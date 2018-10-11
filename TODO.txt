@@ -1,0 +1,10 @@
+* Overall
+** TODO Source file listing utilities
+** TODO Remove global variables
+* Lister Tasks
+** TODO Source file listing utilities
+** TODO Add support for Command line input not just file?
+* Tokenizer Tasks
+** TODO Evalaution of source lines
+** TODO Tokenize source lines
+* Issues

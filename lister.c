@@ -117,6 +117,13 @@ void OutputSourceLine ( char *Bufferp ) {
   printf("%s", Bufferp);
 }
 
+/**
+ * @fn          void WritePrologueHeader(char *Filename) 
+ * @brief       Add header to the source listing
+ * @param[in]   char * Filename - name of the file being processed
+ * @return      none
+ * @note        Adds the time/date to the header
+ */
 void WritePrologueHeader(char *Filename) {
    time_t CurrentTime;
    struct tm *info;
@@ -125,5 +132,5 @@ void WritePrologueHeader(char *Filename) {
    info = localtime(&CurrentTime);
    sprintf(Buffer, "Filename: %s, %s\n", Filename, asctime(info));
 
-   printf("%s", Buffer);
+   OutputSourceLine(Buffer);
 }
