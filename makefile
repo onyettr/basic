@@ -94,13 +94,14 @@ test_harness:
 # Code checking target
 #
 splint-it:
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) main.c
 	$(CODE_CHECK) $(CODE_CHECK_ARGS) lister.c   
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) main.c
+
 
 clean:
 	rm -f basic.exe
 	rm -f $(OBJECT_DIR)/lister.o
-	rm -f liblist.a
+	rm -f liblister.a
 	rm -f $(OBJECT_DIR)/main.o
 	rm -f *.gcno
 	rm -f *.gcda
