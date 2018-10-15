@@ -57,7 +57,7 @@ Prototypes of all functions contained in this file (in order of occurance)
 /**
  * @fn          void SourceLister   ( char *Filename )
  * @brief       Opens a file, reads source and outputs
- * @param[out]  char*  InputFileName
+ * @param[out]  *Filename - string containing the name of the source file
  * @return      none
  * @note        
  */
@@ -86,7 +86,7 @@ void SourceLister   ( char *Filename ) {
 /**
  * @fn          bool ReadSourceLine ( FILE *sourceFile ) {
  * @brief       Read a line of source from a file
- * @param[in]   FILE * - opened source file
+ * @param[in]   *sourceFile - opened source file handle
  * @return      true if line read was ok, false if error or EOF
  * @note        none
  */
@@ -109,7 +109,7 @@ bool ReadSourceLine ( FILE *sourceFile ) {
 /**
  * @fn          void OutputSourceLine ( char *Bufferp ) {
  * @brief       Output a source line
- * @param[in]   char * Bufferp - buffer containing a line of source
+ * @param[in]   *Bufferp - buffer containing a line of source
  * @return      none
  * @note        none
  */
@@ -120,7 +120,7 @@ void OutputSourceLine ( char *Bufferp ) {
 /**
  * @fn          void WritePrologueHeader(char *Filename) 
  * @brief       Add header to the source listing
- * @param[in]   char * Filename - name of the file being processed
+ * @param[in]   *Filename - name of the file being processed
  * @return      none
  * @note        Adds the time/date to the header
  */

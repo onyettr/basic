@@ -69,7 +69,7 @@ Prototypes of all functions contained in this file (in order of occurance)
 /**
  * @fn          void Error ( char *format, ... ) {
  * @brief       standard error output formatter
- * @param[in]   char*  format, ... number of formatted argumantes
+ * @param[in]   *format, ... number of formatted argumantes
  * @return      none
  * @note        outputs error string
  */
@@ -89,9 +89,9 @@ void Error ( char *format, ... ) {
 /**
  * @fn          static void ParseCommandLine ( char *argv[], int argc, char *InputFileName)
  * @brief       Parse the optins from argv
- * @param[in]   char** argv  The arguments.
- * @param[in]   int    argc  The numer of arguments.
- * @param[out]  char*  InputFileName
+ * @param[in]   *argv[] -  The arguments.
+ * @param[in]   argc    - The numer of arguments.
+ * @param[out]  *InputFileName - return any filename found
  * @return      none
  * @note        breaks down the command line
  */

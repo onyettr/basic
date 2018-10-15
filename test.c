@@ -57,7 +57,7 @@ Prototypes of all functions contained in this file (in order of occurance)
 /**
  * @fn          void Error ( char *format, ... ) {
  * @brief       standard error output formatter
- * @param[in]   char*  format, ... number of formatted argumantes
+ * @param[in]   *format, ... number of formatted argumantes
  * @return      none
  * @note        outputs error string
  */
