@@ -66,25 +66,6 @@ Prototypes of all functions contained in this file (in order of occurance)
 ******************************************************************************
 */
 
-/**
- * @fn          void Error ( char *format, ... ) {
- * @brief       standard error output formatter
- * @param[in]   *format, ... number of formatted argumantes
- * @return      none
- * @note        outputs error string
- */
-void Error ( char *format, ... ) {
-    va_list ap;
-    char Buffer[256];
-
-    va_start ( ap, format );
-    (void)vsprintf ( Buffer, format, ap);
-    va_end ( ap );
-
-    printf ("Error-%s-%s\n", PROGRAM_NAME, Buffer );
-
-    exit (0);
-}
 
 /**
  * @fn          static void ParseCommandLine ( char *argv[], int argc, char *InputFileName)
@@ -95,7 +76,7 @@ void Error ( char *format, ... ) {
  * @return      none
  * @note        breaks down the command line
  */
-static void ParseCommandLine ( char *argv[], int argc, char *InputFileName ) {
+static void ParseCommandLine (char *argv[], int argc, char *InputFileName) {
   int i = 1;
   char *ch;
 
@@ -152,7 +133,7 @@ int main ( int argc, char *argv[]) {
 
   ParseCommandLine (argv, argc, FileName);
 
-  SourceLister (FileName);
+  ListerSource (FileName);          /* List the source code to the console */
   
   return 0;
 }

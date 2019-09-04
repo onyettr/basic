@@ -6,13 +6,16 @@
 
 SRC_DIR		= 	.
 OBJECT_DIR	= 	$(SRC_DIR)/object
+LIB_DIR		= 	$(SRC_DIR)/libraries
 MAKE_DIR_CMD	= 	mkdir $(OBJECT_DIR)
+MAKE_LIB_CMD	= 	mkdir $(LIB_DIR)
 
 CC  		= 	gcc
 LINK  		= 	gcc
 AR		= 	ar
 CHK   		= 	checkmk
 CHECK_FOR_CHK	:= 	$(shell command -v $(CHK) 2> /dev/null)
+CHECK_FOR_CPP	:=	$(shell command -v $(CODE_CHECK) 2> /dev/null)
 
 #*******************************************************************************
 # Build options
@@ -26,23 +29,26 @@ PROFLAGS	= 	-pg
 # Main CC and Link build strings
 DEBUG		= 	-g
 CFLAGS		= 	-c -std=c99 -Wall -pedantic $(PFLAGS)
-LFLAGS		= 	$(PFLAGS) -static -L.
+LFLAGS		= 	$(PFLAGS) -static -L. -L./$(LIB_DIR)
 
 # -DDEBUG_TRACE	Will turn on deep trace per function
 
 #
 # Code checking with splint
 #
-CODE_CHECK       = 	splint
-CODE_CHECK_ARGS	 = 	-showfunc -mustfreefresh -nullpass -nullret -noeffect
+#CODE_CHECK       = 	splint
+#CODE_CHECK_ARGS	 = 	-showfunc -mustfreefresh -nullpass -nullret -noeffect
+CODE_CHECK	= 	cppcheck
 
 #
 # Libs, objs targets
-# libstack library is built from trap handling and the stack implementation. 
 #
-OBJS  		     = $(OBJECT_DIR)/main.o 
-LIBS  		     = liblister.a
-TEST_STACK 	     = 
+OBJS  		     = 	$(OBJECT_DIR)/main.o  		\
+			$(OBJECT_DIR)/utilities.o	\
+			$(OBJECT_DIR)/lister.o
+
+LIBS  		     = 	$(LIB_DIR)/liblister.a 		\
+			$(LIB_DIR)/libutilities.a
 
 #*******************************************************************************
 # Build targets:
@@ -52,23 +58,36 @@ TEST_STACK 	     =
 # clean		Delete object and library files
 #*******************************************************************************
 
-all:	$(OBJECT_DIR) basic.exe liblister.a test_harness
+all:	$(OBJECT_DIR) $(LIB_DIR) $(LIBS) basic.exe test_harness splint-it
 
 lib:	$(LIBS)
 
-basic.exe:	$(OBJS) $(LIBS)
-	$(LINK) $(OBJS) $(LFLAGS) -llister -o basic.exe
-
-liblister.a:	lister.o 
-	$(AR) rcs liblister.a lister.o
+$(LIB_DIR):
+	-$(MAKE_LIB_CMD)
 
 $(OBJECT_DIR):
 	-$(MAKE_DIR_CMD)
 
+basic.exe:	$(OBJS) $(LIBS)
+	$(LINK) $(OBJS) $(LFLAGS) -llister -lutilities -o basic.exe
+
+#*******************************************************************************
+# Major library components
+#*******************************************************************************
+$(LIB_DIR)/liblister.a:	$(OBJECT_DIR)/lister.o 
+	$(AR) rcs $(LIB_DIR)/liblister.a $(OBJECT_DIR)/lister.o
+$(LIB_DIR)/libutilities.a:	$(OBJECT_DIR)/utilities.o 
+	$(AR) rcs $(LIB_DIR)/libutilities.a $(OBJECT_DIR)/utilities.o
+
+#*******************************************************************************
+# Object builds
+#*******************************************************************************
 $(OBJECT_DIR)/main.o:		main.c
 	$(CC) $(CFLAGS) $(DEBUG) main.c -o $(OBJECT_DIR)/main.o
 $(OBJECT_DIR)/lister.o:		lister.c
 	$(CC) $(CFLAGS) $(DEBUG) lister.c -o $(OBJECT_DIR)/lister.o
+$(OBJECT_DIR)/utilities.o:	utilities.c
+	$(CC) $(CFLAGS) $(DEBUG) utilities.c -o $(OBJECT_DIR)/utilities.o
 
 #
 # This is the "check" target: Test harness is in stack_check.ts file and 
@@ -82,26 +101,32 @@ $(OBJECT_DIR)/lister.o:		lister.c
 test_harness:
 	@echo "** test harness TODO **"
 
-#test_harness: libstack.a stack_check.ts
-#ifndef CHECK_FOR_CHK
-#	@echo "** checkmk command not found"
-#else
-#	$(CHK) stack_check.ts > stack_check.c
-#	$(CC) -o stack_check.exe stack_check.c -static -L. -lcheck -lstack 
-#endif
+#test_harness: 
+ifndef CHECK_FOR_CHK
+	@echo "** checkmk command not found"
+else
+#	$(CHK) basic_check.ts > basic_check.c
+#	$(CC) -o basic_check.exe basic_check.c -static -L./$(LIBS) -lcheck -llister
+endif
 
 #
 # Code checking target
 #
 splint-it:
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) lister.c   
+ifndef CHECK_FOR_CHK
+	@echo "** cppcheck command not found"
+else
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) lister.c
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) utilities.c
 	$(CODE_CHECK) $(CODE_CHECK_ARGS) main.c
-
+endif
 
 clean:
 	rm -f basic.exe
+	rm -f $(LIB_DIR)/liblister.a
+	rm -f $(LIB_DIR)/libutilities.a
 	rm -f $(OBJECT_DIR)/lister.o
-	rm -f liblister.a
+	rm -f $(OBJECT_DIR)/utilities.o
 	rm -f $(OBJECT_DIR)/main.o
 	rm -f *.gcno
 	rm -f *.gcda

@@ -1,9 +1,20 @@
 * Overall
 ** TODO Source file listing utilities
+** TODO Scanner Tokenizer
+** TODO Symbol Table
+** TODO Parser Expressions
+** TODO Parser Statements
+** TODO Parser Declarations
 ** TODO Remove global variables
 * Lister Tasks
-** TODO Source file listing utilities
+** DONE Source file listing utilities
 ** TODO Add support for Command line input not just file?
+** TODO SourceLister should return error code
+** TODO Should print header again after one page worth of output
+** DONE Lister<name> 
+* Scanner Tasks
+** TODO Utilities for skip spaces 
+** TODO Basic line parser
 * Tokenizer Tasks
 ** TODO Evalaution of source lines
 ** TODO Tokenize source lines

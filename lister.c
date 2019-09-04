@@ -28,7 +28,8 @@ Private Types
 Private variables (static)
 ******************************************************************************
 */
-static char Buffer[MAX_SOURCE_LINE_LENGTH+10];
+static char LineBuffer[MAX_SOURCE_LINE_LENGTH+10];
+static char SourceLineBuffer[MAX_SOURCE_LINE_LENGTH];
 
 /*
 ******************************************************************************
@@ -55,82 +56,81 @@ Prototypes of all functions contained in this file (in order of occurance)
 */
   
 /**
- * @fn          void SourceLister   ( char *Filename )
- * @brief       Opens a file, reads source and outputs
- * @param[out]  *Filename - string containing the name of the source file
- * @return      none
- * @note        
+ * @fn          void ListerSource( char *Filename )
+ * @brief       Opens a file, reads source and outputs to stdout
+ * @param[in]   *Filename - string containing the name of the source file
+ * @return      int32
+ * @note        closes the file before returning
  */
-void SourceLister   ( char *Filename ) {
-  
+int32_t  ListerSource (char *Filename) {
+  uint32_t PageNumber = 1;
+  int32_t ErrorCode = SUCCESS;
+  FILE *SourceFile;  
+
   /*
    * Open the filename containing the source lines 
    */
   SourceFile = fopen(Filename, "r");
-  if ( SourceFile == NULL ) {
-    Error("Failed to open %s", Filename);
-    return;
+  if (SourceFile == NULL) {
+    Error("[ERR] Failed to open %s", Filename);
+
+    return ERROR_FILE_OPEN_FAILURE;
   }
 
   /*
    * Output prologue header
    */
-  WritePrologueHeader(Filename);
+  ListerWritePrologueHeader(Filename);
   
   /*
    * Read each line until EOF
    */
-  while (ReadSourceLine(SourceFile));
-}
-
-/**
- * @fn          bool ReadSourceLine ( FILE *sourceFile ) {
- * @brief       Read a line of source from a file
- * @param[in]   *sourceFile - opened source file handle
- * @return      true if line read was ok, false if error or EOF
- * @note        none
- */
-bool ReadSourceLine ( FILE *sourceFile ) {
-
-
-   if ( fgets(SourceLineBuffer,MAX_SOURCE_LINE_LENGTH, sourceFile) != NULL ) {
+  while (UtilsReadSourceLine(SourceFile,SourceLineBuffer) == true) {
      LineNumber++;
-  
-     sprintf(Buffer, "%4d: %s", LineNumber, SourceLineBuffer);
 
-     OutputSourceLine( Buffer );
+     /*
+      * Page break after  a number of lines
+      */
+     if (LineNumber % MAX_LINES_PER_PAGE == 0) {
+       printf ("%c\t\t\t\t\t  - %d - \n\n", FORM_FEED, PageNumber);
+       PageNumber++;
+     }
+     
+     sprintf(LineBuffer, "%4d: %s", LineNumber, SourceLineBuffer);
 
-     return true;
-   } else {
-     return false;
-   }
+     ListerOutputSourceLine(LineBuffer);
+  }
+
+  fclose(SourceFile);
+
+  return ErrorCode;
 }
 
 /**
- * @fn          void OutputSourceLine ( char *Bufferp ) {
+ * @fn          void ListerOutputSourceLine ( char *Bufferp ) {
  * @brief       Output a source line
  * @param[in]   *Bufferp - buffer containing a line of source
  * @return      none
  * @note        none
  */
-void OutputSourceLine ( char *Bufferp ) {
+void ListerOutputSourceLine (char *Bufferp) {
   printf("%s", Bufferp);
 }
 
 /**
- * @fn          void WritePrologueHeader(char *Filename) 
+ * @fn          void ListerWritePrologueHeader(char *Filename) 
  * @brief       Add header to the source listing
  * @param[in]   *Filename - name of the file being processed
  * @return      none
  * @note        Adds the time/date to the header
  */
-void WritePrologueHeader(char *Filename) {
+void ListerWritePrologueHeader(char *Filename) {
    time_t CurrentTime;
    struct tm *info;
 
    time(&CurrentTime);
    info = localtime(&CurrentTime);
-   sprintf(Buffer, "Filename: %s, %s\n", Filename, asctime(info));
+   sprintf(LineBuffer, "Filename: %s, %s\n", Filename, asctime(info));
 
-   OutputSourceLine(Buffer);
+   ListerOutputSourceLine(LineBuffer);
 }
