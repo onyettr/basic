@@ -1,6 +1,6 @@
 /**
  *****************************************************************************
- * @brief   basic interpreter - list programme
+ * @brief   basic interpreter - list programme to stdout
  * @author  onyettr
  * @file    lister.c
  ***************************************************************************** 
@@ -56,10 +56,10 @@ Prototypes of all functions contained in this file (in order of occurance)
 */
   
 /**
- * @fn          void ListerSource( char *Filename )
+ * @fn          int32_t ListerSource( char *Filename )
  * @brief       Opens a file, reads source and outputs to stdout
  * @param[in]   *Filename - string containing the name of the source file
- * @return      int32
+ * @return      int32_t ErrorCode
  * @note        closes the file before returning
  */
 int32_t  ListerSource (char *Filename) {
@@ -108,7 +108,7 @@ int32_t  ListerSource (char *Filename) {
 
 /**
  * @fn          void ListerOutputSourceLine ( char *Bufferp ) {
- * @brief       Output a source line
+ * @brief       Output a source line to stdout
  * @param[in]   *Bufferp - buffer containing a line of source
  * @return      none
  * @note        none

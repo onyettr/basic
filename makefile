@@ -4,12 +4,14 @@
 # Author           : ronyett
 #*******************************************************************************
 
+# Base location defaults
 SRC_DIR		= 	.
 OBJECT_DIR	= 	$(SRC_DIR)/object
 LIB_DIR		= 	$(SRC_DIR)/libraries
 MAKE_DIR_CMD	= 	mkdir $(OBJECT_DIR)
 MAKE_LIB_CMD	= 	mkdir $(LIB_DIR)
 
+# Tools and options
 CC  		= 	gcc
 LINK  		= 	gcc
 AR		= 	ar
@@ -34,28 +36,30 @@ LFLAGS		= 	$(PFLAGS) -static -L. -L./$(LIB_DIR)
 # -DDEBUG_TRACE	Will turn on deep trace per function
 
 #
-# Code checking with splint
+# Code checking with splint or cppcheck
 #
 #CODE_CHECK       = 	splint
 #CODE_CHECK_ARGS	 = 	-showfunc -mustfreefresh -nullpass -nullret -noeffect
 CODE_CHECK	= 	cppcheck
 
 #
-# Libs, objs targets
+# Libraries and objects targets
 #
 OBJS  		     = 	$(OBJECT_DIR)/main.o  		\
 			$(OBJECT_DIR)/utilities.o	\
-			$(OBJECT_DIR)/lister.o
+			$(OBJECT_DIR)/lister.o		\
+			$(OBJECT_DIR)/tokenizer.o
 
 LIBS  		     = 	$(LIB_DIR)/liblister.a 		\
 			$(LIB_DIR)/libutilities.a
 
 #*******************************************************************************
 # Build targets:
-# all		Creates object directory, builds executable and runs checker
+# all		Creates object directory, builds executable test harness  and
+#               runs checker
 # lib		Build only the list library, no test harness
 # splint-it	run the Syntax checker
-# clean		Delete object and library files
+# clean		Delete object and library files and intermediates
 #*******************************************************************************
 
 all:	$(OBJECT_DIR) $(LIB_DIR) $(LIBS) basic.exe test_harness splint-it
@@ -88,6 +92,11 @@ $(OBJECT_DIR)/lister.o:		lister.c
 	$(CC) $(CFLAGS) $(DEBUG) lister.c -o $(OBJECT_DIR)/lister.o
 $(OBJECT_DIR)/utilities.o:	utilities.c
 	$(CC) $(CFLAGS) $(DEBUG) utilities.c -o $(OBJECT_DIR)/utilities.o
+$(OBJECT_DIR)/tokenizer.o:	tokenizer.c
+	$(CC) $(CFLAGS) $(DEBUG) tokenizer.c -o $(OBJECT_DIR)/tokenizer.o
+
+test_harness:
+	@echo "** test harness TODO **"
 
 #
 # This is the "check" target: Test harness is in stack_check.ts file and 
@@ -97,11 +106,6 @@ $(OBJECT_DIR)/utilities.o:	utilities.c
 # NOTE: This will not build if you have the Profiling enabled as the libstack.a 
 # contains gcov 
 #
-
-test_harness:
-	@echo "** test harness TODO **"
-
-#test_harness: 
 ifndef CHECK_FOR_CHK
 	@echo "** checkmk command not found"
 else
@@ -110,7 +114,7 @@ else
 endif
 
 #
-# Code checking target
+# Code syntax checking target
 #
 splint-it:
 ifndef CHECK_FOR_CHK
@@ -121,13 +125,15 @@ else
 	$(CODE_CHECK) $(CODE_CHECK_ARGS) main.c
 endif
 
+# remove all libs, objs and intermediates
 clean:
 	rm -f basic.exe
 	rm -f $(LIB_DIR)/liblister.a
 	rm -f $(LIB_DIR)/libutilities.a
+	rm -f $(OBJECT_DIR)/main.o
 	rm -f $(OBJECT_DIR)/lister.o
 	rm -f $(OBJECT_DIR)/utilities.o
-	rm -f $(OBJECT_DIR)/main.o
+	rm -f $(OBJECT_DIR)/tokenizer.o
 	rm -f *.gcno
 	rm -f *.gcda
 	rm -f gmon.out

@@ -23,7 +23,6 @@ Includes
 #include "utilities.h"
 #include "lister.h"
 
-
 #define PROGRAM_NAME            "basic"                 /* No name. no slogan */
 #define VERSION                 "(v1.0.0) DEVELOPMENT Version"
 #define AUTHOR_STRING           "()"
@@ -33,9 +32,14 @@ Includes
 #define MAX_SOURCE_LINE_LENGTH  256
 #define MAX_LINES_PER_PAGE      20
 
+/*
+ * Error codes
+ */
 #define SUCCESS                       1
 #define FAILURE                       0
 #define ERROR_FILE_OPEN_FAILURE     (-1)
+
+#define UNUSED( X )            (void) X
 
 /*
 ******************************************************************************
