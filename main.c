@@ -132,8 +132,11 @@ int main ( int argc, char *argv[]) {
   printf ("%s: Version %s\n", PROGRAM_NAME, VERSION);
 
   ParseCommandLine (argv, argc, FileName);
-
+#if 0
   ListerSource (FileName);          /* List the source code to the console */
+#endif
+
+  Tokenize(FileName);
   
   return 0;
 }

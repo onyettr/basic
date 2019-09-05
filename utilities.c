@@ -90,3 +90,20 @@ bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer) {
    return false;
 }
 
+/**
+ * @fn          
+ * @brief       Skip a given buffer of any spaces
+ * @param[in]   *buffer 
+ * @return      
+ * @note        none
+ */
+char *UtilsSkipSpaces (char *SourceBuffer) {
+  char *Startp = SourceBuffer;
+
+  while (*Startp == ' ' && *Startp != '\0') {
+    Startp++;
+  }
+
+  return Startp;
+}
+
