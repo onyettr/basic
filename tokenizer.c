@@ -77,22 +77,28 @@ Token_t TokenGetNumber(char *Bufferp, char *Tokenp) {
  * @param[in] Bufferp - Buffer to tokenize
  * @param[out]Tokenp  - add to tokenized buffer
  * @return    Token_t 
- * @notes     
+ * @notes     Tokenizer ceases when a SPACE or end of line if found
  */
-Token_t TokenGetWord  (char *Bufferp, char *Tokenp) {
-  printf("TokenGetWord %c\n", *Bufferp);
+Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
+  char *Bufp;
+
+  Bufp = *Bufferp;
+  printf("TokenGetWord %c\n", *Bufp);
   
-  while ( ((isalnum(*Bufferp)) || (*Bufferp != '\0')) && (isspace(*Bufferp)) ) {
-      *Tokenp++ = *Bufferp++;
-      printf("%c ", *Bufferp);
-      if (isalnum(*Bufferp)) {
+  while ( ((isalnum(*Bufp)) || (*Bufp != '\0')) && (!isspace(*Bufp)) ) {
+      *Tokenp++ = *Bufp++;
+#if 1
+      //      printf("%c addr %p", *Bufp, Bufp);
+      if (isalnum(*Bufp)) {
         printf("alpha ");
-      } else if (isspace(*Bufferp)) {
+      } else if (isspace(*Bufp)) {
         printf("space ");
-      } 
+      }
+#endif      
   }
 
   *Tokenp = '\0';
+  *Bufferp = Bufp;
   
   return TOKEN_WORD;
 }
@@ -151,20 +157,22 @@ int32_t Tokenize (char *FileName) {
   while (UtilsReadSourceLine(fp, Bufferp) == true) {
      Bufferp = UtilsSkipSpaces(Bufferp);
 
+     printf("Bufp %p\n", (void*)Bufferp);
+     while (*Bufferp != '\0') {
      if (isdigit(*Bufferp)) {
        Token = TokenGetNumber(Bufferp, Tokenp);
+       printf("Bufp new %p\n", (void*)Bufferp);       
      } else if (isalnum(*Bufferp)) {
-       Token = TokenGetWord(Bufferp, Tokenp);
+       Token = TokenGetWord(&Bufferp, Tokenp);
        printf("WORD %s %s\n", Bufferp, Tokenp);
+       printf("Bufp new %p\n", (void*)Bufferp);              
      } else {
        Token = TokenGetSpecial(Bufferp, Tokenp);       
      }
 
      printf(">> %s %s\n", TokenGetStringType(Token), Tokenp);
-
+     }
   }
-
-
 
   UNUSED(TokenBuffer);
   UNUSED(Token);
