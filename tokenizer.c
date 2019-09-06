@@ -65,10 +65,19 @@ Prototypes of all functions contained in this file (in order of occurance)
  * @return    Token_t 
  * @notes     
  */
-Token_t TokenGetNumber(char *Bufferp, char *Tokenp) {
+Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
+  char *Bufp;
+  
   printf("TokenGetNUmber\n");
-
-  return TOKEN_ERROR;
+  Bufp = *Bufferp;
+  
+  while ( ((isalnum(*Bufp)) || (*Bufp != '\0')) && (!isspace(*Bufp)) ) {
+      *Tokenp++ = *Bufp++;
+  }
+  *Tokenp = '\0';
+  *Bufferp = Bufp;
+    
+  return TOKEN_DIGIT;
 }
 
 /**
@@ -87,7 +96,7 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   
   while ( ((isalnum(*Bufp)) || (*Bufp != '\0')) && (!isspace(*Bufp)) ) {
       *Tokenp++ = *Bufp++;
-#if 1
+#if 0
       //      printf("%c addr %p", *Bufp, Bufp);
       if (isalnum(*Bufp)) {
         printf("alpha ");
@@ -111,10 +120,20 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
  * @return    Token_t 
  * @notes     
  */
-Token_t TokenGetSpecial(char *Bufferp, char *Tokenp) {
+Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
+    char *Bufp;
+
+    Bufp = *Bufferp;
     printf("TokenGetSpecial\n");
 
-    return TOKEN_ERROR;    
+    while ( (!(isalnum(*Bufp)) && !(*Bufp != '\0')) && (!isspace(*Bufp)) ) {
+      *Tokenp++ = *Bufp++;
+    }
+
+    *Tokenp = '\0';
+    *Bufferp = Bufp;
+    
+    return TOKEN_SPECIAL;    
 }
 
 /**
@@ -130,6 +149,7 @@ char *TokenGetStringType(Token_t Token) {
      case TOKEN_WORD:   return("WORD"); break;
      case TOKEN_DIGIT:  return("DIGIT"); break;
      case TOKEN_LETTER: return ("LETTER"); break;
+     case TOKEN_SPECIAL:return ("SPECIAL"); break;       
      case TOKEN_ERROR:  return ("ERROR"); break;
      default: return ("????"); break;
   }
@@ -157,21 +177,19 @@ int32_t Tokenize (char *FileName) {
   while (UtilsReadSourceLine(fp, Bufferp) == true) {
      Bufferp = UtilsSkipSpaces(Bufferp);
 
-     printf("Bufp %p\n", (void*)Bufferp);
      while (*Bufferp != '\0') {
      if (isdigit(*Bufferp)) {
-       Token = TokenGetNumber(Bufferp, Tokenp);
-       printf("Bufp new %p\n", (void*)Bufferp);       
+       Token = TokenGetNumber(&Bufferp, Tokenp);
      } else if (isalnum(*Bufferp)) {
        Token = TokenGetWord(&Bufferp, Tokenp);
-       printf("WORD %s %s\n", Bufferp, Tokenp);
-       printf("Bufp new %p\n", (void*)Bufferp);              
+     } else if (isspace(*Bufferp)) {
+       Bufferp++;
      } else {
-       Token = TokenGetSpecial(Bufferp, Tokenp);       
+       Token = TokenGetSpecial(&Bufferp, Tokenp);       
      }
 
-     printf(">> %s %s\n", TokenGetStringType(Token), Tokenp);
-     }
+     printf(">> %5s %s\n", TokenGetStringType(Token), Tokenp);
+    }
   }
 
   UNUSED(TokenBuffer);

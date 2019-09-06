@@ -23,6 +23,7 @@ typedef enum {
     TOKEN_WORD,
     TOKEN_DIGIT,
     TOKEN_LETTER,
+    TOKEN_SPECIAL,
     TOKEN_ERROR
 } TokenValues_t;
 
