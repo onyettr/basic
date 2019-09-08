@@ -77,7 +77,10 @@ void Error ( char *format, ... ) {
  * @fn          bool UtilsReadSourceLine ( FILE *sourceFile, char* ) {
  * @brief       Read a line of source from a file
  * @param[in]   *sourceFile - opened source file handle
+ * @param[out   *SourceBuffer - place to store
  * @return      true if line read was ok, false if error or EOF
+ * @details     Reads from opened file sourceFile and returns a single line in SourceBuffer
+ * @todo  
  * @note        none
  */
 bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer) {
@@ -91,11 +94,13 @@ bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer) {
 }
 
 /**
- * @fn          
+ * @fn          char *UtilsSkipSpaces (char *SourceBuffer) 
  * @brief       Skip a given buffer of any spaces
- * @param[in]   *buffer 
- * @return      
+ * @param[in]   *SourceBuffer 
+ * @return      char * updated pointer into the source buffer
  * @note        none
+ * @details     Skips spaces in a given string and returns pointer to first non space elemento
+ * @todo        use isspace() 
  */
 char *UtilsSkipSpaces (char *SourceBuffer) {
   char *Startp = SourceBuffer;

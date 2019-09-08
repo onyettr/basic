@@ -19,6 +19,11 @@ Includes
 Private Types
 *****************************************************************************
 */
+
+/**
+ * @brief TOKEN values for the various elements
+ * @enum TokenValues_t
+ */
 typedef enum {
     TOKEN_WORD,
     TOKEN_DIGIT,
@@ -29,17 +34,25 @@ typedef enum {
 
 typedef int32_t Token_t;
 
+/**
+ * @brief Literal Types string and integer
+ * @enum LiteralType_t
+ */
 typedef enum {
    LITERAL_STRING,
    LITERAL_INTEGER
 } LiteralType_t;
 
+/**
+ * @brief Literal string and integer storage
+ * @struct Literal_t 
+ */
 typedef struct {
   LiteralType_t Type;
   union {
     int32_t IntegerValue;
     char    String[MAX_SOURCE_LINE_LENGTH];
-  } value;
+  } value;                   /*! union value */
 } Literal_t;
   
 /*
