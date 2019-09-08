@@ -24,25 +24,22 @@ Includes
 #include "lister.h"
 #include "tokenizer.h"
 
-/**
-
- */
-#define PROGRAM_NAME            "basic"                 /* No name. no slogan */
-#define VERSION                 "(v1.0.0) DEVELOPMENT Version"
-#define AUTHOR_STRING           "()"
+#define PROGRAM_NAME            "basic"                        /*!> No name. no slogan */
+#define VERSION                 "(v1.0.0) DEVELOPMENT Version" /*!> Version            */
+#define AUTHOR_STRING           "()"                           /*!> Who did this?      */
 
 /**
  * @brief control codes
  */
-#define BELL                      '\007'
-#define FORM_FEED                 '\014'
+#define BELL                      '\007'      /*!> Console Bell */
+#define FORM_FEED                 '\014'      /*!> Page break   */
 
 /**
  * @brief Error codes
  */
 #define SUCCESS                       1
 #define FAILURE                       0
-#define ERROR_FILE_OPEN_FAILURE     (-1)
+#define ERROR_FILE_OPEN_FAILURE     (-1) 
 
 /**
  * @brief macros
@@ -66,9 +63,9 @@ Private variables (static)
 Global variables
 ******************************************************************************
 */
-extern bool Verbose;
-extern bool Secret;  
-extern bool ListMode;
+extern bool Verbose;                 /*! CLI option for more output   */
+extern bool Secret;                  /*! CLI option for shhhh         */
+extern bool ListMode;                /*! CLI option to enable listing */
 
 extern char SourceFileName[MAX_FILENAME_LENGTH];
 extern uint32_t LineNumber;

@@ -64,7 +64,9 @@ Prototypes of all functions contained in this file (in order of occurance)
  * @param[in] Bufferp - Buffer to tokenize
  * @param[out]Tokenp  - add to tokenized buffer
  * @return    Token_t 
- * @notes     
+ * @details   Builds the value of the number as a literal integer and not ascii. 
+ * @note
+ * @todo      Floating point and MAX_INT overflow
  */
 Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
   char *Bufp;
@@ -96,6 +98,8 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
  * @param[out]Tokenp  - add to tokenized buffer
  * @return    Token_t 
  * @notes     Tokenizer ceases when a SPACE or end of line if found
+ * @details
+ * @todo
  */
 Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   char *Bufp;
@@ -151,8 +155,8 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
  * @brief     Token types to string convert
  * @fn        char *TokenGetStringType(Token_t Token)
  * @param[in] Token
- * @return    char*
- * @notes     
+ * @return    char* string 
+ * @note
  */
 char *TokenGetStringType(Token_t Token) {
 
@@ -171,7 +175,7 @@ char *TokenGetStringType(Token_t Token) {
  * @fn        int32_t Tokenize (char *FileName)
  * @param[in] FileName - file containing lines to Tokenize
  * @return    int32_t ErrorCode
- * @notes     
+ * @note
  */
 int32_t Tokenize (char *FileName) {
   FILE *fp;
