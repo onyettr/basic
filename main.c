@@ -29,6 +29,7 @@ static char USAGE_STRING[] = {
     "Usage: basic {option} {filename}        \n\n"
     "Options:                                \n\n"
     "l   list programme                        \n"
+    "s   scanner output                        \n"
     "v   Verbose Mode                          \n"
 };
 
@@ -46,7 +47,7 @@ Global variables
 bool Verbose  = false;
 bool Secret   = false;
 bool ListMode = false;
-
+bool ScanMode = false;
 FILE *SourceFile;
 
 char SourceFileName   [MAX_FILENAME_LENGTH];
@@ -98,6 +99,8 @@ static void ParseCommandLine (char *argv[], int argc, char *InputFileName) {
         case '/':
         case '-': {
 	   switch (*ch++) {
+              case 's':
+              case 'S': ScanMode = true; break;
 	      case 'v':
 	      case 'V': Verbose = true; break;
 	      case 'l':

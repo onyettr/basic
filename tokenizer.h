@@ -28,6 +28,19 @@ typedef enum {
 } TokenValues_t;
 
 typedef int32_t Token_t;
+
+typedef enum {
+   LITERAL_STRING,
+   LITERAL_INTEGER
+} LiteralType_t;
+
+typedef struct {
+  LiteralType_t Type;
+  union {
+    int32_t IntegerValue;
+    char    String[MAX_SOURCE_LINE_LENGTH];
+  } value;
+} Literal_t;
   
 /*
 ******************************************************************************

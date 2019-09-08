@@ -37,6 +37,12 @@ Global variables
 Exported Global variables
 ******************************************************************************
 */
+/**
+ * @brief constants
+ */
+#define MAX_FILENAME_LENGTH          32
+#define MAX_SOURCE_LINE_LENGTH      256
+#define MAX_LINES_PER_PAGE           20
 
 /*
 ******************************************************************************

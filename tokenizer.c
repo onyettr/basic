@@ -44,6 +44,7 @@ Global variables
 */
 static char TokenBuffer [MAX_SOURCE_LINE_LENGTH+10];
 static char SourceBuffer[MAX_SOURCE_LINE_LENGTH+10];
+static Literal_t Literal;
 
 /*
 ******************************************************************************
@@ -67,13 +68,21 @@ Prototypes of all functions contained in this file (in order of occurance)
  */
 Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
   char *Bufp;
+  int value = 0;
+
+  Bufp = *Bufferp;  
+
+  if (Verbose) printf("TokenGetNUmber\n");
   
-  printf("TokenGetNUmber\n");
-  Bufp = *Bufferp;
-  
-  while ( ((isalnum(*Bufp)) || (*Bufp != '\0')) && (!isspace(*Bufp)) ) {
-      *Tokenp++ = *Bufp++;
-  }
+  do {
+    value = 10 * value + (*Bufp -'0');
+    *Tokenp++ = *Bufp++;
+  } while (isdigit(*Bufp));
+
+
+  Literal.Type  = LITERAL_INTEGER;
+  Literal.value.IntegerValue = value;
+
   *Tokenp = '\0';
   *Bufferp = Bufp;
     
@@ -92,7 +101,8 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   char *Bufp;
 
   Bufp = *Bufferp;
-  printf("TokenGetWord %c\n", *Bufp);
+  
+  if (Verbose) printf("TokenGetWord %c\n", (int)*Bufp);
   
   while ( ((isalnum(*Bufp)) || (*Bufp != '\0')) && (!isspace(*Bufp)) ) {
       *Tokenp++ = *Bufp++;
@@ -122,22 +132,23 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
  */
 Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
     char *Bufp;
+    Token_t TokenReturn;
 
+    if (Verbose) printf("TokenGetSpecial\n");    
     Bufp = *Bufferp;
-    printf("TokenGetSpecial\n");
 
-    while ( (!(isalnum(*Bufp)) && !(*Bufp != '\0')) && (!isspace(*Bufp)) ) {
-      *Tokenp++ = *Bufp++;
-    }
-
+    *Tokenp++ = *Bufp;
+    TokenReturn = (*Bufp == '.') ? TOKEN_SPECIAL : TOKEN_ERROR;
+    Bufp++;
     *Tokenp = '\0';
+
     *Bufferp = Bufp;
     
-    return TOKEN_SPECIAL;    
+    return TokenReturn;    
 }
 
 /**
- * @brief     Token types to string
+ * @brief     Token types to string convert
  * @fn        char *TokenGetStringType(Token_t Token)
  * @param[in] Token
  * @return    char*
@@ -146,11 +157,11 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
 char *TokenGetStringType(Token_t Token) {
 
   switch (Token) {
-     case TOKEN_WORD:   return("WORD"); break;
-     case TOKEN_DIGIT:  return("DIGIT"); break;
-     case TOKEN_LETTER: return ("LETTER"); break;
-     case TOKEN_SPECIAL:return ("SPECIAL"); break;       
-     case TOKEN_ERROR:  return ("ERROR"); break;
+     case TOKEN_WORD:   return ("<WORD>"); break;
+     case TOKEN_DIGIT:  return ("<DIGIT>"); break;
+     case TOKEN_LETTER: return ("<LETTER>"); break;
+     case TOKEN_SPECIAL:return ("<SPECIAL>"); break;       
+     case TOKEN_ERROR:  return ("<ERROR>"); break;
      default: return ("????"); break;
   }
 }
@@ -170,29 +181,50 @@ int32_t Tokenize (char *FileName) {
   Token_t Token;  
 
   fp = fopen(FileName, "r");
+  if ( fp == NULL ) {
+    Error("[ERR] Failed to open %s", FileName);
+
+    return ERROR_FILE_OPEN_FAILURE;    
+  }
     
   Bufferp = SourceBuffer;
   Tokenp  = TokenBuffer;
-  
+
+  /*
+   * read until EOF
+   */
   while (UtilsReadSourceLine(fp, Bufferp) == true) {
      Bufferp = UtilsSkipSpaces(Bufferp);
 
-     while (*Bufferp != '\0') {
-     if (isdigit(*Bufferp)) {
-       Token = TokenGetNumber(&Bufferp, Tokenp);
-     } else if (isalnum(*Bufferp)) {
-       Token = TokenGetWord(&Bufferp, Tokenp);
-     } else if (isspace(*Bufferp)) {
-       Bufferp++;
-     } else {
-       Token = TokenGetSpecial(&Bufferp, Tokenp);       
-     }
+     printf(">> %s", Bufferp);
+     
+     /* 
+      * Parse the single line until the EOL
+      */
+     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
+       if (isdigit(*Bufferp)) {
+         Token = TokenGetNumber(&Bufferp, Tokenp);
+       } else if (isalnum(*Bufferp)) {
+         Token = TokenGetWord(&Bufferp, Tokenp);
+       } else if (isspace(*Bufferp)) {
+         Bufferp++;
+       } else if (*Bufferp == '\n' || *Bufferp == '\r') {
+         Bufferp++;
+       } else {
+         Token = TokenGetSpecial(&Bufferp, Tokenp);       
+       }
 
-     printf(">> %5s %s\n", TokenGetStringType(Token), Tokenp);
-    }
+       if (*Tokenp != '\0') {
+         printf("\t>> %5s %s", TokenGetStringType(Token), Tokenp);
+         if (Token == TOKEN_DIGIT ) {
+           printf("   INTEGER = %d", Literal.value.IntegerValue);
+         }
+         printf("\n");
+       }
+       memset(TokenBuffer, '\0', sizeof(TokenBuffer));
+     }
   }
 
-  UNUSED(TokenBuffer);
   UNUSED(Token);
   
   return ErrorCode;

@@ -24,23 +24,30 @@ Includes
 #include "lister.h"
 #include "tokenizer.h"
 
+/**
+
+ */
 #define PROGRAM_NAME            "basic"                 /* No name. no slogan */
 #define VERSION                 "(v1.0.0) DEVELOPMENT Version"
 #define AUTHOR_STRING           "()"
-#define BELL                    '\007'
-#define FORM_FEED               '\014'
-#define MAX_FILENAME_LENGTH     32
-#define MAX_SOURCE_LINE_LENGTH  256
-#define MAX_LINES_PER_PAGE      20
 
-/*
- * Error codes
+/**
+ * @brief control codes
+ */
+#define BELL                      '\007'
+#define FORM_FEED                 '\014'
+
+/**
+ * @brief Error codes
  */
 #define SUCCESS                       1
 #define FAILURE                       0
 #define ERROR_FILE_OPEN_FAILURE     (-1)
 
-#define UNUSED( X )            (void)X
+/**
+ * @brief macros
+ */
+#define UNUSED( X )              (void)X
 
 /*
 ******************************************************************************
