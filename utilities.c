@@ -110,3 +110,22 @@ char *UtilsSkipSpaces (char *SourceBuffer) {
 
    return Startp;
 }
+
+/**
+ * @fn          bool isendofline(char *SourceBuffer)
+ * @brief       Test for End of Line condition
+ * @param[in]   *SourceBuffer 
+ * @return      true if EOL, false otherwise
+ * @note        none
+ * @details     
+ * @todo        
+ */
+bool isendofline(char *SourceBuffer) {
+   char *Startp = SourceBuffer;
+
+   if (*Startp == '\0' || *Startp == '\n') {
+     return true;
+   }
+
+   return false;
+}

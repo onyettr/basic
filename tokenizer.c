@@ -59,7 +59,7 @@ Prototypes of all functions contained in this file (in order of occurance)
 */
 
 /**
- * @brief     Process Special token
+ * @brief     Process Number Token
  * @fn        Token_t TokenGetNumber(char *Bufferp, char *Tokenp) 
  * @param[in] Bufferp - Buffer to tokenize
  * @param[out]Tokenp  - add to tokenized buffer

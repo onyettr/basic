@@ -53,5 +53,6 @@ void Error (char *format, ...);
 
 bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer);
 char *UtilsSkipSpaces (char *SourceBuffer);
+bool isendofline(char *SourceBuffer);
 
 #endif  /* __UTILITIES__H__ */
