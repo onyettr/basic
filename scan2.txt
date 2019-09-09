@@ -3,3 +3,4 @@ Line1 No spaces 1 2 3 4
    Line3 100
    Line4 200 with text
    Line5 999 with more text
+        Line5 test for special ? ! @ 100 .

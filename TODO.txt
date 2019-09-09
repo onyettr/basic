@@ -1,6 +1,6 @@
 * Overall
 ** TODO Source file listing utilities
-** TODO Scanner Tokenizer
+** TODO Scanner Tokenizer 
 ** TODO Symbol Table
 ** TODO Parser Expressions
 ** TODO Parser Statements
@@ -12,10 +12,12 @@
 ** TODO SourceLister should return error code
 ** TODO Should print header again after one page worth of output
 ** DONE Lister<name> 
-* Scanner Tasks
-** TODO Utilities for skip spaces 
-** TODO Basic line parser
-* Tokenizer Tasks
+* Scanner Tokenizer Tasks
+** DONE Utilities for skip spaces 
+** TODO use of isspace in utilities.c for Skipspaces
+** TODO TokenGetNumber needs to test for MAX_INT
 ** TODO Evalaution of source lines
 ** TODO Tokenize source lines
+
+** DONE Basic line parser
 * Issues

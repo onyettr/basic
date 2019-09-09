@@ -142,7 +142,9 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
     Bufp = *Bufferp;
 
     *Tokenp++ = *Bufp;
+
     TokenReturn = (*Bufp == '.') ? TOKEN_SPECIAL : TOKEN_ERROR;
+
     Bufp++;
     *Tokenp = '\0';
 
@@ -205,7 +207,9 @@ int32_t Tokenize (char *FileName) {
      /* 
       * Parse the single line until the EOL
       */
-     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
+     //
+     //     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
+     while (*Bufferp != '\0') {     
        if (isdigit(*Bufferp)) {
          Token = TokenGetNumber(&Bufferp, Tokenp);
        } else if (isalnum(*Bufferp)) {
@@ -219,7 +223,7 @@ int32_t Tokenize (char *FileName) {
        }
 
        if (*Tokenp != '\0') {
-         printf("\t>> %5s %s", TokenGetStringType(Token), Tokenp);
+         printf("\t>> %9s %s", TokenGetStringType(Token), Tokenp);
          if (Token == TOKEN_DIGIT ) {
            printf("   INTEGER = %d", Literal.value.IntegerValue);
          }

@@ -85,9 +85,8 @@ void Error ( char *format, ... ) {
  */
 bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer) {
 
-   if ( fgets(SourceBuffer,MAX_SOURCE_LINE_LENGTH, sourceFile) != NULL ) {
-
-     return true;
+   if (fgets(SourceBuffer,MAX_SOURCE_LINE_LENGTH, sourceFile) != NULL ) {
+      return true;
    }
 
    return false;
@@ -103,12 +102,11 @@ bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer) {
  * @todo        use isspace() 
  */
 char *UtilsSkipSpaces (char *SourceBuffer) {
-  char *Startp = SourceBuffer;
+   char *Startp = SourceBuffer;
 
-  while (*Startp == ' ' && *Startp != '\0') {
-    Startp++;
-  }
+   while (*Startp == ' ' && *Startp != '\0') {
+      Startp++;
+   }
 
-  return Startp;
+   return Startp;
 }
-
