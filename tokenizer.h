@@ -29,6 +29,8 @@ typedef enum {
     TOKEN_DIGIT,
     TOKEN_LETTER,
     TOKEN_SPECIAL,
+    TOKEN_NO_TOKEN,
+    TOKEN_EOF,
     TOKEN_ERROR
 } TokenValues_t;
 
@@ -51,7 +53,7 @@ typedef struct {
   LiteralType_t Type;
   union {
     int32_t IntegerValue;
-    char    String[MAX_SOURCE_LINE_LENGTH];
+    char    StringValue[MAX_SOURCE_LINE_LENGTH];
   } value;                   /*! union value */
 } Literal_t;
   

@@ -120,7 +120,12 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
 #endif      
   }
 
+
   *Tokenp = '\0';
+
+  Literal.Type  = LITERAL_STRING;  
+  strcpy(Literal.value.StringValue, Tokenp);
+
   *Bufferp = Bufp;
   
   return TOKEN_WORD;
@@ -163,13 +168,42 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
 char *TokenGetStringType(Token_t Token) {
 
   switch (Token) {
-     case TOKEN_WORD:   return ("<WORD>"); break;
-     case TOKEN_DIGIT:  return ("<DIGIT>"); break;
-     case TOKEN_LETTER: return ("<LETTER>"); break;
-     case TOKEN_SPECIAL:return ("<SPECIAL>"); break;       
-     case TOKEN_ERROR:  return ("<ERROR>"); break;
+     case TOKEN_WORD:     return ("<WORD>"); break;
+     case TOKEN_DIGIT:    return ("<DIGIT>"); break;
+     case TOKEN_LETTER:   return ("<LETTER>"); break;
+     case TOKEN_SPECIAL:  return ("<SPECIAL>");break;
+     case TOKEN_NO_TOKEN: return ("<NO TOKEN>"); break;
+     case TOKEN_ERROR:    return ("<ERROR>"); break;
      default: return ("????"); break;
   }
+}
+
+/**
+ * @brief     Print the toejn string
+ * @fn        Token_t TokenGetWord  (char *Bufferp, char *Tokenp) 
+ * @param[in] *TokenString - actual token buffer
+ * @param[in] Token        - The token found
+ * @return    void
+ * @notes     
+ * @details
+ * @todo
+ */
+void TokenPrint (char *TokenString, Token_t Token) {
+
+  if (*TokenString != '\0') {
+    printf("\t>> %10s   %s", TokenGetStringType(Token), TokenString);
+    if (Token == TOKEN_DIGIT ) {
+      printf("   INTEGER = %d", Literal.value.IntegerValue);
+    }
+  } else {
+    if (Token == TOKEN_NO_TOKEN ) {
+      printf("   NO TOKEN");
+    }
+    if (Token == TOKEN_EOF) {
+      printf("   EOF");
+    }
+  }
+  printf("\n");
 }
 
 /**
@@ -222,18 +256,13 @@ int32_t Tokenize (char *FileName) {
          Token = TokenGetSpecial(&Bufferp, Tokenp);       
        }
 
-       if (*Tokenp != '\0') {
-         printf("\t>> %9s %s", TokenGetStringType(Token), Tokenp);
-         if (Token == TOKEN_DIGIT ) {
-           printf("   INTEGER = %d", Literal.value.IntegerValue);
-         }
-         printf("\n");
-       }
+       TokenPrint(TokenBuffer, Token);
+       
        memset(TokenBuffer, '\0', sizeof(TokenBuffer));
      }
   }
-
-  UNUSED(Token);
+  Token = TOKEN_EOF;
+  TokenPrint(TokenBuffer, Token);  
   
   return ErrorCode;
 }
