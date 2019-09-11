@@ -226,13 +226,14 @@ char *TokenGetStringType(Token_t Token) {
      case TOKEN_SEMI_COLON: return ("<SEMI COLON>");break;
      case TOKEN_QUOTE:    return ("<QUOTE>"); break;
      case TOKEN_PERIOD:   return ("<PERIOD>"); break;
+     case TOKEN_SPACE:    return ("<SPACE>"); break;
      case TOKEN_QUESTION_MARK: return ("<QUESTION>"); break;
      default: return ("????"); break;
   }
 }
 
 /**
- * @brief     Print the toejn string
+ * @brief     Print the token string
  * @fn        Token_t TokenGetWord  (char *Bufferp, char *Tokenp) 
  * @param[in] *TokenString - actual token buffer
  * @param[in] Token        - The token found
@@ -244,9 +245,15 @@ char *TokenGetStringType(Token_t Token) {
 void TokenPrint (char *TokenString, Token_t Token) {
 
   if (*TokenString != '\0') {
+    char *Return;
+    
     printf("\t>> %10s   %s", TokenGetStringType(Token), TokenString);
     if (Token == TOKEN_DIGIT ) {
       printf("   INTEGER = %d", Literal.value.IntegerValue);
+    }
+    Return = strchr(TokenString,'\n');
+    if (Return == NULL) {
+      printf("\n");
     }
   } else {
     if (Token == TOKEN_NO_TOKEN ) {
@@ -255,8 +262,9 @@ void TokenPrint (char *TokenString, Token_t Token) {
     if (Token == TOKEN_EOF) {
       printf("   EOF");
     }
+    printf("\n");    
   }
-  printf("\n");
+
 }
 
 /**
@@ -294,15 +302,15 @@ int32_t Tokenize (char *FileName) {
      /* 
       * Parse the single line until the EOL
       */
-     //
-     //     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
-     while (*Bufferp != '\0') {     
+     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {     
        if (isdigit(*Bufferp)) {
          Token = TokenGetNumber(&Bufferp, Tokenp);
        } else if (isalnum(*Bufferp)) {
          Token = TokenGetWord(&Bufferp, Tokenp);
        } else if (isspace(*Bufferp)) {
          Bufferp++;
+	 *Tokenp = ' ';
+	 Token = TOKEN_SPACE;
        } else if (*Bufferp == '\n' || *Bufferp == '\r') {
          Bufferp++;
          *Tokenp = ' ';

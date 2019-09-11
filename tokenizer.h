@@ -56,7 +56,8 @@ typedef enum {
     TOKEN_QUOTE,
     TOKEN_PERIOD,
     TOKEN_QUESTION_MARK,
-
+    TOKEN_SPACE,
+    
     /*
      * Reserved words tokens, based on Dartmouth original dialect
      */
