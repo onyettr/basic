@@ -145,10 +145,38 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
 
     if (Verbose) printf("TokenGetSpecial\n");    
     Bufp = *Bufferp;
-
     *Tokenp++ = *Bufp;
 
-    TokenReturn = (*Bufp == '.') ? TOKEN_SPECIAL : TOKEN_ERROR;
+    switch (*Bufp) {
+      case '~': TokenReturn = TOKEN_TILDE;     break;
+      case '!': TokenReturn = TOKEN_PLING;     break;
+      case '@': TokenReturn = TOKEN_AT;        break;
+      case '#': TokenReturn = TOKEN_HASH;      break;
+      case '%': TokenReturn = TOKEN_PERCENT;   break;
+      case '^': TokenReturn = TOKEN_HAT;       break;
+      case '&': TokenReturn = TOKEN_AMPERSAND; break;
+      case '*': TokenReturn = TOKEN_MULTIPLY;  break;
+      case '(': TokenReturn = TOKEN_LPAREN;    break;
+      case ')': TokenReturn = TOKEN_RPAREN;    break;
+      case '-': TokenReturn = TOKEN_MINUS;     break;
+      case '+': TokenReturn = TOKEN_PLUS;      break;
+      case '=': TokenReturn = TOKEN_EQUAL;     break;
+      case '_': TokenReturn = TOKEN_DASH;      break;
+      case '[': TokenReturn = TOKEN_L_BRACKET; break;
+      case ']': TokenReturn = TOKEN_R_BRACKET; break;
+      case '{': TokenReturn = TOKEN_L_CURLY;   break;
+      case '}': TokenReturn = TOKEN_R_CURLY;   break;
+      case '/': TokenReturn = TOKEN_DIVIDE;    break;
+      case '<': TokenReturn = TOKEN_LT;        break;
+      case '>': TokenReturn = TOKEN_GT;        break;
+      case ',': TokenReturn = TOKEN_COMMA;     break;
+      case ';': TokenReturn = TOKEN_SEMI_COLON;break;
+      case '"': TokenReturn = TOKEN_QUOTE;     break;
+      case '.': TokenReturn = TOKEN_PERIOD;    break;
+      case '?': TokenReturn = TOKEN_QUESTION_MARK; break;
+      default:  TokenReturn = TOKEN_ERROR;
+    }
+    //    TokenReturn = (*Bufp == '.') ? TOKEN_SPECIAL : TOKEN_ERROR;
 
     Bufp++;
     *Tokenp = '\0';
@@ -174,6 +202,31 @@ char *TokenGetStringType(Token_t Token) {
      case TOKEN_SPECIAL:  return ("<SPECIAL>");break;
      case TOKEN_NO_TOKEN: return ("<NO TOKEN>"); break;
      case TOKEN_ERROR:    return ("<ERROR>"); break;
+     case TOKEN_TILDE:    return ("<TILDE>"); break;
+     case TOKEN_PLING:    return ("<PLING>"); break;
+     case TOKEN_AT:       return ("<AT>"); break;
+     case TOKEN_HASH:     return ("<HASH>"); break;
+     case TOKEN_PERCENT:  return ("<PERCENT>"); break;
+     case TOKEN_HAT:      return ("<HAT>"); break;
+     case TOKEN_MULTIPLY: return ("<MULTIPLY>"); break;
+     case TOKEN_LPAREN:   return ("<LPAREN>"); break;
+     case TOKEN_RPAREN:   return ("<RPAREN>"); break;
+     case TOKEN_MINUS:    return ("<MINUS>"); break;
+     case TOKEN_PLUS:     return ("<PLUS>"); break;
+     case TOKEN_EQUAL:    return ("<EQUAL>"); break;
+     case TOKEN_DASH:     return ("<DASH>"); break;
+     case TOKEN_L_BRACKET:return ("<LBRACKET>"); break;
+     case TOKEN_R_BRACKET:return ("<RBRACKET>"); break;
+     case TOKEN_L_CURLY:  return ("<LCURLY>"); break;
+     case TOKEN_R_CURLY:  return ("<RCURLY>"); break;
+     case TOKEN_DIVIDE:   return ("<DIVIDE>"); break;
+     case TOKEN_LT:       return ("<LT>"); break;
+     case TOKEN_GT:       return ("<GT>"); break;
+     case TOKEN_COMMA:    return ("<COMMA>"); break;
+     case TOKEN_SEMI_COLON: return ("<SEMI COLON>");break;
+     case TOKEN_QUOTE:    return ("<QUOTE>"); break;
+     case TOKEN_PERIOD:   return ("<PERIOD>"); break;
+     case TOKEN_QUESTION_MARK: return ("<QUESTION>"); break;
      default: return ("????"); break;
   }
 }
@@ -252,6 +305,7 @@ int32_t Tokenize (char *FileName) {
          Bufferp++;
        } else if (*Bufferp == '\n' || *Bufferp == '\r') {
          Bufferp++;
+         *Tokenp = ' ';
        } else {
          Token = TokenGetSpecial(&Bufferp, Tokenp);       
        }
