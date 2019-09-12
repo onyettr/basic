@@ -120,7 +120,6 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
 #endif      
   }
 
-
   *Tokenp = '\0';
 
   Literal.Type  = LITERAL_STRING;  
@@ -132,11 +131,11 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
 }
 
 /**
- * @brief     Process Special token
- * @fn        Token_t TokenGetSpecial(char *Bufferp, char *Tokenp) 
- * @param[in] Bufferp - Buffer to tokenize
- * @param[out]Tokenp  - add to tokenized buffer
- * @return    Token_t 
+ * @brief      Process Sepcial Token
+ * @fn         Token_t TokenGetSpecial(char *Bufferp, char *Tokenp) 
+ * @param[in]  Bufferp - Buffer to tokenize
+ * @param[out] Tokenp  - add to tokenized buffer
+ * @return     Token_t 
  * @notes     
  */
 Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
@@ -148,31 +147,36 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
     *Tokenp++ = *Bufp;
 
     switch (*Bufp) {
-      case '~': TokenReturn = TOKEN_TILDE;     break;
-      case '!': TokenReturn = TOKEN_PLING;     break;
-      case '@': TokenReturn = TOKEN_AT;        break;
-      case '#': TokenReturn = TOKEN_HASH;      break;
-      case '%': TokenReturn = TOKEN_PERCENT;   break;
-      case '^': TokenReturn = TOKEN_HAT;       break;
-      case '&': TokenReturn = TOKEN_AMPERSAND; break;
-      case '*': TokenReturn = TOKEN_MULTIPLY;  break;
-      case '(': TokenReturn = TOKEN_LPAREN;    break;
-      case ')': TokenReturn = TOKEN_RPAREN;    break;
-      case '-': TokenReturn = TOKEN_MINUS;     break;
-      case '+': TokenReturn = TOKEN_PLUS;      break;
-      case '=': TokenReturn = TOKEN_EQUAL;     break;
-      case '_': TokenReturn = TOKEN_DASH;      break;
-      case '[': TokenReturn = TOKEN_L_BRACKET; break;
-      case ']': TokenReturn = TOKEN_R_BRACKET; break;
-      case '{': TokenReturn = TOKEN_L_CURLY;   break;
-      case '}': TokenReturn = TOKEN_R_CURLY;   break;
-      case '/': TokenReturn = TOKEN_DIVIDE;    break;
-      case '<': TokenReturn = TOKEN_LT;        break;
-      case '>': TokenReturn = TOKEN_GT;        break;
-      case ',': TokenReturn = TOKEN_COMMA;     break;
-      case ';': TokenReturn = TOKEN_SEMI_COLON;break;
-      case '"': TokenReturn = TOKEN_QUOTE;     break;
-      case '.': TokenReturn = TOKEN_PERIOD;    break;
+      case '~': TokenReturn = TOKEN_TILDE;         break;
+      case '!': TokenReturn = TOKEN_PLING;         break;
+      case '@': TokenReturn = TOKEN_AT;            break;
+      case '#': TokenReturn = TOKEN_HASH;          break;
+      case '%': TokenReturn = TOKEN_PERCENT;       break;
+      case '^': TokenReturn = TOKEN_HAT;           break;
+      case '&': TokenReturn = TOKEN_AMPERSAND;     break;
+      case '*': TokenReturn = TOKEN_MULTIPLY;      break;
+      case '(': TokenReturn = TOKEN_LPAREN;        break;
+      case ')': TokenReturn = TOKEN_RPAREN;        break;
+      case '-': TokenReturn = TOKEN_MINUS;         break;
+      case '+': TokenReturn = TOKEN_PLUS;          break;
+      case '=': TokenReturn = TOKEN_EQUAL;         break;
+      case '_': TokenReturn = TOKEN_DASH;          break;
+      case '[': TokenReturn = TOKEN_L_BRACKET;     break;
+      case ']': TokenReturn = TOKEN_R_BRACKET;     break;
+      case '{': TokenReturn = TOKEN_L_CURLY;       break;
+      case '}': TokenReturn = TOKEN_R_CURLY;       break;
+      case '/': TokenReturn = TOKEN_DIVIDE;        break;
+      case '|': TokenReturn = TOKEN_VERTICAL_BAR;  break;        
+      case '<': TokenReturn = TOKEN_LT;            break;
+      case '>': TokenReturn = TOKEN_GT;            break;
+      case ',': TokenReturn = TOKEN_COMMA;         break;
+      case '\\': TokenReturn = TOKEN_BACK_SLASH;   break;
+      case '"': TokenReturn = TOKEN_QUOTE;         break;
+      case '\'': TokenReturn = TOKEN_SINGLE_QUOTE; break;
+      case '`': TokenReturn = TOKEN_OPEN_QUOTE;   break;        
+      case '.': TokenReturn = TOKEN_PERIOD;        break;
+      case ':': TokenReturn = TOKEN_COLON;         break;
+      case ';': TokenReturn = TOKEN_SEMI_COLON;    break;                
       case '?': TokenReturn = TOKEN_QUESTION_MARK; break;
       default:  TokenReturn = TOKEN_ERROR;
     }
@@ -196,39 +200,45 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
 char *TokenGetStringType(Token_t Token) {
 
   switch (Token) {
-     case TOKEN_WORD:     return ("<WORD>"); break;
-     case TOKEN_DIGIT:    return ("<DIGIT>"); break;
-     case TOKEN_LETTER:   return ("<LETTER>"); break;
-     case TOKEN_SPECIAL:  return ("<SPECIAL>");break;
-     case TOKEN_NO_TOKEN: return ("<NO TOKEN>"); break;
-     case TOKEN_ERROR:    return ("<ERROR>"); break;
-     case TOKEN_TILDE:    return ("<TILDE>"); break;
-     case TOKEN_PLING:    return ("<PLING>"); break;
-     case TOKEN_AT:       return ("<AT>"); break;
-     case TOKEN_HASH:     return ("<HASH>"); break;
-     case TOKEN_PERCENT:  return ("<PERCENT>"); break;
-     case TOKEN_HAT:      return ("<HAT>"); break;
-     case TOKEN_MULTIPLY: return ("<MULTIPLY>"); break;
-     case TOKEN_LPAREN:   return ("<LPAREN>"); break;
-     case TOKEN_RPAREN:   return ("<RPAREN>"); break;
-     case TOKEN_MINUS:    return ("<MINUS>"); break;
-     case TOKEN_PLUS:     return ("<PLUS>"); break;
-     case TOKEN_EQUAL:    return ("<EQUAL>"); break;
-     case TOKEN_DASH:     return ("<DASH>"); break;
-     case TOKEN_L_BRACKET:return ("<LBRACKET>"); break;
-     case TOKEN_R_BRACKET:return ("<RBRACKET>"); break;
-     case TOKEN_L_CURLY:  return ("<LCURLY>"); break;
-     case TOKEN_R_CURLY:  return ("<RCURLY>"); break;
-     case TOKEN_DIVIDE:   return ("<DIVIDE>"); break;
-     case TOKEN_LT:       return ("<LT>"); break;
-     case TOKEN_GT:       return ("<GT>"); break;
-     case TOKEN_COMMA:    return ("<COMMA>"); break;
-     case TOKEN_SEMI_COLON: return ("<SEMI COLON>");break;
-     case TOKEN_QUOTE:    return ("<QUOTE>"); break;
-     case TOKEN_PERIOD:   return ("<PERIOD>"); break;
-     case TOKEN_SPACE:    return ("<SPACE>"); break;
-     case TOKEN_QUESTION_MARK: return ("<QUESTION>"); break;
-     default: return ("????"); break;
+     case TOKEN_WORD:          return ("<WORD>");       break;
+     case TOKEN_DIGIT:         return ("<DIGIT>");      break;
+     case TOKEN_LETTER:        return ("<LETTER>");     break;
+     case TOKEN_SPECIAL:       return ("<SPECIAL>");    break;
+     case TOKEN_NO_TOKEN:      return ("<NO TOKEN>");   break;
+     case TOKEN_ERROR:         return ("<ERROR>");      break;
+     case TOKEN_TILDE:         return ("<TILDE>");      break;
+     case TOKEN_PLING:         return ("<PLING>");      break;
+     case TOKEN_AT:            return ("<AT>");         break;
+     case TOKEN_HASH:          return ("<HASH>");       break;
+     case TOKEN_PERCENT:       return ("<PERCENT>");    break;
+     case TOKEN_HAT:           return ("<HAT>");        break;
+     case TOKEN_AMPERSAND:     return ("<AMPERSAND>");  break;       
+     case TOKEN_MULTIPLY:      return ("<MULTIPLY>");   break;
+     case TOKEN_LPAREN:        return ("<LPAREN>");     break;
+     case TOKEN_RPAREN:        return ("<RPAREN>");     break;
+     case TOKEN_MINUS:         return ("<MINUS>");      break;
+     case TOKEN_PLUS:          return ("<PLUS>");       break;
+     case TOKEN_EQUAL:         return ("<EQUAL>");      break;
+     case TOKEN_DIVIDE:        return ("<DIVIDE>");     break;       
+     case TOKEN_DASH:          return ("<UNDERSCORE>"); break;
+     case TOKEN_L_BRACKET:     return ("<LBRACKET>");   break;
+     case TOKEN_R_BRACKET:     return ("<RBRACKET>");   break;
+     case TOKEN_L_CURLY:       return ("<LCURLY>");     break;
+     case TOKEN_R_CURLY:       return ("<RCURLY>");     break;
+     case TOKEN_VERTICAL_BAR:  return ("<VERT BAR>");   break;
+     case TOKEN_LT:            return ("<LT>");         break;
+     case TOKEN_GT:            return ("<GT>");         break;
+     case TOKEN_COMMA:         return ("<COMMA>");      break;
+     case TOKEN_SEMI_COLON:    return ("<SEMI COLON>"); break;
+     case TOKEN_COLON:         return ("COLON>");       break;       
+     case TOKEN_QUOTE:         return ("<QUOTE>");      break; 
+     case TOKEN_SINGLE_QUOTE:  return ("<SINGLE QUOTE>");break;
+     case TOKEN_OPEN_QUOTE:    return ("<OPEN QUOTE>"); break;             
+     case TOKEN_PERIOD:        return ("<PERIOD>");     break;
+     case TOKEN_SPACE:         return ("<SPACE>");      break;
+     case TOKEN_BACK_SLASH:    return ("<BACKSLASH>");  break;     
+     case TOKEN_QUESTION_MARK: return ("<QUESTION>");   break;
+     default:                  return ("????");         break;
   }
 }
 
@@ -239,32 +249,30 @@ char *TokenGetStringType(Token_t Token) {
  * @param[in] Token        - The token found
  * @return    void
  * @notes     
- * @details
+ * @details   Some tokens (SPACE) are ignored
  * @todo
  */
 void TokenPrint (char *TokenString, Token_t Token) {
 
-  if (*TokenString != '\0') {
-    char *Return;
-    
-    printf("\t>> %10s   %s", TokenGetStringType(Token), TokenString);
-    if (Token == TOKEN_DIGIT ) {
-      printf("   INTEGER = %d", Literal.value.IntegerValue);
-    }
-    Return = strchr(TokenString,'\n');
-    if (Return == NULL) {
-      printf("\n");
-    }
-  } else {
-    if (Token == TOKEN_NO_TOKEN ) {
-      printf("   NO TOKEN");
-    }
-    if (Token == TOKEN_EOF) {
-      printf("   EOF");
-    }
-    printf("\n");    
-  }
+    if (*TokenString != '\0') {
+      char *Return;
 
+      printf("\t>> %16s   %s", TokenGetStringType(Token), TokenString);
+      if (Token == TOKEN_DIGIT ) {
+  	printf("   INTEGER = %d", Literal.value.IntegerValue);
+      }
+      Return = strchr(TokenString,'\n');
+      if (Return == NULL) {
+        printf("\n");
+      }
+    } else {
+      if (Token == TOKEN_NO_TOKEN ) {
+        printf("   NO TOKEN\n");
+      }
+      if (Token == TOKEN_EOF) {
+        printf("   EOF\n");
+      }
+    }
 }
 
 /**
@@ -309,7 +317,6 @@ int32_t Tokenize (char *FileName) {
          Token = TokenGetWord(&Bufferp, Tokenp);
        } else if (isspace(*Bufferp)) {
          Bufferp++;
-	 *Tokenp = ' ';
 	 Token = TOKEN_SPACE;
        } else if (*Bufferp == '\n' || *Bufferp == '\r') {
          Bufferp++;

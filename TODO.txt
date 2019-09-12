@@ -8,16 +8,20 @@
 ** TODO Remove global variables
 * Lister Tasks
 ** DONE Source file listing utilities
-** TODO Add support for Command line input not just file?
 ** TODO SourceLister should return error code
-** TODO Should print header again after one page worth of output
+** TODO lister run from CLI
+** DONE Should print header again after one page worth of output
 ** DONE Lister<name> 
 * Scanner Tokenizer Tasks
 ** DONE Utilities for skip spaces 
+** TODO Add support for Command line input not just file input
 ** TODO use of isspace in utilities.c for Skipspaces
 ** TODO TokenGetNumber needs to test for MAX_INT
+** TODO TokenGetNumber needs to read floating point
 ** TODO Evalaution of source lines
-** TODO Tokenize source lines
-
+** DONE Tokenize source lines
+** DONE All ASCII elements in tokenizer header / scanner
+** TODO Add Basic language elements to tokenizer / scanner
 ** DONE Basic line parser
 * Issues
+** DONE [BUG] Scanner output has extra newline?
