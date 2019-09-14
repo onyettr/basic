@@ -14,6 +14,7 @@ Includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <ctype.h>
 #include <time.h>
 #include "basic.h"
 
@@ -99,12 +100,11 @@ bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer) {
  * @return      char * updated pointer into the source buffer
  * @note        none
  * @details     Skips spaces in a given string and returns pointer to first non space elemento
- * @todo        use isspace() 
  */
 char *UtilsSkipSpaces (char *SourceBuffer) {
    char *Startp = SourceBuffer;
 
-   while (*Startp == ' ' && *Startp != '\0') {
+   while (isspace(*Startp)) {   
       Startp++;
    }
 

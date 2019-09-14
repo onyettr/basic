@@ -92,11 +92,11 @@ int32_t  ListerSource (char *Filename) {
       * Page break after  a number of lines
       */
      if (LineNumber % MAX_LINES_PER_PAGE == 0) {
-       printf ("%c\t\t\t\t\t  - %d - \n\n", FORM_FEED, PageNumber);
+       printf ("%c\t\t\t\t\t  - %d - \n\n", FORM_FEED, (int)PageNumber);
        PageNumber++;
      }
      
-     sprintf(LineBuffer, "%4d: %s", LineNumber, SourceLineBuffer);
+     sprintf(LineBuffer, "%4d: %s", (int)LineNumber, SourceLineBuffer);
 
      ListerOutputSourceLine(LineBuffer);
   }
@@ -130,7 +130,10 @@ void ListerWritePrologueHeader(char *Filename) {
 
    time(&CurrentTime);
    info = localtime(&CurrentTime);
-   sprintf(LineBuffer, "Filename: %s, %s\n", Filename, asctime(info));
 
+   sprintf(LineBuffer, "Filename: %s\n", Filename);
+   ListerOutputSourceLine(LineBuffer);   
+   strftime(LineBuffer,80,"%x - %I:%M%p", info);
    ListerOutputSourceLine(LineBuffer);
+   printf("\n");
 }

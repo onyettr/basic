@@ -79,7 +79,6 @@ Prototypes of all functions contained in this file (in order of occurance)
  */
 static void ParseCommandLine (char *argv[], int argc, char *InputFileName) {
   int i = 1;
-  char *ch;
 
   /*
    * Test for any args at all
@@ -93,7 +92,7 @@ static void ParseCommandLine (char *argv[], int argc, char *InputFileName) {
    * Go round and pull in all the commands on the CLI.
    */
   while (i < argc) {
-     ch = argv[i++];    /* Get the whole argument    */
+     char *ch = argv[i++];    /* Get the whole argument    */
 
      switch (*ch++) {
         case '/':

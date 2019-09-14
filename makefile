@@ -41,7 +41,7 @@ LFLAGS		= 	$(PFLAGS) -static -L. -L./$(LIB_DIR)
 #CODE_CHECK       = 	splint
 #CODE_CHECK_ARGS	 = 	-showfunc -mustfreefresh -nullpass -nullret -noeffect
 CODE_CHECK	= 	cppcheck
-
+CODE_CHECK_ARGS	=  	--enable=all
 #
 # Libraries and objects targets
 #
@@ -120,9 +120,10 @@ splint-it:
 ifndef CHECK_FOR_CHK
 	@echo "** cppcheck command not found"
 else
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) lister.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) utilities.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) main.c
+#	$(CODE_CHECK) $(CODE_CHECK_ARGS) lister.c
+#	$(CODE_CHECK) $(CODE_CHECK_ARGS) utilities.c
+#	$(CODE_CHECK) $(CODE_CHECK_ARGS) main.c
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) *.c
 endif
 
 # remove all libs, objs and intermediates
