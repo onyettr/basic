@@ -61,8 +61,8 @@ Prototypes of all functions contained in this file (in order of occurance)
 /**
  * @brief     Process Number Token
  * @fn        Token_t TokenGetNumber(char *Bufferp, char *Tokenp) 
- * @param[in] Bufferp - Buffer to tokenize
- * @param[out]Tokenp  - add to tokenized buffer
+ * @param[in] **Bufferp - Buffer to tokenize
+ * @param[out]*Tokenp  - add to tokenized buffer
  * @return    Token_t 
  * @details   Builds the value of the number as a literal integer and not ascii. 
  * @note
