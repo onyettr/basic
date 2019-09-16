@@ -128,17 +128,22 @@ static void ParseCommandLine (char *argv[], int argc, char *InputFileName) {
 int main ( int argc, char *argv[]) {
   char FileName[80];   
 
+  memset(FileName, sizeof(FileName), '\0');
+
   /*
    * Sign on banner..
    */
   printf ("%s: Version %s\n", PROGRAM_NAME, VERSION);
 
   ParseCommandLine (argv, argc, FileName);
-#if 0
-  ListerSource (FileName);          /* List the source code to the console */
-#endif
 
-  Tokenize(FileName);
+  if (ListMode) {
+    ListerSource (FileName);          /* List the source code to the console */
+  } else if (FileName[0] != '\0') {
+    Tokenize(FileName);
+  } else {
+    CommandLineMode();
+  }
   
   return 0;
 }

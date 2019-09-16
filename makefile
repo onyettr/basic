@@ -48,7 +48,8 @@ CODE_CHECK_ARGS	=  	--enable=all
 OBJS  		     = 	$(OBJECT_DIR)/main.o  		\
 			$(OBJECT_DIR)/utilities.o	\
 			$(OBJECT_DIR)/lister.o		\
-			$(OBJECT_DIR)/tokenizer.o
+			$(OBJECT_DIR)/tokenizer.o	\
+			$(OBJECT_DIR)/interactive.o
 
 LIBS  		     = 	$(LIB_DIR)/liblister.a 		\
 			$(LIB_DIR)/libutilities.a
@@ -94,6 +95,8 @@ $(OBJECT_DIR)/utilities.o:	utilities.c
 	$(CC) $(CFLAGS) $(DEBUG) utilities.c -o $(OBJECT_DIR)/utilities.o
 $(OBJECT_DIR)/tokenizer.o:	tokenizer.c
 	$(CC) $(CFLAGS) $(DEBUG) tokenizer.c -o $(OBJECT_DIR)/tokenizer.o
+$(OBJECT_DIR)/interactive.o:	interactive.c
+	$(CC) $(CFLAGS) $(DEBUG) interactive.c -o $(OBJECT_DIR)/interactive.o
 
 test_harness:
 	@echo "** test harness TODO **"
@@ -135,6 +138,7 @@ clean:
 	rm -f $(OBJECT_DIR)/lister.o
 	rm -f $(OBJECT_DIR)/utilities.o
 	rm -f $(OBJECT_DIR)/tokenizer.o
+	rm -f $(OBJECT_DIR)/interactive.o
 	rm -f *.gcno
 	rm -f *.gcda
 	rm -f gmon.out
