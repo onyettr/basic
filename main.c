@@ -83,10 +83,10 @@ static void ParseCommandLine (char *argv[], int argc, char *InputFileName) {
   /*
    * Test for any args at all
    */
-  if ( argc == 1 ) {
-      fprintf (stdout, "%s\n", USAGE_STRING);
-      exit (0);
-  }
+  //  if ( argc == 1 ) {
+  //      fprintf (stdout, "%s\n", USAGE_STRING);
+  //      exit (0);
+  //  }
   
   /*
    * Go round and pull in all the commands on the CLI.
@@ -104,6 +104,8 @@ static void ParseCommandLine (char *argv[], int argc, char *InputFileName) {
 	      case 'V': Verbose = true; break;
 	      case 'l':
 	      case 'L': ListMode = true; break;
+	      case 'h':
+  	      case 'H': fprintf (stdout, "%s\n", USAGE_STRING); break;
 	      case 'Z':
 	      case 'z': Secret = true; break;
 	      default: {  		 /* Not a valid CLI option, exit logging error */
@@ -128,7 +130,7 @@ static void ParseCommandLine (char *argv[], int argc, char *InputFileName) {
 int main ( int argc, char *argv[]) {
   char FileName[80];   
 
-  memset(FileName, sizeof(FileName), '\0');
+  FileName[0] = '\0';
 
   /*
    * Sign on banner..
@@ -139,7 +141,8 @@ int main ( int argc, char *argv[]) {
 
   if (ListMode) {
     ListerSource (FileName);          /* List the source code to the console */
-  } else if (FileName[0] != '\0') {
+    //  } else if (FileName[0] != '\0') {
+  } else if (ScanMode) {    
     Tokenize(FileName);
   } else {
     CommandLineMode();

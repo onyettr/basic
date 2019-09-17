@@ -41,6 +41,7 @@ Includes
 #define SUCCESS                       1
 #define FAILURE                       0
 #define ERROR_FILE_OPEN_FAILURE     (-1) 
+#define ERROR_FILE_NO_FILENAME      (-2)
 
 /**
  * @brief macros

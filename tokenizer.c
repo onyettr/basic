@@ -189,6 +189,23 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
     
     return TokenReturn;    
 }
+/**
+ * @brief      Process direct commands
+ * @fn         Token_t TokenGetDirect(char **Bufferp, char *Tokenp) 
+ * @param[in]  Bufferp - Buffer to tokenize
+ * @param[out] Tokenp  - add to tokenized buffer
+ * @return     Token_t 
+ * @notes     
+ */
+Token_t TokenGetDirect(char **Bufferp, char *Tokenp) {
+    char *Bufp;
+    Token_t TokenReturn;
+
+    if (Verbose) printf("TokenGetDirect\n");    
+    Bufp = *Bufferp;
+    *Tokenp++ = *Bufp;
+
+}
 
 /**
  * @brief     Token types to string convert
@@ -289,9 +306,15 @@ int32_t Tokenize (char *FileName) {
   char *Tokenp;
   Token_t Token;  
 
+  if (*FileName == '\0') {
+    Error("No filename provided");
+
+    return ERROR_FILE_NO_FILENAME;
+  }
+  
   fp = fopen(FileName, "r");
   if ( fp == NULL ) {
-    Error("[ERR] Failed to open %s", FileName);
+    Error("Failed to open %s", FileName);
 
     return ERROR_FILE_OPEN_FAILURE;    
   }

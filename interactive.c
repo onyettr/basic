@@ -56,8 +56,10 @@ Prototypes of all functions contained in this file (in order of occurance)
 ******************************************************************************
 */
 
-Token_t *DirectCommand(char *TokenString) {
-  
+Token_t DirectCommand(char *TokenString) {
+  // Token_t Token;
+
+  return TOKEN_ERROR;
 }
 
 /**
@@ -74,16 +76,18 @@ int32_t CommandLineMode (void) {
   char *Bufferp;
   char *Tokenp;
   Token_t Token;  
-
-  Bufferp = SourceBuffer;
-  Tokenp  = TokenBuffer;
-
-  printf("basic> ");
+  bool Parsing = true;
   
   /*
    * read until Exit
    */
   while (Parsing) {
+    Bufferp = SourceBuffer;
+    Tokenp  = TokenBuffer;
+
+    memset(SourceBuffer,'\0', sizeof(SourceBuffer));    
+    printf("basic> "); fflush(stdout);    
+
     i = 0;
     do {
       ch = getchar();
@@ -115,9 +119,10 @@ int32_t CommandLineMode (void) {
        
       memset(TokenBuffer, '\0', sizeof(TokenBuffer));
     }
+  }  
+
+  Token = TOKEN_EOF;
+  TokenPrint(TokenBuffer, Token);  
   
-    Token = TOKEN_EOF;
-    TokenPrint(TokenBuffer, Token);  
-  
-    return ErrorCode;
+  return ErrorCode;
 }

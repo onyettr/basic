@@ -140,7 +140,13 @@ typedef struct {
     char    StringValue[MAX_SOURCE_LINE_LENGTH];
   } value;                   /*! union value */
 } Literal_t;
-  
+
+typedef struct {
+  char *cmdstr;
+  //  int (*pDirectFunction)(int argc, char *argv[]);
+  int (*pDirectFunction)(void);  
+} TokenCommandList_t;
+
 /*
 ******************************************************************************
 Private variables (static)
@@ -168,6 +174,7 @@ int32_t Tokenize (char *FileName);
 Token_t TokenGetNumber(char **Bufferp, char *Tokenp);
 Token_t TokenGetWord  (char **Bufferp, char *Tokenp);
 Token_t TokenGetSpecial(char **Bufferp, char *Tokenp);
+Token_t TokenGetDirect(char **Bufferp, char *Tokenp);
 char *TokenGetStringType(Token_t Token);
 void TokenPrint (char *TokenString, Token_t Token);
 
