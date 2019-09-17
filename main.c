@@ -105,7 +105,7 @@ static void ParseCommandLine (char *argv[], int argc, char *InputFileName) {
 	      case 'l':
 	      case 'L': ListMode = true; break;
 	      case 'h':
-  	      case 'H': fprintf (stdout, "%s\n", USAGE_STRING); break;
+              case 'H': fprintf (stdout, "%s\n", USAGE_STRING); exit(0); break;
 	      case 'Z':
 	      case 'z': Secret = true; break;
 	      default: {  		 /* Not a valid CLI option, exit logging error */

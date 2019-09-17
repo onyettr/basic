@@ -170,10 +170,10 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
       case '<': TokenReturn = TOKEN_LT;            break;
       case '>': TokenReturn = TOKEN_GT;            break;
       case ',': TokenReturn = TOKEN_COMMA;         break;
-      case '\\': TokenReturn = TOKEN_BACK_SLASH;   break;
+      case '\\':TokenReturn = TOKEN_BACK_SLASH;    break;
       case '"': TokenReturn = TOKEN_QUOTE;         break;
-      case '\'': TokenReturn = TOKEN_SINGLE_QUOTE; break;
-      case '`': TokenReturn = TOKEN_OPEN_QUOTE;   break;        
+      case '\'':TokenReturn = TOKEN_SINGLE_QUOTE;  break;
+      case '`': TokenReturn = TOKEN_OPEN_QUOTE;    break;        
       case '.': TokenReturn = TOKEN_PERIOD;        break;
       case ':': TokenReturn = TOKEN_COLON;         break;
       case ';': TokenReturn = TOKEN_SEMI_COLON;    break;                
@@ -205,6 +205,9 @@ Token_t TokenGetDirect(char **Bufferp, char *Tokenp) {
     Bufp = *Bufferp;
     *Tokenp++ = *Bufp;
 
+    UNUSED(TokenReturn);
+    
+    return TOKEN_ERROR;
 }
 
 /**

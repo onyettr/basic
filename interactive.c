@@ -72,9 +72,7 @@ Token_t DirectCommand(char *TokenString) {
 int32_t CommandLineMode (void) {
   int32_t ErrorCode = SUCCESS;
   int ch;
-  int i;
   char *Bufferp;
-  char *Tokenp;
   Token_t Token;  
   bool Parsing = true;
   
@@ -82,13 +80,15 @@ int32_t CommandLineMode (void) {
    * read until Exit
    */
   while (Parsing) {
+    char *Tokenp;
+    int i = 0;
+      
     Bufferp = SourceBuffer;
     Tokenp  = TokenBuffer;
 
     memset(SourceBuffer,'\0', sizeof(SourceBuffer));    
     printf("basic> "); fflush(stdout);    
 
-    i = 0;
     do {
       ch = getchar();
       SourceBuffer[i] = ch;
