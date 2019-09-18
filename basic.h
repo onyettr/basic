@@ -68,8 +68,9 @@ Global variables
 extern bool Verbose;                 /*! CLI option for more output   */
 extern bool Secret;                  /*! CLI option for shhhh         */
 extern bool ListMode;                /*! CLI option to enable listing */
+extern bool ScanMode;    
 
-extern char SourceFileName[MAX_FILENAME_LENGTH];
+//extern char SourceFileName[MAX_FILENAME_LENGTH];
 extern uint32_t LineNumber;
 
 /*

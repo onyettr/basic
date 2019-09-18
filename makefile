@@ -15,8 +15,10 @@ MAKE_LIB_CMD	= 	mkdir $(LIB_DIR)
 CC  		= 	gcc
 LINK  		= 	gcc
 AR		= 	ar
-CHK   		= 	checkmk
-CHECK_FOR_CHK	:= 	$(shell command -v $(CHK) 2> /dev/null)
+CHK_TOOL	= 	checkmk
+#CODE_CHECK       = 	splint
+CODE_CHECK	= 	cppcheck
+CHECK_FOR_CHK	:= 	$(shell command -v $(CHK_TOOL) 2> /dev/null)
 CHECK_FOR_CPP	:=	$(shell command -v $(CODE_CHECK) 2> /dev/null)
 
 #*******************************************************************************
@@ -38,20 +40,17 @@ LFLAGS		= 	$(PFLAGS) -static -L. -L./$(LIB_DIR)
 #
 # Code checking with splint or cppcheck
 #
-#CODE_CHECK       = 	splint
 #CODE_CHECK_ARGS	 = 	-showfunc -mustfreefresh -nullpass -nullret -noeffect
-CODE_CHECK	= 	cppcheck
 CODE_CHECK_ARGS	=  	--enable=all
 #
 # Libraries and objects targets
 #
 OBJS  		     = 	$(OBJECT_DIR)/main.o  		\
-			$(OBJECT_DIR)/utilities.o	\
-			$(OBJECT_DIR)/lister.o		\
-			$(OBJECT_DIR)/tokenizer.o	\
-			$(OBJECT_DIR)/interactive.o
+			$(OBJECT_DIR)/interactive.o	\
+			$(OBJECT_DIR)/parsecommandline.o
 
 LIBS  		     = 	$(LIB_DIR)/liblister.a 		\
+			$(LIB_DIR)/libtokenizer.a	\
 			$(LIB_DIR)/libutilities.a
 
 #*******************************************************************************
@@ -74,7 +73,7 @@ $(OBJECT_DIR):
 	-$(MAKE_DIR_CMD)
 
 basic.exe:	$(OBJS) $(LIBS)
-	$(LINK) $(OBJS) $(LFLAGS) -llister -lutilities -o basic.exe
+	$(LINK) $(OBJS) $(LFLAGS) -llister -lutilities -ltokenizer -o basic.exe
 
 #*******************************************************************************
 # Major library components
@@ -83,6 +82,8 @@ $(LIB_DIR)/liblister.a:	$(OBJECT_DIR)/lister.o
 	$(AR) rcs $(LIB_DIR)/liblister.a $(OBJECT_DIR)/lister.o
 $(LIB_DIR)/libutilities.a:	$(OBJECT_DIR)/utilities.o 
 	$(AR) rcs $(LIB_DIR)/libutilities.a $(OBJECT_DIR)/utilities.o
+$(LIB_DIR)/libtokenizer.a:	$(OBJECT_DIR)/tokenizer.o 
+	$(AR) rcs $(LIB_DIR)/libtokenizer.a $(OBJECT_DIR)/tokenizer.o
 
 #*******************************************************************************
 # Object builds
@@ -97,30 +98,35 @@ $(OBJECT_DIR)/tokenizer.o:	tokenizer.c
 	$(CC) $(CFLAGS) $(DEBUG) tokenizer.c -o $(OBJECT_DIR)/tokenizer.o
 $(OBJECT_DIR)/interactive.o:	interactive.c
 	$(CC) $(CFLAGS) $(DEBUG) interactive.c -o $(OBJECT_DIR)/interactive.o
-
-test_harness:
-	@echo "** test harness TODO **"
+$(OBJECT_DIR)/parsecommandline.o:	parsecommandline.c
+	$(CC) $(CFLAGS) $(DEBUG) parsecommandline.c -o $(OBJECT_DIR)/parsecommandline.o
 
 #
-# This is the "check" target: Test harness is in stack_check.ts file and 
+# This is the "checkmk" target: Test harness is in stack_check.ts file and 
 # this is converted by "check" into a C file which is linked to give another
 # executable. 
 # 
 # NOTE: This will not build if you have the Profiling enabled as the libstack.a 
 # contains gcov 
 #
+test_harness: 
+#	@echo "** test harness TODO **"
 ifndef CHECK_FOR_CHK
 	@echo "** checkmk command not found"
 else
-#	$(CHK) basic_check.ts > basic_check.c
-#	$(CC) -o basic_check.exe basic_check.c -static -L./$(LIBS) -lcheck -llister
+	$(CHK_TOOL) basic_check.ts > basic_check.c
+	$(CC)  basic_check.c 	 \
+	$(OBJECT_DIR)/interactive.o		 \
+	-static -L$(LIB_DIR) 			 \
+	-lcheck -llister -lutilities -ltokenizer \
+	-o basic_check.exe
 endif
 
 #
 # Code syntax checking target
 #
 splint-it:
-ifndef CHECK_FOR_CHK
+ifndef CHECK_FOR_CPP
 	@echo "** cppcheck command not found"
 else
 #	$(CODE_CHECK) $(CODE_CHECK_ARGS) lister.c
@@ -132,13 +138,16 @@ endif
 # remove all libs, objs and intermediates
 clean:
 	rm -f basic.exe
+	rm -f basic_check.exe
 	rm -f $(LIB_DIR)/liblister.a
 	rm -f $(LIB_DIR)/libutilities.a
+	rm -f $(LIB_DIR)/libtokenizer.a
 	rm -f $(OBJECT_DIR)/main.o
 	rm -f $(OBJECT_DIR)/lister.o
 	rm -f $(OBJECT_DIR)/utilities.o
 	rm -f $(OBJECT_DIR)/tokenizer.o
 	rm -f $(OBJECT_DIR)/interactive.o
+	rm -f $(OBJECT_DIR)/parsecommandline.o
 	rm -f *.gcno
 	rm -f *.gcda
 	rm -f gmon.out

@@ -29,14 +29,15 @@ Private Types
 Private variables (static)
 ******************************************************************************
 */
-//static char SourceLineBuffer[MAX_SOURCE_LINE_LENGTH];
 
 /*
 ******************************************************************************
 Private Macros
 ******************************************************************************
 */
-
+#if defined(DEBUG)
+#define DEBUG(X) print(X)
+#endif
 /*
 ******************************************************************************
 Global variables
@@ -74,7 +75,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
 
   Bufp = *Bufferp;  
 
-  if (Verbose) printf("TokenGetNUmber\n");
+  //  if (Verbose) printf("TokenGetNUmber\n");
   
   do {
     value = 10 * value + (*Bufp -'0');
@@ -106,7 +107,7 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
 
   Bufp = *Bufferp;
   
-  if (Verbose) printf("TokenGetWord %c\n", (int)*Bufp);
+  //  if (Verbose) printf("TokenGetWord %c\n", (int)*Bufp);
   
   while ( ((isalnum(*Bufp)) || (*Bufp != '\0')) && (!isspace(*Bufp)) ) {
       *Tokenp++ = *Bufp++;
@@ -142,7 +143,7 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
     char *Bufp;
     Token_t TokenReturn;
 
-    if (Verbose) printf("TokenGetSpecial\n");    
+    //    if (Verbose) printf("TokenGetSpecial\n");    
     Bufp = *Bufferp;
     *Tokenp++ = *Bufp;
 
@@ -199,14 +200,11 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
  */
 Token_t TokenGetDirect(char **Bufferp, char *Tokenp) {
     char *Bufp;
-    Token_t TokenReturn;
 
-    if (Verbose) printf("TokenGetDirect\n");    
+    //    if (Verbose) printf("TokenGetDirect\n");    
     Bufp = *Bufferp;
     *Tokenp++ = *Bufp;
 
-    UNUSED(TokenReturn);
-    
     return TOKEN_ERROR;
 }
 
