@@ -68,7 +68,6 @@ Prototypes of all functions contained in this file (in order of occurance)
  * @details   Builds the value of the number as a literal integer and not ascii. 
  * @note
  * @todo      Floating point and MAX_INT overflow
- * @addtogroup Tokenizer
  */
 Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
   char *Bufp;
@@ -77,6 +76,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
   Bufp = *Bufferp;  
 
   //  if (Verbose) printf("TokenGetNUmber\n");
+  
   do {
     value = 10 * value + (*Bufp -'0');
     *Tokenp++ = *Bufp++;
@@ -89,7 +89,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
   *Tokenp = '\0';
   *Bufferp = Bufp;
     
-  return TOKEN_NUMBER;
+  return TOKEN_DIGIT;
 }
 
 /**
@@ -101,7 +101,6 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
  * @notes     Tokenizer ceases when a SPACE or end of line if found
  * @details
  * @todo
- * @addtogroup Tokenizer
  */
 Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   char *Bufp;
@@ -124,45 +123,12 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
 
   *Tokenp = '\0';
 
-  *Bufferp = Bufp;
-  
-  return TOKEN_WORD;
-}
-
-/**
- * @brief     Process String
- * @fn        Token_t TokenGetString (char *Bufferp, char *Tokenp) 
- * @param[in] Bufferp - Buffer to tokenize
- * @param[out]Tokenp  - add to tokenized buffer
- * @return    Token_t 
- * @notes     Tokenizer ceases when a SPACE or end of line if found
- * @details
- * @todo
- * @addtogroup Tokenizer
- */
-Token_t TokenGetString (char **Bufferp, char *Tokenp) {
-  char *Bufp;
-
-  Bufp = *Bufferp;
-  
-  if (Verbose) printf("TokenGetString %c\n", (int)*Bufp);
-  
-  while (!isEndOfLine(Bufp)) {
-    if (*Bufp == '\'') {
-      *Tokenp++ = *Bufp++;
-      if (*Bufp == '\'') break;
-    }
-    *Tokenp++ = *Bufp++;
-  }
-
-  *Tokenp = '\0';
-
   Literal.Type  = LITERAL_STRING;  
   strcpy(Literal.value.StringValue, Tokenp);
 
   *Bufferp = Bufp;
   
-  return TOKEN_STRING;
+  return TOKEN_WORD;
 }
 
 /**
@@ -186,7 +152,6 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
       case '!': TokenReturn = TOKEN_PLING;         break;
       case '@': TokenReturn = TOKEN_AT;            break;
       case '#': TokenReturn = TOKEN_HASH;          break;
-      case '$': TokenReturn = TOKEN_DOLLAR;        break;                
       case '%': TokenReturn = TOKEN_PERCENT;       break;
       case '^': TokenReturn = TOKEN_HAT;           break;
       case '&': TokenReturn = TOKEN_AMPERSAND;     break;
@@ -231,6 +196,7 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
  * @param[in]  Bufferp - Buffer to tokenize
  * @param[out] Tokenp  - add to tokenized buffer
  * @return     Token_t 
+ * @notes     
  */
 Token_t TokenGetDirect(char **Bufferp, char *Tokenp) {
     char *Bufp;
@@ -253,9 +219,7 @@ char *TokenGetStringType(Token_t Token) {
 
   switch (Token) {
      case TOKEN_WORD:          return ("<WORD>");       break;
-     case TOKEN_STRING:        return ("<STRING>");     break;       
      case TOKEN_DIGIT:         return ("<DIGIT>");      break;
-     case TOKEN_NUMBER:        return ("<NUMBER>");     break;       
      case TOKEN_LETTER:        return ("<LETTER>");     break;
      case TOKEN_SPECIAL:       return ("<SPECIAL>");    break;
      case TOKEN_NO_TOKEN:      return ("<NO TOKEN>");   break;
@@ -264,7 +228,6 @@ char *TokenGetStringType(Token_t Token) {
      case TOKEN_PLING:         return ("<PLING>");      break;
      case TOKEN_AT:            return ("<AT>");         break;
      case TOKEN_HASH:          return ("<HASH>");       break;
-     case TOKEN_DOLLAR:        return ("<DOLLAR>");     break;       
      case TOKEN_PERCENT:       return ("<PERCENT>");    break;
      case TOKEN_HAT:           return ("<HAT>");        break;
      case TOKEN_AMPERSAND:     return ("<AMPERSAND>");  break;       
@@ -303,6 +266,7 @@ char *TokenGetStringType(Token_t Token) {
  * @param[in] *TokenString - actual token buffer
  * @param[in] Token        - The token found
  * @return    void
+ * @notes     
  * @details   Some tokens (SPACE) are ignored
  * @todo
  */
@@ -312,12 +276,9 @@ void TokenPrint (char *TokenString, Token_t Token) {
       char *Return;
 
       printf("\t>> %16s   %s", TokenGetStringType(Token), TokenString);
-      if (Token == TOKEN_NUMBER) {
-  	printf("   (INTEGER) = %d", Literal.value.IntegerValue);
+      if (Token == TOKEN_DIGIT ) {
+  	printf("   INTEGER = %d", Literal.value.IntegerValue);
       }
-      if (Token == TOKEN_STRING) {
-  	printf("   (STRING ) = %s", Literal.value.StringValue);        
-      }        
       Return = strchr(TokenString,'\n');
       if (Return == NULL) {
         printf("\n");
@@ -384,8 +345,6 @@ int32_t Tokenize (char *FileName) {
        } else if (*Bufferp == '\n' || *Bufferp == '\r') {
          Bufferp++;
          *Tokenp = ' ';
-       } else if (*Bufferp == '"') {
-         Token = TokenGetString(&Bufferp, Tokenp);
        } else {
          Token = TokenGetSpecial(&Bufferp, Tokenp);       
        }

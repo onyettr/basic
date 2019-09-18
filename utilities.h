@@ -1,10 +1,8 @@
 /**
  *****************************************************************************
- * @brief    Basic interpreter
- * @author   onyettr
- * @file     utilities.h
- * @defgroup Utilities
- *           Support functions for file and buffer operations
+ * @brief   basic interpreter
+ * @author  onyettr
+ * @file    basic.h
  ***************************************************************************** 
  */
 #ifndef __UTILITIES__H__
@@ -56,6 +54,6 @@ void ParseCommandLine (char *argv[], int argc, char *InputFileName);
   
 bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer);
 char *UtilsSkipSpaces (char *SourceBuffer);
-bool isEndOfLine (char *SourceBuffer);
+bool isendofline(char *SourceBuffer);
 
 #endif  /* __UTILITIES__H__ */
