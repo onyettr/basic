@@ -1,8 +1,10 @@
 /**
  *****************************************************************************
- * @brief   basic interpreter
- * @author  onyettr
- * @file    basic.h
+ * @brief    Basic interpreter
+ * @author   onyettr
+ * @file     utilities.h
+ * @defgroup Utilities
+ *           Support functions for file and buffer operations
  ***************************************************************************** 
  */
 #ifndef __UTILITIES__H__
@@ -53,6 +55,6 @@ void Error (char *format, ...);
 
 bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer);
 char *UtilsSkipSpaces (char *SourceBuffer);
-bool isendofline(char *SourceBuffer);
+bool isEndOfLine (char *SourceBuffer);
 
 #endif  /* __UTILITIES__H__ */

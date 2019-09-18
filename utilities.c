@@ -120,7 +120,7 @@ char *UtilsSkipSpaces (char *SourceBuffer) {
  * @details     
  * @todo        
  */
-bool isendofline(char *SourceBuffer) {
+bool isEndOfLine(char *SourceBuffer) {
    char *Startp = SourceBuffer;
 
    if (*Startp == '\0' || *Startp == '\n') {
