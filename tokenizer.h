@@ -1,8 +1,13 @@
 /**
  *****************************************************************************
- * @brief   basic interpreter
- * @author  onyettr
- * @file    tokenizer.h
+ * @brief    basic interpreter
+ * @author   onyettr
+ * @file     tokenizer.h
+ * @defgroup Tokenizer
+ *           Takes input from a file (or buffer) and starts the tokenization 
+ *           process converting the buffer into tokens
+ *           Buffer = A B C
+ *           Token  = <WORD>A<SPACE><WORD>B<SPACE>C EOF
  ***************************************************************************** 
  */
 #ifndef __TOKENIZER__H__
@@ -26,7 +31,9 @@ Private Types
  */
 typedef enum {
     TOKEN_WORD,
+    TOKEN_STRING,
     TOKEN_DIGIT,
+    TOKEN_NUMBER,
     TOKEN_LETTER,
     TOKEN_SPECIAL,
     TOKEN_NO_TOKEN,
@@ -35,6 +42,7 @@ typedef enum {
     TOKEN_PLING,
     TOKEN_AT,
     TOKEN_HASH,
+    TOKEN_DOLLAR,
     TOKEN_PERCENT,
     TOKEN_HAT,
     TOKEN_AMPERSAND,
