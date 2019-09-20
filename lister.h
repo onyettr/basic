@@ -1,8 +1,10 @@
 /**
  *****************************************************************************
- * @brief   basic interpreter
- * @author  onyettr
- * @file    lister.h
+ * @brief    Basic interpreter
+ * @author   onyettr
+ * @file     lister.h
+ * @defgroup Lister
+ *           Utilities to list files to stdout
  ***************************************************************************** 
  */
 #ifndef __LISTER__H__

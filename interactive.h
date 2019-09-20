@@ -1,8 +1,10 @@
 /**
  *****************************************************************************
- * @brief   basic interpreter
- * @author  onyettr
- * @file    interactive.h
+ * @brief    Basic interpreter
+ * @author   onyettr
+ * @file     interactive.h
+ * @defgroup Interactive
+ *           Ability to tokenize and parse via the command line
  ***************************************************************************** 
  */
 #ifndef __INTERACTIVE__H__
