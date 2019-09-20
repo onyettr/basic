@@ -143,6 +143,7 @@ typedef struct {
 
 typedef struct {
   char *cmdstr;
+  Token_t TokenValue;
   //  int (*pDirectFunction)(int argc, char *argv[]);
   int (*pDirectFunction)(void);  
 } TokenCommandList_t;

@@ -73,7 +73,8 @@ void Error ( char *format, ... ) {
 
     exit (0);
 }
-  
+
+
 /**
  * @fn          bool UtilsReadSourceLine ( FILE *sourceFile, char* ) {
  * @brief       Read a line of source from a file

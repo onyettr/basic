@@ -47,6 +47,27 @@ static char TokenBuffer [MAX_SOURCE_LINE_LENGTH+10];
 static char SourceBuffer[MAX_SOURCE_LINE_LENGTH+10];
 static Literal_t Literal;
 
+/**
+ *  @brief  All Direct (not keywords) commands
+ *  @struct TokenCommandList_t TokenCommand
+ */
+static TokenCommandList_t TokenCommand[] = {
+    { "HELLO"   , TOKEN_HELLO   , NULL },
+    { "NEW"     , TOKEN_NEW     , NULL },
+    { "OLD"     , TOKEN_OLD     , NULL },
+    { "SAVE"    , TOKEN_SAVE    , NULL },
+    { "REPLACE" , TOKEN_REPLACE , NULL },
+    { "RENAME"  , TOKEN_RENAME  , NULL },
+    { "CAT"     , TOKEN_CAT     , NULL },
+    { "LIST"    , TOKEN_LIST    , NULL },
+    { "RUN"     , TOKEN_RUN     , NULL },
+    { "STOP"    , TOKEN_CMD_STOP, NULL },
+    { "UNSAVE"  , TOKEN_UNSAVE  , NULL },
+    { "SYSTEM"  , TOKEN_SYSTEM  , NULL },
+    { "BYE"     , TOKEN_BYE     , NULL },
+    { "GOODBYE" , TOKEN_GOODBYE , NULL }
+};
+  
 /*
 ******************************************************************************
 Exported Global variables
@@ -58,6 +79,41 @@ Exported Global variables
 Prototypes of all functions contained in this file (in order of occurance)
 ******************************************************************************
 */
+
+/**
+ * @brief     Match strings
+ * @fn        static int StringMatch(char *str1, char *str2)
+ * @param[in] *str1 
+ * @param[in] *str1 
+ * @return    true if matches, false otherwise
+ * @details   
+ * @note
+ * @todo     
+ */
+static bool StringMatch(char *str1,char *str2) {
+  int i;
+
+  for (i=0; i < (int)strlen(str2); i++) {
+    if (str1[i] != str2[i] )
+      return false;
+  }
+
+  return(!(strncmp(str1,str2, strlen(str1))));
+}
+
+/**
+ * @brief     Look for any keywords or any direct commands
+ * @fn        Token_t TokenKeyword (char *Bufferp) 
+ * @param[in] **Bufferp - Buffer to tokenize
+ * @return    Token_t 
+ * @details   Is this is Key word (Languar or direct)
+ * @note
+ * @todo     
+ */
+Token_t TokenKeyword (char *Bufferp) {
+
+  return TOKEN_ERROR;
+}
 
 /**
  * @brief     Process Number Token
