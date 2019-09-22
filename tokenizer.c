@@ -102,16 +102,76 @@ static bool StringMatch(char *str1,char *str2) {
 }
 
 /**
+ * @brief     Token types to string convert
+ * @fn        char *TokenGetStringType(Token_t Token)
+ * @param[in] Token
+ * @return    char* string 
+ * @note
+ */
+char *TokenGetStringType(Token_t Token) {
+
+  switch (Token) {
+     case TOKEN_WORD:          return ("<WORD>");       break;
+     case TOKEN_STRING:        return ("<STRING>");     break;
+     case TOKEN_DIGIT:         return ("<DIGIT>");      break;       
+     case TOKEN_LETTER:        return ("<LETTER>");     break;
+     case TOKEN_SPECIAL:       return ("<SPECIAL>");    break;
+     case TOKEN_NO_TOKEN:      return ("<NO TOKEN>");   break;
+     case TOKEN_ERROR:         return ("<ERROR>");      break;
+     case TOKEN_TILDE:         return ("<TILDE>");      break;
+     case TOKEN_PLING:         return ("<PLING>");      break;
+     case TOKEN_AT:            return ("<AT>");         break;
+     case TOKEN_HASH:          return ("<HASH>");       break;
+     case TOKEN_PERCENT:       return ("<PERCENT>");    break;
+     case TOKEN_HAT:           return ("<HAT>");        break;
+     case TOKEN_AMPERSAND:     return ("<AMPERSAND>");  break;       
+     case TOKEN_MULTIPLY:      return ("<MULTIPLY>");   break;
+     case TOKEN_LPAREN:        return ("<LPAREN>");     break;
+     case TOKEN_RPAREN:        return ("<RPAREN>");     break;
+     case TOKEN_MINUS:         return ("<MINUS>");      break;
+     case TOKEN_PLUS:          return ("<PLUS>");       break;
+     case TOKEN_EQUAL:         return ("<EQUAL>");      break;
+     case TOKEN_DIVIDE:        return ("<DIVIDE>");     break;       
+     case TOKEN_DASH:          return ("<UNDERSCORE>"); break;
+     case TOKEN_L_BRACKET:     return ("<LBRACKET>");   break;
+     case TOKEN_R_BRACKET:     return ("<RBRACKET>");   break;
+     case TOKEN_L_CURLY:       return ("<LCURLY>");     break;
+     case TOKEN_R_CURLY:       return ("<RCURLY>");     break;
+     case TOKEN_VERTICAL_BAR:  return ("<VERT BAR>");   break;
+     case TOKEN_LT:            return ("<LT>");         break;
+     case TOKEN_GT:            return ("<GT>");         break;
+     case TOKEN_COMMA:         return ("<COMMA>");      break;
+     case TOKEN_SEMI_COLON:    return ("<SEMI COLON>"); break;
+     case TOKEN_COLON:         return ("COLON>");       break;       
+     case TOKEN_QUOTE:         return ("<QUOTE>");      break; 
+     case TOKEN_SINGLE_QUOTE:  return ("<SINGLE QUOTE>");break;
+     case TOKEN_OPEN_QUOTE:    return ("<OPEN QUOTE>"); break;             
+     case TOKEN_PERIOD:        return ("<PERIOD>");     break;
+     case TOKEN_SPACE:         return ("<SPACE>");      break;
+     case TOKEN_BACK_SLASH:    return ("<BACKSLASH>");  break;     
+     case TOKEN_QUESTION_MARK: return ("<QUESTION>");   break;
+     default:                  return ("????");         break;
+  }
+}
+
+/**
  * @brief     Look for any keywords or any direct commands
  * @fn        Token_t TokenKeyword (char *Bufferp) 
  * @param[in] **Bufferp - Buffer to tokenize
  * @return    Token_t 
- * @details   Is this is Key word (Languar or direct)
+ * @details   Is this is Key word (Language or direct)
  * @note
  * @todo     
  */
-Token_t TokenKeyword (char *Bufferp) {
+Token_t TokenDirectKeyword (char *Bufferp) {
+  int i;
 
+  for (i=0; i < sizeof(TokenCommand); i++) {
+    if (StringMatch(Bufferp,TokenCommand[i].cmdstr)) {
+      return TokenCommand[i].TokenValue;
+    }
+  }    
+ 
   return TOKEN_ERROR;
 }
 
@@ -131,7 +191,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
 
   Bufp = *Bufferp;  
 
-  //  if (Verbose) printf("TokenGetNUmber\n");
+  if (Verbose) printf("TokenGetNUmber\n");
   
   do {
     value = 10 * value + (*Bufp -'0');
@@ -160,35 +220,71 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
  */
 Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   char *Bufp;
-
+  int i;
+  char *t = Tokenp;
+  
   Bufp = *Bufferp;
   
-  //  if (Verbose) printf("TokenGetWord %c\n", (int)*Bufp);
+  if (Verbose) printf("TokenGetWord %c\n", (int)*Bufp);
+  
+  while ( ((isalnum(*Bufp)) || (*Bufp != '\0')) && (!isspace(*Bufp)) ) {
+    //  while ( isalnum(*Bufp) ) {  
+      *Tokenp++ = *Bufp++;
+      if (Verbose) printf("[%p] %c = %c\n", (void *)Tokenp, *Tokenp, *Bufp);      
+  }
+  *Tokenp = '\0';
+  printf("Last [%p] = %d\n", (void *)Tokenp, *Tokenp);
+  
+  *Bufferp = Bufp;
+
+  if (Verbose) printf("TokenGetWord DONE Len = %d ", strlen(t));
+  for (i=0; i < strlen(t); i++) {
+    printf("%c ", *t++);
+  }
+  printf("\n");
+  
+  return TokenDirectKeyword(Tokenp);
+}
+  
+/**
+ * @brief     Process string (alpha) token
+ * @fn        Token_t TokenGetString  (char *Bufferp, char *Tokenp) 
+ * @param[in] Bufferp - Buffer to tokenize
+ * @param[out]Tokenp  - add to tokenized buffer
+ * @return    Token_t 
+ * @notes     Tokenizer ceases when a SPACE or end of line if found
+ * @details
+ * @todo
+ */
+Token_t TokenGetString (char **Bufferp, char *Tokenp) {
+  char *Bufp;
+  int i;
+  char *t = Tokenp;
+  Bufp = *Bufferp;
+  
+  if (Verbose) printf("TokenGetString %c\n", (int)*Bufp);
   
   while ( ((isalnum(*Bufp)) || (*Bufp != '\0')) && (!isspace(*Bufp)) ) {
       *Tokenp++ = *Bufp++;
-#if 0
-      //      printf("%c addr %p", *Bufp, Bufp);
-      if (isalnum(*Bufp)) {
-        printf("alpha ");
-      } else if (isspace(*Bufp)) {
-        printf("space ");
-      }
-#endif      
+      if (Verbose) printf("[%p] %c = %c\n", (void *)Tokenp, *Tokenp, *Bufp);            
   }
-
   *Tokenp = '\0';
 
   Literal.Type  = LITERAL_STRING;  
   strcpy(Literal.value.StringValue, Tokenp);
 
   *Bufferp = Bufp;
+  if (Verbose) printf("TokenGetString DONE Len = %d ", strlen(t));
+  for (i=0; i < 8; i++) {
+    printf("%c ", *t++);
+  }
+  printf("\n");
   
-  return TOKEN_WORD;
+  return TOKEN_STRING;
 }
 
 /**
- * @brief      Process Sepcial Token
+ * @brief      Process Special Token
  * @fn         Token_t TokenGetSpecial(char *Bufferp, char *Tokenp) 
  * @param[in]  Bufferp - Buffer to tokenize
  * @param[out] Tokenp  - add to tokenized buffer
@@ -199,7 +295,8 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
     char *Bufp;
     Token_t TokenReturn;
 
-    //    if (Verbose) printf("TokenGetSpecial\n");    
+    if (Verbose) printf("TokenGetSpecial\n");
+    
     Bufp = *Bufferp;
     *Tokenp++ = *Bufp;
 
@@ -257,63 +354,12 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
 Token_t TokenGetDirect(char **Bufferp, char *Tokenp) {
     char *Bufp;
 
-    //    if (Verbose) printf("TokenGetDirect\n");    
+    if (Verbose) printf("TokenGetDirect %s\n", Tokenp);
+    
     Bufp = *Bufferp;
     *Tokenp++ = *Bufp;
 
     return TOKEN_ERROR;
-}
-
-/**
- * @brief     Token types to string convert
- * @fn        char *TokenGetStringType(Token_t Token)
- * @param[in] Token
- * @return    char* string 
- * @note
- */
-char *TokenGetStringType(Token_t Token) {
-
-  switch (Token) {
-     case TOKEN_WORD:          return ("<WORD>");       break;
-     case TOKEN_DIGIT:         return ("<DIGIT>");      break;
-     case TOKEN_LETTER:        return ("<LETTER>");     break;
-     case TOKEN_SPECIAL:       return ("<SPECIAL>");    break;
-     case TOKEN_NO_TOKEN:      return ("<NO TOKEN>");   break;
-     case TOKEN_ERROR:         return ("<ERROR>");      break;
-     case TOKEN_TILDE:         return ("<TILDE>");      break;
-     case TOKEN_PLING:         return ("<PLING>");      break;
-     case TOKEN_AT:            return ("<AT>");         break;
-     case TOKEN_HASH:          return ("<HASH>");       break;
-     case TOKEN_PERCENT:       return ("<PERCENT>");    break;
-     case TOKEN_HAT:           return ("<HAT>");        break;
-     case TOKEN_AMPERSAND:     return ("<AMPERSAND>");  break;       
-     case TOKEN_MULTIPLY:      return ("<MULTIPLY>");   break;
-     case TOKEN_LPAREN:        return ("<LPAREN>");     break;
-     case TOKEN_RPAREN:        return ("<RPAREN>");     break;
-     case TOKEN_MINUS:         return ("<MINUS>");      break;
-     case TOKEN_PLUS:          return ("<PLUS>");       break;
-     case TOKEN_EQUAL:         return ("<EQUAL>");      break;
-     case TOKEN_DIVIDE:        return ("<DIVIDE>");     break;       
-     case TOKEN_DASH:          return ("<UNDERSCORE>"); break;
-     case TOKEN_L_BRACKET:     return ("<LBRACKET>");   break;
-     case TOKEN_R_BRACKET:     return ("<RBRACKET>");   break;
-     case TOKEN_L_CURLY:       return ("<LCURLY>");     break;
-     case TOKEN_R_CURLY:       return ("<RCURLY>");     break;
-     case TOKEN_VERTICAL_BAR:  return ("<VERT BAR>");   break;
-     case TOKEN_LT:            return ("<LT>");         break;
-     case TOKEN_GT:            return ("<GT>");         break;
-     case TOKEN_COMMA:         return ("<COMMA>");      break;
-     case TOKEN_SEMI_COLON:    return ("<SEMI COLON>"); break;
-     case TOKEN_COLON:         return ("COLON>");       break;       
-     case TOKEN_QUOTE:         return ("<QUOTE>");      break; 
-     case TOKEN_SINGLE_QUOTE:  return ("<SINGLE QUOTE>");break;
-     case TOKEN_OPEN_QUOTE:    return ("<OPEN QUOTE>"); break;             
-     case TOKEN_PERIOD:        return ("<PERIOD>");     break;
-     case TOKEN_SPACE:         return ("<SPACE>");      break;
-     case TOKEN_BACK_SLASH:    return ("<BACKSLASH>");  break;     
-     case TOKEN_QUESTION_MARK: return ("<QUESTION>");   break;
-     default:                  return ("????");         break;
-  }
 }
 
 /**
@@ -384,7 +430,7 @@ int32_t Tokenize (char *FileName) {
    */
   while (UtilsReadSourceLine(fp, Bufferp) == true) {
      Bufferp = UtilsSkipSpaces(Bufferp);
-
+     
      printf(">> %s", Bufferp);
      
      /* 
@@ -398,6 +444,8 @@ int32_t Tokenize (char *FileName) {
        } else if (isspace(*Bufferp)) {
          Bufferp++;
 	 Token = TOKEN_SPACE;
+       } else if (*Bufferp == '"') {
+         Token = TokenGetString(&Bufferp, Tokenp);
        } else if (*Bufferp == '\n' || *Bufferp == '\r') {
          Bufferp++;
          *Tokenp = ' ';
@@ -406,7 +454,7 @@ int32_t Tokenize (char *FileName) {
        }
 
        TokenPrint(TokenBuffer, Token);
-       
+              
        memset(TokenBuffer, '\0', sizeof(TokenBuffer));
      }
   }

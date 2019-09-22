@@ -13,17 +13,18 @@
 ** DONE Should print header again after one page worth of output
 ** DONE Lister<name> 
 * Scanner Tokenizer Tasks
+** DONE Add support for Command line input not just file input
 ** DONE Utilities for skip spaces 
-** TODO Add support for Command line input not just file input
 ** TODO use of isspace in utilities.c for Skipspaces
 ** TODO TokenGetNumber needs to test for MAX_INT
 ** TODO TokenGetNumber needs to read floating point
 ** TODO Evalaution of source lines
+** TODO Words to upper case
 ** DONE Tokenize source lines
 ** DONE All ASCII elements in tokenizer header / scanner
-** TODO String type support (is this needed?)
+** DONE String type support (is this needed?)
 ** TODO DIGIT vs TOKEN_NUMBER return
-** TODO Add Basic language elements to tokenizer / scanner (is REserved word)
+** TODO Reserved Word - Add Basic language elements to tokenizer / scanner (is REserved word)
 ** DONE Basic line parser
 * Issues
 ** DONE [BUG] Scanner output has extra newline?

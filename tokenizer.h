@@ -26,6 +26,7 @@ Private Types
  */
 typedef enum {
     TOKEN_WORD,
+    TOKEN_STRING, 
     TOKEN_DIGIT,
     TOKEN_LETTER,
     TOKEN_SPECIAL,
