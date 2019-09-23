@@ -119,6 +119,7 @@ else
 	$(OBJECT_DIR)/interactive.o		 \
 	-static -L$(LIB_DIR) 			 \
 	-lcheck -llister -lutilities -ltokenizer \
+	-lpthread				 \
 	-o basic_check.exe
 endif
 

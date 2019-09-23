@@ -65,7 +65,8 @@ static TokenCommandList_t TokenCommand[] = {
     { "UNSAVE"  , TOKEN_UNSAVE  , NULL },
     { "SYSTEM"  , TOKEN_SYSTEM  , NULL },
     { "BYE"     , TOKEN_BYE     , NULL },
-    { "GOODBYE" , TOKEN_GOODBYE , NULL }
+    { "GOODBYE" , TOKEN_GOODBYE , NULL },
+    { NULL      , TOKEN_ERROR   , NULL }    
 };
   
 /*
@@ -164,12 +165,15 @@ char *TokenGetStringType(Token_t Token) {
  * @todo     
  */
 Token_t TokenDirectKeyword (char *Bufferp) {
-  int i;
+  TokenCommandList_t *pRow;
 
-  for (i=0; i < sizeof(TokenCommand); i++) {
-    if (StringMatch(Bufferp,TokenCommand[i].cmdstr)) {
-      return TokenCommand[i].TokenValue;
+  pRow = (TokenCommandList_t *)&TokenCommand[0];
+  while (pRow->cmdstr != NULL) {
+    printf("Matching %s = %s\n",Bufferp, pRow->cmdstr);
+    if (StringMatch(Bufferp,pRow->cmdstr)) {
+      return pRow->TokenValue;
     }
+    pRow++;
   }    
  
   return TOKEN_ERROR;
@@ -238,12 +242,8 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   *Bufferp = Bufp;
 
   if (Verbose) printf("TokenGetWord DONE Len = %d ", strlen(t));
-  for (i=0; i < strlen(t); i++) {
-    printf("%c ", *t++);
-  }
-  printf("\n");
   
-  return TokenDirectKeyword(Tokenp);
+  return TokenDirectKeyword(t);
 }
   
 /**
@@ -436,7 +436,8 @@ int32_t Tokenize (char *FileName) {
      /* 
       * Parse the single line until the EOL
       */
-     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {     
+     //     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
+       while (*Bufferp != '\0') {     
        if (isdigit(*Bufferp)) {
          Token = TokenGetNumber(&Bufferp, Tokenp);
        } else if (isalnum(*Bufferp)) {

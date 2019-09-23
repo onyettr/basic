@@ -47,6 +47,7 @@ Includes
  * @brief macros
  */
 #define UNUSED( X )              (void)X
+#define DIM( X )                (sizeof(X) / sizeof(X[0])
 
 /*
 ******************************************************************************
