@@ -51,6 +51,7 @@ static Literal_t Literal;
  *  @brief  All Direct (not keywords) commands
  *  @struct TokenCommandList_t TokenCommand
  */
+#if 0
 static TokenCommandList_t TokenCommand[] = {
     { "HELLO"   , TOKEN_HELLO   , NULL },
     { "NEW"     , TOKEN_NEW     , NULL },
@@ -68,7 +69,30 @@ static TokenCommandList_t TokenCommand[] = {
     { "GOODBYE" , TOKEN_GOODBYE , NULL },
     { NULL      , TOKEN_ERROR   , NULL }    
 };
-  
+#endif
+
+/**
+ *  @brief  All language reserved Keywords
+ *  @struct TokenCommandList_t TokenKeyword
+ */
+static TokenCommandList_t TokenKeyword[] = {
+    { "LET"     , TOKEN_LET     , NULL },
+    { "PRINT"   , TOKEN_PRINT   , NULL },
+    { "END"     , TOKEN_END     , NULL },
+    { "READ"    , TOKEN_READ    , NULL },
+    { "DATA"    , TOKEN_DATA    , NULL },
+    { "GOTO"    , TOKEN_GOTO    , NULL },
+    { "IF"      , TOKEN_IF      , NULL },
+    { "FOR"     , TOKEN_FOR     , NULL },
+    { "NEXT"    , TOKEN_NEXT    , NULL },
+    { "GOSUB"   , TOKEN_GOSUB   , NULL },
+    { "RETURN"  , TOKEN_RETURN  , NULL },
+    { "DEF"     , TOKEN_DEF     , NULL },
+    { "REM"     , TOKEN_REM     , NULL },
+    { "STOP"    , TOKEN_STOP    , NULL },
+    { NULL      , TOKEN_ERROR   , NULL }    
+};
+
 /*
 ******************************************************************************
 Exported Global variables
@@ -151,6 +175,22 @@ char *TokenGetStringType(Token_t Token) {
      case TOKEN_SPACE:         return ("<SPACE>");      break;
      case TOKEN_BACK_SLASH:    return ("<BACKSLASH>");  break;     
      case TOKEN_QUESTION_MARK: return ("<QUESTION>");   break;
+
+     case TOKEN_LET:           return ("<RW LET>");     break;      /* Reserved Language Words */
+     case TOKEN_PRINT:         return ("<RW PRINT>");   break;
+     case TOKEN_END:           return ("<RW END>");     break;
+     case TOKEN_READ:          return ("<RW READ>");    break;
+     case TOKEN_DATA:          return ("<RW DATA>");    break;
+     case TOKEN_GOTO:          return ("<RW GOTO>");    break;
+     case TOKEN_IF:            return ("<RW IF>");      break;
+     case TOKEN_FOR:           return ("<RW FOR>");     break;
+     case TOKEN_NEXT:          return ("<RW NEXT>");    break;
+     case TOKEN_GOSUB:         return ("<RW GOSUB>");   break;
+     case TOKEN_RETURN:        return ("<RW RETURN>");  break;
+     case TOKEN_DEF:           return ("<RW DEF>");     break;
+     case TOKEN_DIM:           return ("<RW DIM>");     break;
+     case TOKEN_REM:           return ("<RW REM>");     break;
+     case TOKEN_STOP:          return ("<RW STOP>");    break;
      default:                  return ("????");         break;
   }
 }
@@ -167,11 +207,12 @@ char *TokenGetStringType(Token_t Token) {
 Token_t TokenDirectKeyword (char *Bufferp) {
   TokenCommandList_t *pRow;
 
-  pRow = (TokenCommandList_t *)&TokenCommand[0];
+  //  pRow = (TokenCommandList_t *)&TokenCommand[0];
+  pRow = (TokenCommandList_t *)&TokenKeyword[0];  
   while (pRow->cmdstr != NULL) {
-    printf("Matching %s = %s\n",Bufferp, pRow->cmdstr);
+    //    printf("Matching %s = %s\n",Bufferp, pRow->cmdstr);
     if (StringMatch(Bufferp,pRow->cmdstr)) {
-      return pRow->TokenValue;
+       return pRow->TokenValue;
     }
     pRow++;
   }    
@@ -224,8 +265,8 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
  */
 Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   char *Bufp;
-  int i;
   char *t = Tokenp;
+  Token_t TokenReturn;
   
   Bufp = *Bufferp;
   
@@ -234,16 +275,22 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   while ( ((isalnum(*Bufp)) || (*Bufp != '\0')) && (!isspace(*Bufp)) ) {
     //  while ( isalnum(*Bufp) ) {  
       *Tokenp++ = *Bufp++;
-      if (Verbose) printf("[%p] %c = %c\n", (void *)Tokenp, *Tokenp, *Bufp);      
+      //      if (Verbose) printf("[%p] %c = %c\n", (void *)Tokenp, *Tokenp, *Bufp);      
   }
   *Tokenp = '\0';
-  printf("Last [%p] = %d\n", (void *)Tokenp, *Tokenp);
+  //  printf("Last [%p] = %d\n", (void *)Tokenp, *Tokenp);
   
   *Bufferp = Bufp;
 
-  if (Verbose) printf("TokenGetWord DONE Len = %d ", strlen(t));
-  
-  return TokenDirectKeyword(t);
+  /*
+   * Test if this s Keyword, TOKEN_ERROR means it isnt
+   */
+  TokenReturn = TokenDirectKeyword(t);
+  if ( TokenReturn == TOKEN_ERROR ) {
+    return TOKEN_WORD;                   /* return TOKEN_IDENTIFIER; */
+  }
+
+  return TokenReturn;
 }
   
 /**
@@ -258,8 +305,7 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
  */
 Token_t TokenGetString (char **Bufferp, char *Tokenp) {
   char *Bufp;
-  int i;
-  char *t = Tokenp;
+
   Bufp = *Bufferp;
   
   if (Verbose) printf("TokenGetString %c\n", (int)*Bufp);
@@ -274,11 +320,6 @@ Token_t TokenGetString (char **Bufferp, char *Tokenp) {
   strcpy(Literal.value.StringValue, Tokenp);
 
   *Bufferp = Bufp;
-  if (Verbose) printf("TokenGetString DONE Len = %d ", strlen(t));
-  for (i=0; i < 8; i++) {
-    printf("%c ", *t++);
-  }
-  printf("\n");
   
   return TOKEN_STRING;
 }
@@ -436,8 +477,7 @@ int32_t Tokenize (char *FileName) {
      /* 
       * Parse the single line until the EOL
       */
-     //     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
-       while (*Bufferp != '\0') {     
+     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
        if (isdigit(*Bufferp)) {
          Token = TokenGetNumber(&Bufferp, Tokenp);
        } else if (isalnum(*Bufferp)) {

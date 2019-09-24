@@ -22,11 +22,12 @@ Private Types
 
 /**
  * @brief TOKEN values for the various elements
- * @enum TokenValues_t
+ * @enum  TokenValues_t
  */
 typedef enum {
     TOKEN_WORD,
-    TOKEN_STRING, 
+    TOKEN_STRING,
+    TOKEN_IDENTIFIER,
     TOKEN_DIGIT,
     TOKEN_LETTER,
     TOKEN_SPECIAL,
@@ -65,7 +66,7 @@ typedef enum {
     TOKEN_SPACE,
     
     /*
-     * Reserved words tokens, based on Dartmouth original dialect
+     * Reserved words tokens, based on Dartmouth BASIC original dialect
      */
     TOKEN_LET,
     TOKEN_PRINT,
@@ -119,6 +120,10 @@ typedef enum {
     TOKEN_ERROR
 } TokenValues_t;
 
+/**
+ *  @brief Token_t enumeration for Tokens
+ *  
+ */
 typedef int32_t Token_t;
 
 /**
@@ -146,7 +151,7 @@ typedef struct {
   char *cmdstr;
   Token_t TokenValue;
   //  int (*pDirectFunction)(int argc, char *argv[]);
-  int (*pDirectFunction)(void);  
+  int (*pDirectFunction)(void);     /*! For future use to add callbacks for Keywords */
 } TokenCommandList_t;
 
 /*
@@ -177,7 +182,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp);
 Token_t TokenGetWord  (char **Bufferp, char *Tokenp);
 Token_t TokenGetSpecial(char **Bufferp, char *Tokenp);
 Token_t TokenGetDirect(char **Bufferp, char *Tokenp);
-char *TokenGetStringType(Token_t Token);
-void TokenPrint (char *TokenString, Token_t Token);
+char    *TokenGetStringType(Token_t Token);
+void   TokenPrint (char *TokenString, Token_t Token);
 
 #endif  /* __TOKENIZER_H__ */
