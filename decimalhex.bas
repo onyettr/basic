@@ -1,0 +1,24 @@
+10 HOME
+20 TEXT : PR#0 : REM setting 40x24 TEXT MODE
+30 PRINT "DECIMAL","HEX"
+40 PRINT "-------","---"
+50 FOR I = 0 TO 20 
+60 LET A = I
+70 GOSUB 200
+80 PRINT I, HEX$
+90 NEXT I
+100 END
+
+200 LET HEX$ = "" : REM HEX$ will return hex string of variable A
+210 LET B = A - INT (A/16) * 16
+220 IF B < 10 THEN H$ = STR$(B)
+230 IF B = 10 THEN H$ = "A"
+240 IF B = 11 THEN H$ = "B"
+250 IF B = 12 THEN H$ = "C"
+260 IF B = 13 THEN H$ = "D"
+270 IF B = 14 THEN H$ = "E"
+280 IF B = 15 THEN H$ = "F"
+290 LET HEX$ = H$ + HEX$
+300 LET A = (A - B) / 16
+310 IF (A > 0) THEN GOTO 210
+320 RETURN
