@@ -22,9 +22,9 @@
 ** TODO [Task 0007] Tokenp needs to return parameter pointer
 ** TODO [Task 0008] Direct Command look up required if in interactive mode? 
 ** TODO [Task 0009] DIGIT vs TOKEN_NUMBER return
-** TODO [Task 0010] Reserved Keyword - Add Basic language elements to tokenizer / scanner (is Reserved word)
 ** TODO [Task 0013] Check for Functions calls e.g. EXP(), ABS()
 ** TODO [Task 0014] Expresssion evaluation
+** DONE [Task 0010] Reserved Keyword - Add Basic language elements to tokenizer / scanner (is Reserved word)
 ** DONE Tokenize source lines
 ** DONE All ASCII elements in tokenizer header / scanner
 ** DONE String type support (is this needed?)
