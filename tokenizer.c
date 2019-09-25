@@ -109,8 +109,8 @@ Prototypes of all functions contained in this file (in order of occurance)
  * @brief     Match strings
  * @fn        static int StringMatch(char *str1, char *str2)
  * @param[in] *str1 
- * @param[in] *str1 
- * @return    true if matches, false otherwise
+ * @param[in] *str2
+ * @return    true if str1 matches str2, false otherwise
  * @details   
  * @note
  * @todo     
@@ -120,7 +120,7 @@ static bool StringMatch(char *str1,char *str2) {
 
   for (i=0; i < (int)strlen(str2); i++) {
     if (str1[i] != str2[i] )
-      return false;
+      return false;           /* No match */
   }
 
   return(!(strncmp(str1,str2, strlen(str1))));
