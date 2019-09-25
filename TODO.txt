@@ -24,7 +24,7 @@
 ** TODO [Task 0009] DIGIT vs TOKEN_NUMBER return
 ** TODO [Task 0013] Check for Functions calls e.g. EXP(), ABS()
 ** TODO [Task 0014] Expresssion evaluation
-** TODO [Task 0015] Check for >= <= operators
+** DONE [Task 0015] add TokenGetSpecial check for >= <= <> operators
 ** DONE [Task 0010] Reserved Keyword - Add Basic language elements to tokenizer / scanner (is Reserved word)
 ** DONE Tokenize source lines
 ** DONE All ASCII elements in tokenizer header / scanner

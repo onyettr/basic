@@ -1,0 +1,8 @@
+Logical Operators
+LT <
+GT >
+EQ =
+GE >= 
+LE <=
+NE <>
+                     

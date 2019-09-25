@@ -163,8 +163,6 @@ char *TokenGetStringType(Token_t Token) {
      case TOKEN_L_CURLY:       return ("<LCURLY>");     break;
      case TOKEN_R_CURLY:       return ("<RCURLY>");     break;
      case TOKEN_VERTICAL_BAR:  return ("<VERT BAR>");   break;
-     case TOKEN_LT:            return ("<LT>");         break;
-     case TOKEN_GT:            return ("<GT>");         break;
      case TOKEN_COMMA:         return ("<COMMA>");      break;
      case TOKEN_SEMI_COLON:    return ("<SEMI COLON>"); break;
      case TOKEN_COLON:         return ("COLON>");       break;       
@@ -175,7 +173,11 @@ char *TokenGetStringType(Token_t Token) {
      case TOKEN_SPACE:         return ("<SPACE>");      break;
      case TOKEN_BACK_SLASH:    return ("<BACKSLASH>");  break;     
      case TOKEN_QUESTION_MARK: return ("<QUESTION>");   break;
-
+     case TOKEN_LT:            return ("<LT>");         break;
+     case TOKEN_GT:            return ("<GT>");         break;
+     case TOKEN_GE:            return ("<GE>");         break; 
+     case TOKEN_LE:            return ("<LE>");         break;
+     case TOKEN_NE:            return ("<NE>");         break;       
      case TOKEN_LET:           return ("<RW LET>");     break;      /* Reserved Language Words */
      case TOKEN_PRINT:         return ("<RW PRINT>");   break;
      case TOKEN_END:           return ("<RW END>");     break;
@@ -332,15 +334,19 @@ Token_t TokenGetString (char **Bufferp, char *Tokenp) {
  * @return     Token_t 
  * @notes     
  */
-Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
+Token_t TokenGetSpecial(char **Bufferp, char **Tokenp) {
     char *Bufp;
+    char *Tokp;
     Token_t TokenReturn;
-
-    if (Verbose) printf("TokenGetSpecial\n");
     
     Bufp = *Bufferp;
-    *Tokenp++ = *Bufp;
+    Tokp = *Tokenp;
+    //    *Tokenp++ = *Bufp;
 
+    if (Verbose) printf("TokenGetSpecial %c\n", *Bufp);
+
+    *Tokp++ = *Bufp;
+    
     switch (*Bufp) {
       case '~': TokenReturn = TOKEN_TILDE;         break;
       case '!': TokenReturn = TOKEN_PLING;         break;
@@ -362,8 +368,6 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
       case '}': TokenReturn = TOKEN_R_CURLY;       break;
       case '/': TokenReturn = TOKEN_DIVIDE;        break;
       case '|': TokenReturn = TOKEN_VERTICAL_BAR;  break;        
-      case '<': TokenReturn = TOKEN_LT;            break;
-      case '>': TokenReturn = TOKEN_GT;            break;
       case ',': TokenReturn = TOKEN_COMMA;         break;
       case '\\':TokenReturn = TOKEN_BACK_SLASH;    break;
       case '"': TokenReturn = TOKEN_QUOTE;         break;
@@ -373,14 +377,39 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
       case ':': TokenReturn = TOKEN_COLON;         break;
       case ';': TokenReturn = TOKEN_SEMI_COLON;    break;                
       case '?': TokenReturn = TOKEN_QUESTION_MARK; break;
+      case '<': {                           /* < <> <= */
+        if (*(Bufp+1) == '=') {
+          TokenReturn = TOKEN_LE;
+          Bufp++;
+          *Tokp++ = '=';                    
+        } else if (*(Bufp+1) == '>') {
+          TokenReturn = TOKEN_NE;
+          Bufp++;
+          *Tokp++ = '>';                    
+        } else {
+          TokenReturn = TOKEN_LT;
+        }
+        break;
+      }
+      case '>': {                           /* > >= */
+        if (*(Bufp+1) == '=') {
+          TokenReturn = TOKEN_GE;
+          Bufp++;
+          *Tokp++ = '=';          
+        } else {
+          TokenReturn = TOKEN_GT;
+        }
+        break;
+      }
       default:  TokenReturn = TOKEN_ERROR;
     }
     //    TokenReturn = (*Bufp == '.') ? TOKEN_SPECIAL : TOKEN_ERROR;
 
     Bufp++;
-    *Tokenp = '\0';
+    *Tokp = '\0';
 
     *Bufferp = Bufp;
+    *Tokenp  = Tokp;
     
     return TokenReturn;    
 }
@@ -418,7 +447,7 @@ void TokenPrint (char *TokenString, Token_t Token) {
     if (*TokenString != '\0') {
       char *Return;
 
-      printf("\t>> %16s   %s", TokenGetStringType(Token), TokenString);
+      printf("\t> %16s   %s", TokenGetStringType(Token), TokenString);
       if (Token == TOKEN_DIGIT ) {
   	printf("   INTEGER = %d", Literal.value.IntegerValue);
       }
@@ -464,13 +493,13 @@ int32_t Tokenize (char *FileName) {
   }
     
   Bufferp = SourceBuffer;
-  Tokenp  = TokenBuffer;
 
   /*
    * read until EOF
    */
   while (UtilsReadSourceLine(fp, Bufferp) == true) {
      Bufferp = UtilsSkipSpaces(Bufferp);
+     Tokenp  = TokenBuffer;
      
      printf(">> %s", Bufferp);
      
@@ -491,7 +520,7 @@ int32_t Tokenize (char *FileName) {
          Bufferp++;
          *Tokenp = ' ';
        } else {
-         Token = TokenGetSpecial(&Bufferp, Tokenp);       
+         Token = TokenGetSpecial(&Bufferp, &Tokenp);       
        }
 
        TokenPrint(TokenBuffer, Token);
