@@ -5,4 +5,4 @@ EQ =
 GE >= 
 LE <=
 NE <>
-                     
+100 IF X <> 10 THEN GOTO 10                     

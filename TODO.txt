@@ -1,6 +1,6 @@
 * Overall
 ** TODO Source file listing utilities
-** TODO Scanner Tokenizer 
+** TODO Scanner and Tokenizer 
 ** TODO Symbol Table
 ** TODO Parser Expressions
 ** TODO Parser Statements
@@ -12,27 +12,9 @@
 ** DONE Source file listing utilities
 ** DONE Should print header again after one page worth of output
 ** DONE Lister<name> 
-* Scanner Tokenizer Tasks
-** TODO [Task 0001] use of isspace in utilities.c for Skipspaces
-** TODO [Task 0002] TokenGetNumber needs to test for MAX_INT
-** TODO [Task 0003] TokenGetNumber needs to read floating point
-** TODO [Task 0004] TokenGetNumber needs to read negative integers
-** TODO [Task 0005] Evalaution of source lines
-** TODO [Task 0006] TokenGetWord to upper case by default
-** TODO [Task 0007] Tokenp needs to return parameter pointer
-** TODO [Task 0008] Direct Command look up required if in interactive mode? 
-** TODO [Task 0009] DIGIT vs TOKEN_NUMBER return
-** TODO [Task 0013] Check for Functions calls e.g. EXP(), ABS()
-** TODO [Task 0014] Expresssion evaluation
-** DONE [Task 0015] add TokenGetSpecial check for >= <= <> operators
-** DONE [Task 0010] Reserved Keyword - Add Basic language elements to tokenizer / scanner (is Reserved word)
-** DONE Tokenize source lines
-** DONE All ASCII elements in tokenizer header / scanner
-** DONE String type support (is this needed?)
-** DONE Basic line parser
-** DONE Add support for Command line input not just file input
-** DONE Utilities for skip spaces 
-
+* Scanner And Tokenizer Tasks
+* Symboll Table
+* Parser Expressions
 * Issues
 ** TODO [BUG 1000] Verbose mode declared cuases build issue with checkmk
 ** DONE [BUG 1001] Scanner output has extra newline?

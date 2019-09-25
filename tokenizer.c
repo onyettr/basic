@@ -329,23 +329,26 @@ Token_t TokenGetString (char **Bufferp, char *Tokenp) {
 /**
  * @brief      Process Special Token
  * @fn         Token_t TokenGetSpecial(char *Bufferp, char *Tokenp) 
- * @param[in]  Bufferp - Buffer to tokenize
- * @param[out] Tokenp  - add to tokenized buffer
- * @return     Token_t 
- * @notes     
+ * @param[in]  Bufferp - Buffer pointer to input characters. Pointer is moved and passed back.
+ * @param[out] Tokenp  - add to token buffer for further processing. 
+ * @return     Token_t - The type of tokem found
+ * @notes      The Special tokens are the non Alpha numerics. 
+ *             Logical operators need extra handling e.g. >= <= <> requires the next character be parsed as well
+ *             >  GT
+ *             <  LT
+ *             <> NE
+ *             >= GE
+ *             <= LE
  */
-Token_t TokenGetSpecial(char **Bufferp, char **Tokenp) {
+Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
     char *Bufp;
-    char *Tokp;
     Token_t TokenReturn;
     
     Bufp = *Bufferp;
-    Tokp = *Tokenp;
-    //    *Tokenp++ = *Bufp;
 
     if (Verbose) printf("TokenGetSpecial %c\n", *Bufp);
 
-    *Tokp++ = *Bufp;
+    *Tokenp++ = *Bufp;     /* Copy input buffer character to the Token Buffer */
     
     switch (*Bufp) {
       case '~': TokenReturn = TOKEN_TILDE;         break;
@@ -381,11 +384,11 @@ Token_t TokenGetSpecial(char **Bufferp, char **Tokenp) {
         if (*(Bufp+1) == '=') {
           TokenReturn = TOKEN_LE;
           Bufp++;
-          *Tokp++ = '=';                    
+	  *Tokenp++ = '=';
         } else if (*(Bufp+1) == '>') {
           TokenReturn = TOKEN_NE;
           Bufp++;
-          *Tokp++ = '>';                    
+	  *Tokenp++ = '>';
         } else {
           TokenReturn = TOKEN_LT;
         }
@@ -395,7 +398,7 @@ Token_t TokenGetSpecial(char **Bufferp, char **Tokenp) {
         if (*(Bufp+1) == '=') {
           TokenReturn = TOKEN_GE;
           Bufp++;
-          *Tokp++ = '=';          
+	  *Tokenp++ = '=';
         } else {
           TokenReturn = TOKEN_GT;
         }
@@ -403,16 +406,15 @@ Token_t TokenGetSpecial(char **Bufferp, char **Tokenp) {
       }
       default:  TokenReturn = TOKEN_ERROR;
     }
-    //    TokenReturn = (*Bufp == '.') ? TOKEN_SPECIAL : TOKEN_ERROR;
 
     Bufp++;
-    *Tokp = '\0';
+    *Tokenp = '\0';
 
-    *Bufferp = Bufp;
-    *Tokenp  = Tokp;
+    *Bufferp = Bufp;    /* Return last position in the input buffer */
     
     return TokenReturn;    
 }
+
 /**
  * @brief      Process direct commands
  * @fn         Token_t TokenGetDirect(char **Bufferp, char *Tokenp) 
@@ -470,13 +472,15 @@ void TokenPrint (char *TokenString, Token_t Token) {
  * @fn        int32_t Tokenize (char *FileName)
  * @param[in] FileName - file containing lines to Tokenize
  * @return    int32_t ErrorCode
- * @note
+ * @note      Reads a line of text until EOF
+ *            For each line, spaces are skipped and all the characters are parsed until EOL (or ERROR)
+ *            - Each item (DIGIT, WORD, SPECIAL
+ *            The TokenBuffer contains the parsed line elements now in tokens
  */
 int32_t Tokenize (char *FileName) {
   FILE *fp;
   int32_t ErrorCode = SUCCESS;
   char *Bufferp;
-  char *Tokenp;
   Token_t Token;  
 
   if (*FileName == '\0') {
@@ -495,37 +499,35 @@ int32_t Tokenize (char *FileName) {
   Bufferp = SourceBuffer;
 
   /*
-   * read until EOF
+   * Read the file until the EOF
    */
   while (UtilsReadSourceLine(fp, Bufferp) == true) {
      Bufferp = UtilsSkipSpaces(Bufferp);
-     Tokenp  = TokenBuffer;
      
      printf(">> %s", Bufferp);
      
      /* 
-      * Parse the single line until the EOL
+      * Parse the single line until the EOL or Error
       */
      while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
-       if (isdigit(*Bufferp)) {
-         Token = TokenGetNumber(&Bufferp, Tokenp);
-       } else if (isalnum(*Bufferp)) {
-         Token = TokenGetWord(&Bufferp, Tokenp);
-       } else if (isspace(*Bufferp)) {
+       if (isdigit(*Bufferp)) {                             /* Test for Numbers                         */
+         Token = TokenGetNumber(&Bufferp, TokenBuffer);
+       } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
+         Token = TokenGetWord(&Bufferp, TokenBuffer);
+       } else if (isspace(*Bufferp)) {                      /* Test for SPACE, we just skip             */
          Bufferp++;
 	 Token = TOKEN_SPACE;
-       } else if (*Bufferp == '"') {
-         Token = TokenGetString(&Bufferp, Tokenp);
-       } else if (*Bufferp == '\n' || *Bufferp == '\r') {
+       } else if (*Bufferp == '"') {                        /* Test for STRINGS                         */
+         Token = TokenGetString(&Bufferp, TokenBuffer);
+       } else if (*Bufferp == '\n' || *Bufferp == '\r') {   /* TODO: convert to spaces for TokenBuffer? */
          Bufferp++;
-         *Tokenp = ' ';
-       } else {
-         Token = TokenGetSpecial(&Bufferp, &Tokenp);       
+       } else {                                             /* Test for Special characters              */
+         Token = TokenGetSpecial(&Bufferp, TokenBuffer);       
        }
 
-       TokenPrint(TokenBuffer, Token);
+       TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
               
-       memset(TokenBuffer, '\0', sizeof(TokenBuffer));
+       memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse     */
      }
   }
   Token = TOKEN_EOF;
