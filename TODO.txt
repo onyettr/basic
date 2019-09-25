@@ -6,6 +6,7 @@
 ** TODO Parser Statements
 ** TODO Parser Declarations
 ** TODO Remove global variables
+** TODO Build
 * Lister Tasks
 ** TODO [Task 0011] SourceLister should return error code
 ** TODO [Task 0012] lister run from CLI
@@ -15,6 +16,8 @@
 * Scanner And Tokenizer Tasks
 * Symboll Table
 * Parser Expressions
+* Misc Build
+** TODO src directory seperate makefiles
 * Issues
 ** TODO [BUG 1000] Verbose mode declared cuases build issue with checkmk
 ** DONE [BUG 1001] Scanner output has extra newline?
