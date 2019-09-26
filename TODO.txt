@@ -13,8 +13,13 @@
 ** DONE Source file listing utilities
 ** DONE Should print header again after one page worth of output
 ** DONE Lister<name> 
-* Scanner And Tokenizer Tasks
-* Symboll Table
+* Scanner And Tokenizer Tasksn
+** TODO [0013] TokenGetNumber - negative numbers support
+** TODO [0014] TokenGetNumber - floating point support
+** TODO [0015] TokenGetNumber - Exp support
+** TODO [0016] Interactive Mode - use callbacks to execute functions
+* Symbol Table
+** TODO [0017] Add linked list project to build
 * Parser Expressions
 * Misc Build
 ** TODO src directory seperate makefiles

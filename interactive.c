@@ -112,7 +112,6 @@ int32_t CommandLineMode (void) {
 
       if (Token == TOKEN_WORD) {                           /* Test for direct command                  */
         Token = TokenDirectCommand(TokenBuffer);
-        printf("Token last %s\n", TokenGetStringType(Token));
       }
       TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
               
