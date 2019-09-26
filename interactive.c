@@ -71,20 +71,18 @@ Token_t DirectCommand(char *TokenString) {
  */
 int32_t CommandLineMode (void) {
   int32_t ErrorCode = SUCCESS;
-  int ch;
+
   char *Bufferp;
-  Token_t Token;  
-  bool Parsing = true;
+  Token_t Token = TOKEN_OK;
   
   /*
    * read until Exit
    */
-  while (Parsing) {
-    char *Tokenp;
+  while (Token != TOKEN_ERROR) {
     int i = 0;
-      
+    int ch;
+    
     Bufferp = SourceBuffer;
-    Tokenp  = TokenBuffer;
 
     memset(SourceBuffer,'\0', sizeof(SourceBuffer));    
     printf("basic> "); fflush(stdout);    
@@ -97,32 +95,30 @@ int32_t CommandLineMode (void) {
   
     Bufferp = UtilsSkipSpaces(Bufferp);
 
-    /* 
-     * Parse the single line until the EOL
-     */
-    while (*Bufferp != '\0' && Token != TOKEN_ERROR) {     
-      if (isdigit(*Bufferp)) {
-        Token = TokenGetNumber(&Bufferp, Tokenp);
-      } else if (isalnum(*Bufferp)) {
-        Token = TokenGetWord(&Bufferp, Tokenp);
-      } else if (isspace(*Bufferp)) {
-        Bufferp++;
-        Token = TOKEN_SPACE;
-      } else if (*Bufferp == '\n' || *Bufferp == '\r') {
-        Bufferp++;
-        *Tokenp = ' ';
-      } else {
-        Token = TokenGetSpecial(&Bufferp, Tokenp);       
+    while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
+      if (isdigit(*Bufferp)) {                             /* Test for Numbers                         */
+	Token = TokenGetNumber(&Bufferp, TokenBuffer);
+      } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
+	Token = TokenGetWord(&Bufferp, TokenBuffer);
+      } else if (isspace(*Bufferp)) {                      /* Test for SPACE, we just skip             */
+	Bufferp++;
+	Token = TOKEN_SPACE;
+      } else if (*Bufferp == '"') {                        /* Test for STRINGS                         */
+	Token = TokenGetString(&Bufferp, TokenBuffer);
+      } else if (*Bufferp == '\n' || *Bufferp == '\r') {   /* TODO: convert to spaces for TokenBuffer? */
+	Bufferp++;
+      } else {                                             /* Test for Special characters              */
+         Token = TokenGetSpecial(&Bufferp, TokenBuffer);
       }
 
-      TokenPrint(TokenBuffer, Token);
-       
-      memset(TokenBuffer, '\0', sizeof(TokenBuffer));
+      TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
+              
+      memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse     */
     }
-  }  
-
+  }
   Token = TOKEN_EOF;
   TokenPrint(TokenBuffer, Token);  
+    
   
   return ErrorCode;
 }

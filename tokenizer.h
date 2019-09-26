@@ -120,6 +120,7 @@ typedef enum {
     TOKEN_GOODBYE,
     
     TOKEN_EOF,
+    TOKEN_OK, 
     TOKEN_ERROR
 } TokenValues_t;
 
@@ -183,6 +184,7 @@ Prototypes of all functions contained in this file (in order of occurance)
 int32_t Tokenize (char *FileName);
 Token_t TokenGetNumber(char **Bufferp, char *Tokenp);
 Token_t TokenGetWord  (char **Bufferp, char *Tokenp);
+Token_t TokenGetString(char **Bufferp, char *Tokenp);
 Token_t TokenGetSpecial(char **Bufferp, char *Tokenp);
 Token_t TokenGetDirect(char **Bufferp, char *Tokenp);
 char    *TokenGetStringType(Token_t Token);
