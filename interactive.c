@@ -71,21 +71,20 @@ Token_t DirectCommand(char *TokenString) {
  */
 int32_t CommandLineMode (void) {
   int32_t ErrorCode = SUCCESS;
-
   char *Bufferp;
   Token_t Token = TOKEN_OK;
   
   /*
    * read until Exit
    */
-  while (Token != TOKEN_ERROR) {
+  while (Token != TOKEN_BYE) {
     int i = 0;
     int ch;
-    
+
     Bufferp = SourceBuffer;
 
     memset(SourceBuffer,'\0', sizeof(SourceBuffer));    
-    printf("basic> "); fflush(stdout);    
+    printf("basic> "); fflush(stdout);                    /* Sign on with a prompt                     */
 
     do {
       ch = getchar();
@@ -95,7 +94,7 @@ int32_t CommandLineMode (void) {
   
     Bufferp = UtilsSkipSpaces(Bufferp);
 
-    while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
+    while ((*Bufferp != '\0' && Token != TOKEN_BYE)) {
       if (isdigit(*Bufferp)) {                             /* Test for Numbers                         */
 	Token = TokenGetNumber(&Bufferp, TokenBuffer);
       } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
@@ -111,14 +110,16 @@ int32_t CommandLineMode (void) {
          Token = TokenGetSpecial(&Bufferp, TokenBuffer);
       }
 
+      if (Token == TOKEN_WORD) {                           /* Test for direct command                  */
+        Token = TokenDirectCommand(TokenBuffer);
+        printf("Token last %s\n", TokenGetStringType(Token));
+      }
       TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
               
       memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse     */
     }
   }
-  Token = TOKEN_EOF;
   TokenPrint(TokenBuffer, Token);  
-    
   
   return ErrorCode;
 }

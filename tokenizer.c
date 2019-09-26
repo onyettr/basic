@@ -51,7 +51,6 @@ static Literal_t Literal;
  *  @brief  All Direct (not keywords) commands
  *  @struct TokenCommandList_t TokenCommand
  */
-#if 0
 static TokenCommandList_t TokenCommand[] = {
     { "HELLO"   , TOKEN_HELLO   , NULL },
     { "NEW"     , TOKEN_NEW     , NULL },
@@ -67,9 +66,8 @@ static TokenCommandList_t TokenCommand[] = {
     { "SYSTEM"  , TOKEN_SYSTEM  , NULL },
     { "BYE"     , TOKEN_BYE     , NULL },
     { "GOODBYE" , TOKEN_GOODBYE , NULL },
-    { NULL      , TOKEN_ERROR   , NULL }    
+    { NULL      , TOKEN_WORD    , NULL }    
 };
-#endif
 
 /**
  *  @brief  All language reserved Keywords
@@ -89,8 +87,8 @@ static TokenCommandList_t TokenKeyword[] = {
     { "RETURN"  , TOKEN_RETURN  , NULL },
     { "DEF"     , TOKEN_DEF     , NULL },
     { "REM"     , TOKEN_REM     , NULL },
-    { "STOP"    , TOKEN_STOP    , NULL },
-    { NULL      , TOKEN_ERROR   , NULL }    
+    //    { "STOP"    , TOKEN_STOP    , NULL },
+    { NULL      , TOKEN_WORD    , NULL }    
 };
 
 /*
@@ -147,6 +145,7 @@ char *TokenGetStringType(Token_t Token) {
      case TOKEN_PLING:         return ("<PLING>");      break;
      case TOKEN_AT:            return ("<AT>");         break;
      case TOKEN_HASH:          return ("<HASH>");       break;
+     case TOKEN_DOLLAR:        return ("<DOLLAR>");     break;
      case TOKEN_PERCENT:       return ("<PERCENT>");    break;
      case TOKEN_HAT:           return ("<HAT>");        break;
      case TOKEN_AMPERSAND:     return ("<AMPERSAND>");  break;       
@@ -192,7 +191,22 @@ char *TokenGetStringType(Token_t Token) {
      case TOKEN_DEF:           return ("<RW DEF>");     break;
      case TOKEN_DIM:           return ("<RW DIM>");     break;
      case TOKEN_REM:           return ("<RW REM>");     break;
-     case TOKEN_STOP:          return ("<RW STOP>");    break;
+     case TOKEN_CMD_STOP:       
+     case TOKEN_STOP:          return ("<CMD STOP>");   break;
+     case TOKEN_HELLO:         return ("<CMD HELLO>");  break;
+     case TOKEN_NEW:           return ("<CMD NEW  >");  break;
+     case TOKEN_OLD:           return ("<CMD OLD  >");  break;
+     case TOKEN_SAVE:          return ("<CMD SAVE>");   break;
+     case TOKEN_REPLACE:       return ("<CMD REPLACE>");break;
+     case TOKEN_RENAME:        return ("<CMD RENAME>"); break;
+     case TOKEN_CAT:           return ("<CMD CAT>");    break;
+     case TOKEN_LIST:          return ("<CMD LIST>");   break;
+     case TOKEN_RUN:           return ("<CMD RUN>");    break;
+     case TOKEN_UNSAVE:        return ("<CMD UNSAVE>"); break;
+     case TOKEN_SYSTEM:        return ("<CMD SYSTEM>"); break;
+     case TOKEN_BYE:           return ("<CMD BYE>");    break;
+     case TOKEN_GOODBYE:       return ("<CMD GOODBYE>");break;
+     case TOKEN_OK:            return ("<OK>");         break;
      default:                  return ("????");         break;
   }
 }
@@ -219,7 +233,32 @@ Token_t TokenDirectKeyword (char *Bufferp) {
     pRow++;
   }    
  
-  return TOKEN_ERROR;
+  return pRow->TokenValue;
+}
+
+/**
+ * @brief     Look for any direct commands
+ * @fn        Token_t TokenDirectCommand (char *Bufferp) 
+ * @param[in] **Bufferp - Buffer to tokenize
+ * @return    Token_t 
+ * @details   Is this is direct word 
+ * @note
+ * @todo     
+ */
+Token_t TokenDirectCommand (char *Bufferp) {
+  TokenCommandList_t *pRow;
+
+  //  pRow = (TokenCommandList_t *)&TokenCommand[0];
+  pRow = (TokenCommandList_t *)&TokenCommand[0];  
+  while (pRow->cmdstr != NULL) {
+    //    printf("Matching %s = %s\n",Bufferp, pRow->cmdstr);
+    if (StringMatch(Bufferp,pRow->cmdstr)) {
+       return pRow->TokenValue;
+    }
+    pRow++;
+  }    
+ 
+  return pRow->TokenValue;
 }
 
 /**
@@ -268,7 +307,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
 Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   char *Bufp;
   char *t = Tokenp;
-  Token_t TokenReturn;
+  Token_t TokenReturn = TOKEN_OK;
   
   Bufp = *Bufferp;
   
@@ -288,9 +327,6 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
    * Test if this s Keyword, TOKEN_ERROR means it isnt
    */
   TokenReturn = TokenDirectKeyword(t);
-  if ( TokenReturn == TOKEN_ERROR ) {
-    return TOKEN_WORD;                   /* return TOKEN_IDENTIFIER; */
-  }
 
   return TokenReturn;
 }
@@ -355,6 +391,7 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
       case '!': TokenReturn = TOKEN_PLING;         break;
       case '@': TokenReturn = TOKEN_AT;            break;
       case '#': TokenReturn = TOKEN_HASH;          break;
+      case '$': TokenReturn = TOKEN_DOLLAR;        break;        
       case '%': TokenReturn = TOKEN_PERCENT;       break;
       case '^': TokenReturn = TOKEN_HAT;           break;
       case '&': TokenReturn = TOKEN_AMPERSAND;     break;

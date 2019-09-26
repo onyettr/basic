@@ -37,6 +37,7 @@ typedef enum {
     TOKEN_PLING,
     TOKEN_AT,
     TOKEN_HASH,
+    TOKEN_DOLLAR,
     TOKEN_PERCENT,
     TOKEN_HAT,
     TOKEN_AMPERSAND,
@@ -182,12 +183,14 @@ Prototypes of all functions contained in this file (in order of occurance)
 ******************************************************************************
 */
 int32_t Tokenize (char *FileName);
-Token_t TokenGetNumber(char **Bufferp, char *Tokenp);
-Token_t TokenGetWord  (char **Bufferp, char *Tokenp);
-Token_t TokenGetString(char **Bufferp, char *Tokenp);
-Token_t TokenGetSpecial(char **Bufferp, char *Tokenp);
-Token_t TokenGetDirect(char **Bufferp, char *Tokenp);
+Token_t TokenGetNumber     (char **Bufferp, char *Tokenp);
+Token_t TokenGetWord       (char **Bufferp, char *Tokenp);
+Token_t TokenGetString     (char **Bufferp, char *Tokenp);
+Token_t TokenGetSpecial    (char **Bufferp, char *Tokenp);
+Token_t TokenGetDirect     (char **Bufferp, char *Tokenp);
+void    TokenPrint         (char *TokenString, Token_t Token);
+Token_t TokenDirectKeyword (char *Bufferp);
+Token_t TokenDirectCommand (char *Bufferp);
 char    *TokenGetStringType(Token_t Token);
-void   TokenPrint (char *TokenString, Token_t Token);
 
 #endif  /* __TOKENIZER_H__ */
