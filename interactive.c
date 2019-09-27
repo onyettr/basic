@@ -86,16 +86,16 @@ int32_t CommandLineMode (void) {
     memset(SourceBuffer,'\0', sizeof(SourceBuffer));    
     printf("basic> "); fflush(stdout);                    /* Sign on with a prompt                     */
 
-    do {
+    do {                                                  /* GRab characters until CR  LF              */
       ch = getchar();
       SourceBuffer[i] = ch;
       i++;
     }  while (ch != '\n');
   
-    Bufferp = UtilsSkipSpaces(Bufferp);
+    Bufferp = UtilsSkipSpaces(Bufferp);                    /* Eat any leading spaces                   */
 
     while ((*Bufferp != '\0' && Token != TOKEN_BYE)) {
-      if (isdigit(*Bufferp)) {                             /* Test for Numbers                         */
+      if (isdigit(*Bufferp) || (*Bufferp == '-')) {        /* Test for Numbers or -ve                  */      
 	Token = TokenGetNumber(&Bufferp, TokenBuffer);
       } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
 	Token = TokenGetWord(&Bufferp, TokenBuffer);

@@ -274,11 +274,21 @@ Token_t TokenDirectCommand (char *Bufferp) {
 Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
   char *Bufp;
   int value = 0;
-
+  bool isNegative = false;
+  
   Bufp = *Bufferp;  
 
-  if (Verbose) printf("TokenGetNUmber\n");
-  
+  if (Verbose) printf("TokenGetNUmber %c \n", *Bufp);
+
+  if (*Bufp == '-') {           /* Test if this is negative number */
+    isNegative = true;
+    *Tokenp++ = *Bufp++;
+
+    /*
+     * TODO: Test here for a Digit following the -ve sign
+     */
+  }
+
   do {
     value = 10 * value + (*Bufp -'0');
     *Tokenp++ = *Bufp++;
@@ -286,8 +296,8 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
 
 
   Literal.Type  = LITERAL_INTEGER;
-  Literal.value.IntegerValue = value;
-
+  Literal.value.IntegerValue = isNegative ? -value : value;
+  
   *Tokenp = '\0';
   *Bufferp = Bufp;
     
@@ -542,12 +552,9 @@ int32_t Tokenize (char *FileName) {
      Bufferp = UtilsSkipSpaces(Bufferp);
      
      printf(">> %s", Bufferp);
-     
-     /* 
-      * Parse the single line until the EOL or Error
-      */
-     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
-       if (isdigit(*Bufferp)) {                             /* Test for Numbers                         */
+
+     while (*Bufferp != '\0') {
+       if (isdigit(*Bufferp) || (*Bufferp == '-')) {        /* Test for Numbers                         */
          Token = TokenGetNumber(&Bufferp, TokenBuffer);
        } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
          Token = TokenGetWord(&Bufferp, TokenBuffer);
