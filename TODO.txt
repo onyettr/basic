@@ -27,5 +27,6 @@
 * Misc Build
 ** TODO src directory seperate makefiles
 * Issues
+** TODO [BUG 1002] Negative Numbers - <SPACE> <DIGIT> doesnt generate an error
 ** TODO [BUG 1000] Verbose mode declared cuases build issue with checkmk
 ** DONE [BUG 1001] Scanner output has extra newline?
