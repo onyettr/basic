@@ -95,8 +95,10 @@ int32_t CommandLineMode (void) {
     Bufferp = UtilsSkipSpaces(Bufferp);                    /* Eat any leading spaces                   */
 
     while ((*Bufferp != '\0' && Token != TOKEN_BYE)) {
-      if (isdigit(*Bufferp) || (*Bufferp == '-')) {        /* Test for Numbers or -ve                  */      
-	Token = TokenGetNumber(&Bufferp, TokenBuffer);
+      if (isdigit(*Bufferp)|| Token == TOKEN_MINUS) {      /* Test for Numbers or -ve                  */
+	if ((Token == TOKEN_MINUS && isdigit(*Bufferp+1)) || isdigit(*Bufferp)) {
+	  Token = TokenGetNumber(&Bufferp, TokenBuffer);
+	}
       } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
 	Token = TokenGetWord(&Bufferp, TokenBuffer);
       } else if (isspace(*Bufferp)) {                      /* Test for SPACE, we just skip             */
@@ -113,9 +115,14 @@ int32_t CommandLineMode (void) {
       if (Token == TOKEN_WORD) {                           /* Test for direct command                  */
         Token = TokenDirectCommand(TokenBuffer);
       }
-      TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
+
+      printf("%s %s\n", TokenBuffer, Bufferp);
+
+      if (Token != TOKEN_NO_TOKEN) {
+	TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
               
-      memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse     */
+	memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse     */
+      }
     }
   }
   TokenPrint(TokenBuffer, Token);  

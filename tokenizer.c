@@ -287,6 +287,12 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
     /*
      * TODO: Test here for a Digit following the -ve sign
      */
+    if (!isdigit(*Bufp+1)) {
+      *Bufferp = Bufp++;
+      *Tokenp++  = *Bufp;
+      
+      return TOKEN_NO_TOKEN;
+    }
   }
 
   do {
@@ -553,8 +559,8 @@ int32_t Tokenize (char *FileName) {
      
      printf(">> %s", Bufferp);
 
-     while (*Bufferp != '\0') {
-       if (isdigit(*Bufferp) || (*Bufferp == '-')) {        /* Test for Numbers                         */
+     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
+       if ((*Bufferp == '-') || isdigit(*Bufferp)) {        /* Test for Numbers including -ve ones      */
          Token = TokenGetNumber(&Bufferp, TokenBuffer);
        } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
          Token = TokenGetWord(&Bufferp, TokenBuffer);
@@ -569,9 +575,11 @@ int32_t Tokenize (char *FileName) {
          Token = TokenGetSpecial(&Bufferp, TokenBuffer);       
        }
 
-       TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
+       if (Token != TOKEN_NO_TOKEN) {
+	 TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
               
-       memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse     */
+	 memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse     */
+       }
      }
   }
   Token = TOKEN_EOF;
