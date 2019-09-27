@@ -22,7 +22,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    Bufferp = Pattern;
    Tokenp  = TokenBuffer;
    
-   ReturnToken = TokenGetNumber(&Bufferp, Tokenp);
+   ReturnToken = TokenGetNumber(&Bufferp, Tokenp, false);
 
    fail_unless(ReturnToken == TOKEN_DIGIT, "TokenGetNumber - wrong token return");
    fail_unless(Tokenp[0] == '1',           "TokenGetNumber - didnt copy token  ");
@@ -45,7 +45,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    Bufferp = Pattern;
    Tokenp  = TokenBuffer;
    
-   ReturnToken = TokenGetNumber(&Bufferp, Tokenp);
+   ReturnToken = TokenGetNumber(&Bufferp, Tokenp, true);
 
    fail_unless(ReturnToken == TOKEN_DIGIT, "TokenGetNumber - wrong token return");
    fail_unless(Tokenp[0] == '-',           "TokenGetNumber - didnt copy token[0]");
@@ -65,7 +65,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    Bufferp = Pattern;
    Tokenp  = TokenBuffer;
    
-   ReturnToken = TokenGetNumber(&Bufferp, Tokenp);
+   ReturnToken = TokenGetNumber(&Bufferp, Tokenp, false);
    printf("Token = %s\n", TokenGetStringType(ReturnToken));
    
    fail_unless(ReturnToken == TOKEN_DIGIT, "TokenGetNumber - wrong token return");

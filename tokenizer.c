@@ -271,29 +271,13 @@ Token_t TokenDirectCommand (char *Bufferp) {
  * @note
  * @todo      Floating point and MAX_INT overflow
  */
-Token_t TokenGetNumber(char **Bufferp, char *Tokenp) {
+Token_t TokenGetNumber(char **Bufferp, char *Tokenp, bool isNegative) {
   char *Bufp;
   int value = 0;
-  bool isNegative = false;
   
   Bufp = *Bufferp;  
 
   if (Verbose) printf("TokenGetNUmber %c \n", *Bufp);
-
-  if (*Bufp == '-') {           /* Test if this is negative number */
-    isNegative = true;
-    *Tokenp++ = *Bufp++;
-
-    /*
-     * TODO: Test here for a Digit following the -ve sign
-     */
-    if (!isdigit(*Bufp+1)) {
-      *Bufferp = Bufp++;
-      *Tokenp++  = *Bufp;
-      
-      return TOKEN_NO_TOKEN;
-    }
-  }
 
   do {
     value = 10 * value + (*Bufp -'0');
@@ -560,8 +544,8 @@ int32_t Tokenize (char *FileName) {
      printf(">> %s", Bufferp);
 
      while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
-       if ((*Bufferp == '-') || isdigit(*Bufferp)) {        /* Test for Numbers including -ve ones      */
-         Token = TokenGetNumber(&Bufferp, TokenBuffer);
+       if ((Token == TOKEN_MINUS && isdigit(*Bufferp+1)) || isdigit(*Bufferp)) {       /* Test for Numbers including -ve ones      */
+         Token = TokenGetNumber(&Bufferp, TokenBuffer,(Token == TOKEN_MINUS));
        } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
          Token = TokenGetWord(&Bufferp, TokenBuffer);
        } else if (isspace(*Bufferp)) {                      /* Test for SPACE, we just skip             */
@@ -575,11 +559,9 @@ int32_t Tokenize (char *FileName) {
          Token = TokenGetSpecial(&Bufferp, TokenBuffer);       
        }
 
-       if (Token != TOKEN_NO_TOKEN) {
-	 TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
+       TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
               
-	 memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse     */
-       }
+       memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse     */
      }
   }
   Token = TOKEN_EOF;
