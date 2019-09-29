@@ -289,7 +289,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, bool isNegative) {
   Literal.value.IntegerValue = isNegative ? -value : value;
   
   *Tokenp = '\0';
-  *Bufferp = Bufp;
+  *Bufferp = (char *)Bufp;
     
   return TOKEN_DIGIT;
 }
@@ -321,7 +321,7 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   *Tokenp = '\0';
   //  printf("Last [%p] = %d\n", (void *)Tokenp, *Tokenp);
   
-  *Bufferp = Bufp;
+  *Bufferp = (char *)Bufp;
 
   /*
    * Test if this s Keyword, TOKEN_ERROR means it isnt
@@ -357,7 +357,7 @@ Token_t TokenGetString (char **Bufferp, char *Tokenp) {
   Literal.Type  = LITERAL_STRING;  
   strcpy(Literal.value.StringValue, Tokenp);
 
-  *Bufferp = Bufp;
+  *Bufferp = (char *)Bufp;
   
   return TOKEN_STRING;
 }
@@ -539,7 +539,7 @@ int32_t Tokenize (char *FileName) {
    * Read the file until the EOF
    */
   while (UtilsReadSourceLine(fp, Bufferp) == true) {
-     Bufferp = UtilsSkipSpaces(Bufferp);
+    Bufferp = UtilsSkipSpaces(Bufferp);
      
      printf(">> %s", Bufferp);
 

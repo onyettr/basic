@@ -8,6 +8,7 @@
 SRC_DIR		= 	.
 OBJECT_DIR	= 	$(SRC_DIR)/object
 LIB_DIR		= 	$(SRC_DIR)/libraries
+INC_DIR		= 	$(SRC_DIR)/include
 MAKE_DIR_CMD	= 	mkdir $(OBJECT_DIR)
 MAKE_LIB_CMD	= 	mkdir $(LIB_DIR)
 
@@ -17,6 +18,7 @@ LINK  		= 	gcc
 AR		= 	ar
 CHK_TOOL	= 	checkmk
 #CODE_CHECK       = 	splint
+CLANG		= 	clang
 CODE_CHECK	= 	cppcheck
 CHECK_FOR_CHK	:= 	$(shell command -v $(CHK_TOOL) 2> /dev/null)
 CHECK_FOR_CPP	:=	$(shell command -v $(CODE_CHECK) 2> /dev/null)
@@ -32,7 +34,7 @@ PROFLAGS	= 	-pg
 
 # Main CC and Link build strings
 DEBUG		= 	-g
-CFLAGS		= 	-c -std=c99 -Wall -pedantic $(PFLAGS)
+CFLAGS		= 	-c -std=c99 -Wall -pedantic $(PFLAGS) -I $(INC_DIR)
 LFLAGS		= 	$(PFLAGS) -static -L. -L./$(LIB_DIR)
 
 # -DDEBUG_TRACE	Will turn on deep trace per function
@@ -90,6 +92,7 @@ $(LIB_DIR)/libtokenizer.a:	$(OBJECT_DIR)/tokenizer.o
 #*******************************************************************************
 $(OBJECT_DIR)/main.o:		main.c
 	$(CC) $(CFLAGS) $(DEBUG) main.c -o $(OBJECT_DIR)/main.o
+
 $(OBJECT_DIR)/lister.o:		lister.c
 	$(CC) $(CFLAGS) $(DEBUG) lister.c -o $(OBJECT_DIR)/lister.o
 $(OBJECT_DIR)/utilities.o:	utilities.c
@@ -115,13 +118,20 @@ ifndef CHECK_FOR_CHK
 	@echo "** checkmk command not found"
 else
 	$(CHK_TOOL) basic_check.ts > basic_check.c
-	$(CC)  basic_check.c 	 \
-	$(OBJECT_DIR)/interactive.o		 \
-	-static -L$(LIB_DIR) 			 \
-	-lcheck -llister -lutilities -ltokenizer \
-	-lpthread				 \
+	$(CC)  basic_check.c 	 			\
+	$(OBJECT_DIR)/interactive.o		 	\
+	-static -L$(LIB_DIR) -I $(INC_DIR)	 	\
+	-lcheck -llister -lutilities -ltokenizer 	\
+	-lpthread				 	\
 	-o basic_check.exe
 endif
+
+clang:
+		$(CLANG) $(CFLAGS) $(DEBUG) main.c        -o $(OBJECT_DIR)/main_clang.o
+		$(CLANG) $(CFLAGS) $(DEBUG) lister.c      -o $(OBJECT_DIR)/lister_clang.o
+		$(CLANG) $(CFLAGS) $(DEBUG) utilities.c   -o $(OBJECT_DIR)/utilities_clang.o
+		$(CLANG) $(CFLAGS) $(DEBUG) tokenizer.c   -o $(OBJECT_DIR)/tokenizer_clang.o
+		$(CLANG) $(CFLAGS) $(DEBUG) interactive.c -o $(OBJECT_DIR)/interactive_clang.o
 
 #
 # Code syntax checking target
@@ -140,6 +150,7 @@ endif
 clean:
 	rm -f basic.exe
 	rm -f basic_check.exe
+	rm -f basic_check.c
 	rm -f $(LIB_DIR)/liblister.a
 	rm -f $(LIB_DIR)/libutilities.a
 	rm -f $(LIB_DIR)/libtokenizer.a

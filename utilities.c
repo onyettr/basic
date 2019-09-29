@@ -87,7 +87,7 @@ void Error ( char *format, ... ) {
  */
 bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer) {
 
-   if (fgets(SourceBuffer,MAX_SOURCE_LINE_LENGTH, sourceFile) != NULL ) {
+  if (fgets((char *)SourceBuffer,MAX_SOURCE_LINE_LENGTH, sourceFile) != NULL ) {
       return true;
    }
 
@@ -103,7 +103,7 @@ bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer) {
  * @details     Skips spaces in a given string and returns pointer to first non space elemento
  */
 char *UtilsSkipSpaces (char *SourceBuffer) {
-   char *Startp = SourceBuffer;
+  char *Startp = SourceBuffer;
 
    while (isspace(*Startp)) {   
       Startp++;
