@@ -1,8 +1,0 @@
-special  ! @ 100 .
-Conditionals < > 
-Arithmetic + - / * =
-compare < > ? \ _
-Punctuation , . : ; ' " ? `
-arrays [ ] { } ( ) 
-Bit operators ^ | & ~ 
-                     

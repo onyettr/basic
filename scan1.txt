@@ -1,3 +1,0 @@
-NO SPACE 123 special 2    .
-String Test1 "hello"
-String Test2 alpha1234
