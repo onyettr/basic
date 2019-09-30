@@ -48,6 +48,7 @@ CODE_CHECK_ARGS	=  	--enable=all
 # Libraries and objects targets
 #
 OBJS  		     = 	$(OBJECT_DIR)/main.o  		\
+			$(OBJECT_DIR)/error.o		\
 			$(OBJECT_DIR)/interactive.o	\
 			$(OBJECT_DIR)/parsecommandline.o
 
@@ -92,7 +93,8 @@ $(LIB_DIR)/libtokenizer.a:	$(OBJECT_DIR)/tokenizer.o
 #*******************************************************************************
 $(OBJECT_DIR)/main.o:		main.c
 	$(CC) $(CFLAGS) $(DEBUG) main.c -o $(OBJECT_DIR)/main.o
-
+$(OBJECT_DIR)/error.o:		error.c
+	$(CC) $(CFLAGS) $(DEBUG) error.c -o $(OBJECT_DIR)/error.o
 $(OBJECT_DIR)/lister.o:		lister.c
 	$(CC) $(CFLAGS) $(DEBUG) lister.c -o $(OBJECT_DIR)/lister.o
 $(OBJECT_DIR)/utilities.o:	utilities.c
@@ -120,6 +122,7 @@ else
 	$(CHK_TOOL) basic_check.ts > basic_check.c
 	$(CC)  basic_check.c 	 			\
 	$(OBJECT_DIR)/interactive.o		 	\
+	$(OBJECT_DIR)/error.o		 		\
 	-static -L$(LIB_DIR) -I $(INC_DIR)	 	\
 	-lcheck -llister -lutilities -ltokenizer 	\
 	-lpthread				 	\
@@ -155,6 +158,7 @@ clean:
 	rm -f $(LIB_DIR)/libutilities.a
 	rm -f $(LIB_DIR)/libtokenizer.a
 	rm -f $(OBJECT_DIR)/main.o
+	rm -f $(OBJECT_DIR)/error.o
 	rm -f $(OBJECT_DIR)/lister.o
 	rm -f $(OBJECT_DIR)/utilities.o
 	rm -f $(OBJECT_DIR)/tokenizer.o

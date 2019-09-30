@@ -52,6 +52,7 @@ static Literal_t Literal;
  *  @struct TokenCommandList_t TokenCommand
  */
 static TokenCommandList_t TokenCommand[] = {
+
     { "HELLO"   , TOKEN_HELLO   , NULL },
     { "NEW"     , TOKEN_NEW     , NULL },
     { "OLD"     , TOKEN_OLD     , NULL },
@@ -269,11 +270,13 @@ Token_t TokenDirectCommand (char *Bufferp) {
  * @return    Token_t 
  * @details   Builds the value of the number as a literal integer and not ascii. 
  * @note
- * @todo      Floating point and MAX_INT overflow
+ * @todo      Floating point e.g. 2.56, -.25 
+ *            Exponent       e.g. 2E10 or 2^10(?)
  */
 Token_t TokenGetNumber(char **Bufferp, char *Tokenp, bool isNegative) {
   char *Bufp;
   int value = 0;
+  uint32_t DigitCount = 0;
   
   Bufp = *Bufferp;  
 
@@ -282,8 +285,14 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, bool isNegative) {
   do {
     value = 10 * value + (*Bufp -'0');
     *Tokenp++ = *Bufp++;
-  } while (isdigit(*Bufp));
+    DigitCount++;
+  } while ( (isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT));
 
+  if (DigitCount >= MAX_DIGIT_COUNT) {
+    Error("%s", ErrorToString(ERROR_NUMBER_TOO_LARGE));
+
+    return TOKEN_ERROR;
+  }
 
   Literal.Type  = LITERAL_INTEGER;
   Literal.value.IntegerValue = isNegative ? -value : value;

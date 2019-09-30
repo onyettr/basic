@@ -22,32 +22,31 @@ Includes
 #include <stdbool.h>
 #include "utilities.h"
 #include "lister.h"
+#include "error.h"
 #include "tokenizer.h"
 #include "interactive.h"
 
-#define PROGRAM_NAME            "basic"                        /*!> No name. no slogan */
-#define VERSION                 "(v1.0.0) DEVELOPMENT Version" /*!> Version            */
-#define AUTHOR_STRING           "()"                           /*!> Who did this?      */
+#define PROGRAM_NAME            "basic"                        /*!> No name. no slogan          */
+#define VERSION                 "(v1.0.0) DEVELOPMENT Version" /*!> Version                     */
+#define AUTHOR_STRING           "()"                           /*!> Who did this?               */
 
 /**
  * @brief control codes
  */
-#define BELL                      '\007'      /*!> Console Bell */
-#define FORM_FEED                 '\014'      /*!> Page break   */
-
-/**
- * @brief Error codes
- */
-#define SUCCESS                       1
-#define FAILURE                       0
-#define ERROR_FILE_OPEN_FAILURE     (-1) 
-#define ERROR_FILE_NO_FILENAME      (-2)
+#define BELL                    '\007'                         /*!> Console Bell                */
+#define FORM_FEED               '\014'                         /*!> Page break                  */
 
 /**
  * @brief macros
  */
-#define UNUSED( X )              (void)X
+#define UNUSED( X )             (void)X
 #define DIM( X )                (sizeof(X) / sizeof(X[0])
+
+/**
+ * @brief Constants
+ */
+#define MAX_DIGIT_COUNT         9                              /*!> Accuracy of original machine */
+
 
 /*
 ******************************************************************************
