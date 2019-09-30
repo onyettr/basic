@@ -137,6 +137,7 @@ typedef int32_t Token_t;
  */
 typedef enum {
    LITERAL_STRING,
+   LITERAL_FLOAT,
    LITERAL_INTEGER
 } LiteralType_t;
 
@@ -148,6 +149,7 @@ typedef struct {
   LiteralType_t Type;
   union {
     int32_t IntegerValue;
+    float   FloatValue;
     char    StringValue[MAX_SOURCE_LINE_LENGTH];
   } value;                   /*! union value */
 } Literal_t;
@@ -183,7 +185,7 @@ Prototypes of all functions contained in this file (in order of occurance)
 ******************************************************************************
 */
 int32_t Tokenize (char *FileName);
-Token_t TokenGetNumber     (char **Bufferp, char *Tokenp, bool isNegative);
+Token_t TokenGetNumber     (char **Bufferp, char *Tokenp, Token_t PreToken);
 Token_t TokenGetWord       (char **Bufferp, char *Tokenp);
 Token_t TokenGetString     (char **Bufferp, char *Tokenp);
 Token_t TokenGetSpecial    (char **Bufferp, char *Tokenp);

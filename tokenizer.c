@@ -270,12 +270,13 @@ Token_t TokenDirectCommand (char *Bufferp) {
  * @return    Token_t 
  * @details   Builds the value of the number as a literal integer and not ascii. 
  * @note
- * @todo      Floating point e.g. 2.56, -.25 
+ * @todo      Floating point e.g. 2.56, -.25 .25
  *            Exponent       e.g. 2E10 or 2^10(?)
  */
-Token_t TokenGetNumber(char **Bufferp, char *Tokenp, bool isNegative) {
+Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
   char *Bufp;
   int value = 0;
+  bool isFloatingPoint = false;
   uint32_t DigitCount = 0;
   
   Bufp = *Bufferp;  
@@ -294,8 +295,23 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, bool isNegative) {
     return TOKEN_ERROR;
   }
 
-  Literal.Type  = LITERAL_INTEGER;
-  Literal.value.IntegerValue = isNegative ? -value : value;
+  if (*Bufp++ == '.') {      /* This could be a floating point number */
+    printf("a floater?\n");
+    while ((isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT)) {
+      value = 10 * value + (*Bufp -'0');
+      *Tokenp++ = *Bufp++;
+      DigitCount++;
+    }
+    isFloatingPoint = true;
+  }
+  
+  if (isFloatingPoint) {
+    Literal.Type  = LITERAL_FLOAT;
+    Literal.value.FloatValue = (PreToken == TOKEN_MINUS) ? -value : value;
+  } else {
+    Literal.Type  = LITERAL_INTEGER;
+    Literal.value.IntegerValue = (PreToken == TOKEN_MINUS) ? -value : value;
+  }
   
   *Tokenp = '\0';
   *Bufferp = (char *)Bufp;
@@ -497,7 +513,13 @@ void TokenPrint (char *TokenString, Token_t Token) {
 
       printf("\t> %16s   %s", TokenGetStringType(Token), TokenString);
       if (Token == TOKEN_DIGIT ) {
-  	printf("   INTEGER = %d", Literal.value.IntegerValue);
+	if (Literal.Type == LITERAL_INTEGER) {
+	  printf("   INTEGER = %d", Literal.value.IntegerValue);
+	} else if (Literal.Type == LITERAL_FLOAT) {
+	  printf("   FLOAT   = %f", Literal.value.FloatValue);	  
+	} else {
+	  printf("   <UNKNOWN LITERAL?>\n");	  	  
+	}
       }
       Return = strchr(TokenString,'\n');
       if (Return == NULL) {
@@ -554,7 +576,7 @@ int32_t Tokenize (char *FileName) {
 
      while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
        if ((Token == TOKEN_MINUS && isdigit(*Bufferp+1)) || isdigit(*Bufferp)) {       /* Test for Numbers including -ve ones      */
-         Token = TokenGetNumber(&Bufferp, TokenBuffer,(Token == TOKEN_MINUS));
+         Token = TokenGetNumber(&Bufferp, TokenBuffer, Token);
        } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
          Token = TokenGetWord(&Bufferp, TokenBuffer);
        } else if (isspace(*Bufferp)) {                      /* Test for SPACE, we just skip             */

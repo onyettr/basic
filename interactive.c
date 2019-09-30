@@ -95,9 +95,9 @@ int32_t CommandLineMode (void) {
     Bufferp = UtilsSkipSpaces(Bufferp);                    /* Eat any leading spaces                   */
 
     while ((*Bufferp != '\0' && Token != TOKEN_BYE)) {
-      //      if (isdigit(*Bufferp)|| Token == TOKEN_MINUS) {      /* Test for Numbers or -ve                  */
-      if ((Token == TOKEN_MINUS && isdigit(*Bufferp+1)) || isdigit(*Bufferp)) {
-	Token = TokenGetNumber(&Bufferp, TokenBuffer, (Token == TOKEN_MINUS));
+      if ((Token == TOKEN_MINUS && isdigit(*Bufferp+1)) || /* Test for Numbers or -ve                  */
+	  isdigit(*Bufferp) || Token == TOKEN_PERIOD) {
+	Token = TokenGetNumber(&Bufferp, TokenBuffer, Token);
       } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
 	Token = TokenGetWord(&Bufferp, TokenBuffer);
       } else if (isspace(*Bufferp)) {                      /* Test for SPACE, we just skip             */
