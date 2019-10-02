@@ -70,6 +70,27 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    
    fail_unless(ReturnToken == TOKEN_DIGIT, "TokenGetNumber - wrong token return");
 
+#test TokenGetNumber_one_floating_point
+   Token_t ReturnToken;
+   char TokenBuffer[10];
+   char *Bufferp;
+   char *Tokenp;
+   char Pattern[4];
+
+   memset(TokenBuffer, '\0',sizeof(TokenBuffer));
+   
+   Pattern[0] = '1';
+   Pattern[1] = '.';
+   Pattern[2] = '2';
+   Pattern[3] = '\0';
+   Bufferp = Pattern;
+   Tokenp  = TokenBuffer;
+   
+   ReturnToken = TokenGetNumber(&Bufferp, Tokenp, false);
+   printf("Token = %s\n", TokenGetStringType(ReturnToken));
+   
+   fail_unless(ReturnToken == TOKEN_DIGIT, "TokenGetNumber - wrong token return");
+
 #test TokenGetWord_word_success
    Token_t ReturnToken;
    char TokenBuffer[10];

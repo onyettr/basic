@@ -275,37 +275,47 @@ Token_t TokenDirectCommand (char *Bufferp) {
  */
 Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
   char *Bufp;
-  int value = 0;
+  float value = 0.0;
   bool isFloatingPoint = false;
   uint32_t DigitCount = 0;
+  float power = 1.0;
   
   Bufp = *Bufferp;  
 
-  if (Verbose) printf("TokenGetNUmber %c \n", *Bufp);
-
+  if (Verbose) printf("TokenGetNumber %c \n", *Bufp);
+#if 1
   do {
     value = 10 * value + (*Bufp -'0');
     *Tokenp++ = *Bufp++;
     DigitCount++;
   } while ( (isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT));
-
+#else
+  while ( (isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT) && (PreToken != TOKEN_PERIOD)) {
+    value = 10 * value + (*Bufp -'0');
+    *Tokenp++ = *Bufp++;
+    DigitCount++;
+  } 
+#endif  
   if (DigitCount >= MAX_DIGIT_COUNT) {
     Error("%s", ErrorToString(ERROR_NUMBER_TOO_LARGE));
 
     return TOKEN_ERROR;
   }
 
-  if (*Bufp++ == '.') {      /* This could be a floating point number */
-    printf("a floater?\n");
+  if (*Bufp == '.' || PreToken == TOKEN_PERIOD ) {      /* This could be a floating point number */
+    if (Verbose) printf("TokenGetNumber: floating point %f\n", value);
     while ((isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT)) {
-      value = 10 * value + (*Bufp -'0');
+      value = 10.0 * value + (*Bufp -'0');
+      power *= 10.0;
       *Tokenp++ = *Bufp++;
       DigitCount++;
+      if (Verbose) printf("TokenGetNumber: %f\n", value);      
     }
     isFloatingPoint = true;
   }
   
   if (isFloatingPoint) {
+    value = value / power;
     Literal.Type  = LITERAL_FLOAT;
     Literal.value.FloatValue = (PreToken == TOKEN_MINUS) ? -value : value;
   } else {
@@ -574,8 +584,10 @@ int32_t Tokenize (char *FileName) {
      
      printf(">> %s", Bufferp);
 
-     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {
-       if ((Token == TOKEN_MINUS && isdigit(*Bufferp+1)) || isdigit(*Bufferp)) {       /* Test for Numbers including -ve ones      */
+     while (*Bufferp != '\0' && Token != TOKEN_ERROR) {     /* Test for Numbers including -ve ones      */
+       if ((Token == TOKEN_MINUS && isdigit(*Bufferp+1)) ||
+ 	   (Token == TOKEN_PERIOD && isdigit(*Bufferp+1)) ||
+	   isdigit(*Bufferp) || Token == TOKEN_PERIOD) {
          Token = TokenGetNumber(&Bufferp, TokenBuffer, Token);
        } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
          Token = TokenGetWord(&Bufferp, TokenBuffer);
