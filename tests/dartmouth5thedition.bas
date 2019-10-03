@@ -1,0 +1,33 @@
+REM Dartmouth Fifth Edition Syntax / Keywords - 1970
+LET
+PRINT
+END
+FOR
+NEXT
+GOTO
+GOSUB
+RETURN
+IF
+THEN
+DEF
+READ
+DATA
+DIM
++ - * / ^
+; ,
+MAT
+SGN
+RESTORE
+INPUT
+RANDOMIZE
+ON
+CHANGE
+REM Additions
+COMMON
+TIM
+LEN
+STR$
+VAL
+ASC
+CLK$
+DAT$

@@ -1,0 +1,22 @@
+REM Dartmouth Third Edition Syntax / Keywords - 1966
+LET
+PRINT
+END
+FOR
+NEXT
+GOTO
+GOSUB
+RETURN
+IF
+THEN
+DEF
+READ
+DATA
+DIM
++ - * / ^
+; ,
+MAT
+REM Additions
+SGN
+RESTORE
+INPUT

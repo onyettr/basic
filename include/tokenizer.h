@@ -70,7 +70,7 @@ typedef enum {
     TOKEN_SPACE,
     
     /*
-     * Reserved words tokens, based on Dartmouth BASIC original dialect
+     * Reserved words tokens, based on Dartmouth BASIC original dialect (Edition #1_
      */
     TOKEN_LET,
     TOKEN_PRINT,
@@ -79,7 +79,9 @@ typedef enum {
     TOKEN_DATA,
     TOKEN_GOTO,
     TOKEN_IF,
+    TOKEN_THEN,
     TOKEN_FOR,
+    TOKEN_TO, 
     TOKEN_NEXT,
     TOKEN_GOSUB,
     TOKEN_RETURN,
@@ -88,6 +90,34 @@ typedef enum {
     TOKEN_REM,
     TOKEN_STOP,
 
+    TOKEN_MAT,                    /* 2nd edition */
+
+    TOKEN_SGN,                    /* 3rd edition */
+    TOKEN_RESTORE,
+    TOKEN_INPUT,
+
+    TOKEN_RANDOMIZE,              /* 4th edition */
+    TOKEN_ON,
+    TOKEN_CHANGE,
+
+    TOKEN_RESET,                  /* 5th edition */
+    TOKEN_LOC,
+    TOKEN_LOF,
+    TOKEN_CHAIN,
+    TOKEN_COMMON,
+    TOKEN_TIM,
+    TOKEN_LEN,
+    TOKEN_STRDOLLAR,
+    TOKEN_VAL,
+    TOKEN_ASC,
+
+    TOKEN_CALL,                   /* 6th edition */
+    TOKEN_SUB,
+    TOKEN_SUBEND,
+    TOKEN_FILE,
+    TOKEN_SEG,
+    TOKEN_MID,
+    
     /*
      * Numeric functions
      */
@@ -105,20 +135,25 @@ typedef enum {
     /*
      * Direct commands
      */
-    TOKEN_HELLO,
-    TOKEN_NEW,
-    TOKEN_OLD,
-    TOKEN_SAVE,
-    TOKEN_REPLACE,
-    TOKEN_RENAME,
-    TOKEN_CAT,
-    TOKEN_LIST,
-    TOKEN_RUN,
-    TOKEN_CMD_STOP,
-    TOKEN_UNSAVE,
-    TOKEN_SYSTEM,
-    TOKEN_BYE,
+    TOKEN_HELLO,                    /* Log onto DTSS                    */
+    TOKEN_BYE,                      /* Log off  DTSS                    */
+    TOKEN_BASIC,                    /* Start basic mode                 */
+    TOKEN_NEW,                      /* Name and begin writing a program */
+    TOKEN_OLD,                      /* Get previous program             */
+    TOKEN_SAVE,                     /* Save current program             */
+    TOKEN_REPLACE,                  /* Save using new filename          */
+    TOKEN_RENAME,                   /* Change name                      */
+    TOKEN_CAT,                      /* CATALOG display programs stored  */
+    TOKEN_LIST,                     /* Display current program          */
+    TOKEN_RUN,                      /* Execute current program          */
+    TOKEN_CMD_STOP,                 /* Interrupt current program        */
+    TOKEN_UNSAVE,                   /* clear current program            */
+    TOKEN_SYSTEM,                   /* ??                               */
     TOKEN_GOODBYE,
+    TOKEN_SCRATCH,                  /* erase current program            */
+    TOKEN_FRI,                      /* Friden mode                      */
+    TOKEN_NFR,                      /* Exit FRI mode                    */
+    TOKEN_EXPLAIN,                  /* Help command                     */
     
     TOKEN_EOF,
     TOKEN_OK, 

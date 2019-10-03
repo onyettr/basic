@@ -82,12 +82,28 @@ static TokenCommandList_t TokenKeyword[] = {
     { "DATA"    , TOKEN_DATA    , NULL },
     { "GOTO"    , TOKEN_GOTO    , NULL },
     { "IF"      , TOKEN_IF      , NULL },
+    { "THEN"    , TOKEN_THEN    , NULL },    
     { "FOR"     , TOKEN_FOR     , NULL },
+    { "TO"      , TOKEN_TO      , NULL },    
     { "NEXT"    , TOKEN_NEXT    , NULL },
     { "GOSUB"   , TOKEN_GOSUB   , NULL },
     { "RETURN"  , TOKEN_RETURN  , NULL },
     { "DEF"     , TOKEN_DEF     , NULL },
+    { "DIM"     , TOKEN_DIM     , NULL },    
     { "REM"     , TOKEN_REM     , NULL },
+    { "MAT"     , TOKEN_MAT     , NULL },      /* 2nd edition */
+    { "SGN"     , TOKEN_SGN     , NULL },      /* 3rd edition */
+    { "RESTORE" , TOKEN_RESTORE , NULL },
+    { "INPUT"   , TOKEN_INPUT   , NULL },
+    { "RANDOMIZE",TOKEN_RANDOMIZE,NULL },      /* 4th edition */
+    { "ON"      , TOKEN_ON      , NULL },
+    { "CHANGE"  , TOKEN_CHANGE  , NULL },
+    { "RESET"   , TOKEN_RESET   , NULL },      /* 5th edition */
+    { "LOC"     , TOKEN_LOC     , NULL },
+    { "LOF"     , TOKEN_LOF     , NULL },
+    { "CHAIN"   , TOKEN_CHAIN   , NULL },
+    { "COMMON"  , TOKEN_COMMON  , NULL },
+    
     //    { "STOP"    , TOKEN_STOP    , NULL },
     { NULL      , TOKEN_WORD    , NULL }    
 };
@@ -165,9 +181,9 @@ char *TokenGetStringType(Token_t Token) {
      case TOKEN_VERTICAL_BAR:  return ("<VERT BAR>");   break;
      case TOKEN_COMMA:         return ("<COMMA>");      break;
      case TOKEN_SEMI_COLON:    return ("<SEMI COLON>"); break;
-     case TOKEN_COLON:         return ("COLON>");       break;       
+     case TOKEN_COLON:         return ("<COLON>");      break;       
      case TOKEN_QUOTE:         return ("<QUOTE>");      break; 
-     case TOKEN_SINGLE_QUOTE:  return ("<SINGLE QUOTE>");break;
+     case TOKEN_SINGLE_QUOTE:  return ("<SNG  QUOTE>"); break;
      case TOKEN_OPEN_QUOTE:    return ("<OPEN QUOTE>"); break;             
      case TOKEN_PERIOD:        return ("<PERIOD>");     break;
      case TOKEN_SPACE:         return ("<SPACE>");      break;
@@ -184,14 +200,23 @@ char *TokenGetStringType(Token_t Token) {
      case TOKEN_READ:          return ("<RW READ>");    break;
      case TOKEN_DATA:          return ("<RW DATA>");    break;
      case TOKEN_GOTO:          return ("<RW GOTO>");    break;
-     case TOKEN_IF:            return ("<RW IF>");      break;
      case TOKEN_FOR:           return ("<RW FOR>");     break;
+     case TOKEN_IF:            return ("<RW IF>");      break;
+     case TOKEN_THEN:          return ("<RW THEN>");    break;
+     case TOKEN_TO:            return ("<RW TO>");      break;       
      case TOKEN_NEXT:          return ("<RW NEXT>");    break;
      case TOKEN_GOSUB:         return ("<RW GOSUB>");   break;
      case TOKEN_RETURN:        return ("<RW RETURN>");  break;
      case TOKEN_DEF:           return ("<RW DEF>");     break;
      case TOKEN_DIM:           return ("<RW DIM>");     break;
      case TOKEN_REM:           return ("<RW REM>");     break;
+     case TOKEN_MAT:           return ("<RW MAT>");     break;
+     case TOKEN_SGN:           return ("<RW SGN>");     break;
+     case TOKEN_RESTORE:       return ("<RW RESTORE>"); break;
+     case TOKEN_INPUT:         return ("<RW INPUT>");   break;
+     case TOKEN_RANDOMIZE:     return ("<RW RANDOMIZE>"); break;
+     case TOKEN_ON:            return ("<RW ON>");      break;
+     case TOKEN_CHANGE:        return ("<RW CHANGE>");  break;                     
      case TOKEN_CMD_STOP:       
      case TOKEN_STOP:          return ("<CMD STOP>");   break;
      case TOKEN_HELLO:         return ("<CMD HELLO>");  break;
@@ -283,7 +308,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
   Bufp = *Bufferp;  
 
   if (Verbose) printf("TokenGetNumber %c \n", *Bufp);
-#if 1
+#if 0
   do {
     value = 10 * value + (*Bufp -'0');
     *Tokenp++ = *Bufp++;
@@ -304,6 +329,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
 
   if (*Bufp == '.' || PreToken == TOKEN_PERIOD ) {      /* This could be a floating point number */
     if (Verbose) printf("TokenGetNumber: floating point %f\n", value);
+    Bufp++;
     while ((isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT)) {
       value = 10.0 * value + (*Bufp -'0');
       power *= 10.0;
@@ -521,12 +547,12 @@ void TokenPrint (char *TokenString, Token_t Token) {
     if (*TokenString != '\0') {
       char *Return;
 
-      printf("\t> %16s   %s", TokenGetStringType(Token), TokenString);
+      printf("\t> %16s   %16s", TokenGetStringType(Token), TokenString);
       if (Token == TOKEN_DIGIT ) {
 	if (Literal.Type == LITERAL_INTEGER) {
-	  printf("   INTEGER = %d", Literal.value.IntegerValue);
+	  printf("   INTEGER = %16d", Literal.value.IntegerValue);
 	} else if (Literal.Type == LITERAL_FLOAT) {
-	  printf("   FLOAT   = %f", Literal.value.FloatValue);	  
+	  printf("   FLOAT   = %16f", Literal.value.FloatValue);	  
 	} else {
 	  printf("   <UNKNOWN LITERAL?>\n");	  	  
 	}
