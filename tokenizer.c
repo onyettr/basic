@@ -49,7 +49,7 @@ static Literal_t Literal;
 
 /**
  *  @brief  All Direct (not keywords) commands
- *  @struct TokenCommandList_t TokenCommand
+ *  @struct TokenCommandList_t
  */
 static TokenCommandList_t TokenCommand[] = {
 
@@ -72,7 +72,7 @@ static TokenCommandList_t TokenCommand[] = {
 
 /**
  *  @brief  All language reserved Keywords
- *  @struct TokenCommandList_t TokenKeyword
+ *  @struct TokenCommandList_t 
  */
 static TokenCommandList_t TokenKeyword[] = {
     { "LET"     , TOKEN_LET     , NULL },
@@ -358,7 +358,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
  * @param[in] Bufferp - Buffer to tokenize
  * @param[out]Tokenp  - add to tokenized buffer
  * @return    Token_t 
- * @notes     Tokenizer ceases when a SPACE or end of line if found
+ * @note      Tokenizer ceases when a SPACE or end of line if found
  * @details
  * @todo
  */
@@ -393,7 +393,7 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
  * @param[in] Bufferp - Buffer to tokenize
  * @param[out]Tokenp  - add to tokenized buffer
  * @return    Token_t 
- * @notes     Tokenizer ceases when a SPACE or end of line if found
+ * @note      Tokenizer ceases when a SPACE or end of line if found
  * @details
  * @todo
  */
@@ -424,7 +424,7 @@ Token_t TokenGetString (char **Bufferp, char *Tokenp) {
  * @param[in]  Bufferp - Buffer pointer to input characters. Pointer is moved and passed back.
  * @param[out] Tokenp  - add to token buffer for further processing. 
  * @return     Token_t - The type of tokem found
- * @notes      The Special tokens are the non Alpha numerics. 
+ * @note       The Special tokens are the non Alpha numerics. 
  *             Logical operators need extra handling e.g. >= <= <> requires the next character be parsed as well
  *             >  GT
  *             <  LT
@@ -514,7 +514,7 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
  * @param[in]  Bufferp - Buffer to tokenize
  * @param[out] Tokenp  - add to tokenized buffer
  * @return     Token_t 
- * @notes     
+ * @note       None
  */
 Token_t TokenGetDirect(char **Bufferp, char *Tokenp) {
     char *Bufp;
@@ -533,7 +533,7 @@ Token_t TokenGetDirect(char **Bufferp, char *Tokenp) {
  * @param[in] *TokenString - actual token buffer
  * @param[in] Token        - The token found
  * @return    void
- * @notes     
+ * @note
  * @details   Some tokens (SPACE) are ignored
  * @todo
  */
