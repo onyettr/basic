@@ -249,10 +249,8 @@ char *TokenGetStringType(Token_t Token) {
 Token_t TokenDirectKeyword (char *Bufferp) {
   TokenCommandList_t *pRow;
 
-  //  pRow = (TokenCommandList_t *)&TokenCommand[0];
   pRow = (TokenCommandList_t *)&TokenKeyword[0];  
   while (pRow->cmdstr != NULL) {
-    //    printf("Matching %s = %s\n",Bufferp, pRow->cmdstr);
     if (StringMatch(Bufferp,pRow->cmdstr)) {
        return pRow->TokenValue;
     }
@@ -274,10 +272,8 @@ Token_t TokenDirectKeyword (char *Bufferp) {
 Token_t TokenDirectCommand (char *Bufferp) {
   TokenCommandList_t *pRow;
 
-  //  pRow = (TokenCommandList_t *)&TokenCommand[0];
   pRow = (TokenCommandList_t *)&TokenCommand[0];  
   while (pRow->cmdstr != NULL) {
-    //    printf("Matching %s = %s\n",Bufferp, pRow->cmdstr);
     if (StringMatch(Bufferp,pRow->cmdstr)) {
        return pRow->TokenValue;
     }
@@ -300,10 +296,10 @@ Token_t TokenDirectCommand (char *Bufferp) {
  */
 Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
   char *Bufp;
-  float value = 0.0;
-  bool isFloatingPoint = false;
   uint32_t DigitCount = 0;
+  bool isFloatingPoint = false;  
   float power = 1.0;
+  float value = 0.0;
   
   Bufp = *Bufferp;  
 
@@ -315,7 +311,8 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
     DigitCount++;
   } while ( (isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT));
 #else
-  while ( (isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT) && (PreToken != TOKEN_PERIOD)) {
+  while ( (isdigit(*Bufp) && (DigitCount < MAX_DIGIT_COUNT)) && (PreToken != TOKEN_PERIOD)) {
+    if (Verbose) printf("TokenGetNumber: pre-floating point %f\n", value);    
     value = 10 * value + (*Bufp -'0');
     *Tokenp++ = *Bufp++;
     DigitCount++;
@@ -375,9 +372,7 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   if (Verbose) printf("TokenGetWord %c\n", (int)*Bufp);
   
   while ( ((isalnum(*Bufp)) || (*Bufp != '\0')) && (!isspace(*Bufp)) ) {
-    //  while ( isalnum(*Bufp) ) {  
       *Tokenp++ = *Bufp++;
-      //      if (Verbose) printf("[%p] %c = %c\n", (void *)Tokenp, *Tokenp, *Bufp);      
   }
   *Tokenp = '\0';
   //  printf("Last [%p] = %d\n", (void *)Tokenp, *Tokenp);

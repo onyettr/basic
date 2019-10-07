@@ -95,7 +95,6 @@ int32_t CommandLineMode (void) {
     Bufferp = UtilsSkipSpaces(Bufferp);                    /* Eat any leading spaces                   */
 
     while ((*Bufferp != '\0' && Token != TOKEN_BYE)) {
-      printf("Bufferp %c\n", *Bufferp);
       if ((Token == TOKEN_MINUS  && isdigit(*Bufferp+1)) || /* Test for Numbers or -ve                  */
 	  (Token == TOKEN_PERIOD && isdigit(*Bufferp+1)) ||
 	  isdigit(*Bufferp) || Token == TOKEN_PERIOD) {

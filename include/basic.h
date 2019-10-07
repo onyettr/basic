@@ -26,15 +26,15 @@ Includes
 #include "tokenizer.h"
 #include "interactive.h"
 
-#define PROGRAM_NAME            "basic"                        /*!> No name. no slogan          */
-#define VERSION                 "(v1.0.0) DEVELOPMENT Version" /*!> Version                     */
-#define AUTHOR_STRING           "()"                           /*!> Who did this?               */
+#define PROGRAM_NAME            "basic"                        /*!> No name. no slogan           */
+#define VERSION                 "(v1.0.0) DEVELOPMENT Version" /*!> Version                      */
+#define AUTHOR_STRING           "()"                           /*!> Who did this?                */
 
 /**
  * @brief control codes
  */
-#define BELL                    '\007'                         /*!> Console Bell                */
-#define FORM_FEED               '\014'                         /*!> Page break                  */
+#define BELL                    '\007'                         /*!> Console Bell                 */
+#define FORM_FEED               '\014'                         /*!> Page break                   */
 
 /**
  * @brief macros
@@ -46,7 +46,7 @@ Includes
  * @brief Constants
  */
 #define MAX_DIGIT_COUNT         9                              /*!> Accuracy of original machine */
-
+#define MAX_INT_VALUE           512                            /*!> Ints are not very big        */
 
 /*
 ******************************************************************************
@@ -65,12 +65,10 @@ Private variables (static)
 Global variables
 ******************************************************************************
 */
-extern bool Verbose;                 /*! CLI option for more output   */
-extern bool Secret;                  /*! CLI option for shhhh         */
-extern bool ListMode;                /*! CLI option to enable listing */
-extern bool ScanMode;    
-
-//extern char SourceFileName[MAX_FILENAME_LENGTH];
+extern bool Verbose;                 /*!> CLI option for more output   */
+extern bool Secret;                  /*!> CLI option for shhhh         */
+extern bool ListMode;                /*!> CLI option to enable listing */
+extern bool ScanMode;                /*!> CLI option to enable parsing */
 extern uint32_t LineNumber;
 
 /*
