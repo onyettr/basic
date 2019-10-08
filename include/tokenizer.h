@@ -23,6 +23,7 @@ Private Types
 /**
  * @brief TOKEN values for the various elements
  * @enum  TokenValues_t
+ * @addtogrpup Tokenizer
  */
 typedef enum {
     TOKEN_WORD,
@@ -162,13 +163,14 @@ typedef enum {
 
 /**
  *  @brief Token_t enumeration for Tokens
- *  
+ *  @addtogrpup Tokenizer
  */
 typedef int32_t Token_t;
 
 /**
  * @brief Literal Types string and integer
  * @enum LiteralType_t
+ * @addtogrpup Tokenizer
  */
 typedef enum {
    LITERAL_STRING,
@@ -179,6 +181,7 @@ typedef enum {
 /**
  * @brief Literal string and integer storage
  * @struct Literal_t 
+ * @addtogrpup Tokenizer
  */
 typedef struct {
   LiteralType_t Type;
@@ -189,11 +192,20 @@ typedef struct {
   } value;                   /*! union value */
 } Literal_t;
 
+/**
+ * @brief  Command list definition
+ * @struct TokenCommandList_t
+ * @note   <String> <Token Value> <Callback_fn>
+ *         if the string matches then the Token is returned and a callback can be invoked.
+ *         Commands are DIRECT meaning system calls or they are language Keywords
+ * @todo   Use the callback function for the direct commands
+ * @addtogrpup Tokenizer
+ */
 typedef struct {
-  char *cmdstr;
-  Token_t TokenValue;
+  char *cmdstr;                  /*!> String containing Command                    */
+  Token_t TokenValue;            /*!> Token value for this command                 */
   //  int (*pDirectFunction)(int argc, char *argv[]);
-  int (*pDirectFunction)(void);     /*! For future use to add callbacks for Keywords */
+  int (*pDirectFunction)(void);  /*!> For future use to add callbacks for Keywords */
 } TokenCommandList_t;
 
 /*

@@ -1,8 +1,27 @@
 /**
  *****************************************************************************
- * @brief   C Programming Examples - basic interpreter
- * @author  onyettr
- * @file    main.c
+ * @brief    basic interpreter
+ * @author   onyettr
+ * @file     main.c
+ * 
+ * @mainpage Basic Interpreter 
+ *           Project to implement a BASIC language interpreter using ANSI C
+ *           BASIC is based on the Dartmouth Basic Edition #1 (1964)
+ *           Supports interactive as well as batch mode via a file
+ *  
+ * @subpage  InteractiveMode "Interactive Mode"
+ *
+ * @subpage  BatchMode       "Batch Mode"
+ *
+ * @page     BatchMode
+ * @ref      Tokenizer "Tokenizer"
+ *
+ * @page     InteractiveMode
+ * @ref      Interactive "Interactive"
+ *
+ * @defgroup Tokenizer
+ *
+ * @defgroup Interactive
  ***************************************************************************** 
  */
 

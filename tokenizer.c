@@ -3,6 +3,7 @@
  * @brief   basic interpreter - tokenizer
  * @author  onyettr
  * @file    tokenizer.c
+ *
  ***************************************************************************** 
  */
 
@@ -43,8 +44,8 @@ Private Macros
 Global variables
 ******************************************************************************
 */
-static char TokenBuffer [MAX_SOURCE_LINE_LENGTH+10];
-static char SourceBuffer[MAX_SOURCE_LINE_LENGTH+10];
+static char TokenBuffer [MAX_SOURCE_LINE_LENGTH+10];   /*!> All tokens after parsing each line */
+static char SourceBuffer[MAX_SOURCE_LINE_LENGTH+10];   /*!> Line read from the file            */
 static Literal_t Literal;
 
 /**
@@ -103,8 +104,6 @@ static TokenCommandList_t TokenKeyword[] = {
     { "LOF"     , TOKEN_LOF     , NULL },
     { "CHAIN"   , TOKEN_CHAIN   , NULL },
     { "COMMON"  , TOKEN_COMMON  , NULL },
-    
-    //    { "STOP"    , TOKEN_STOP    , NULL },
     { NULL      , TOKEN_WORD    , NULL }    
 };
 
@@ -122,9 +121,9 @@ Prototypes of all functions contained in this file (in order of occurance)
 
 /**
  * @brief     Match strings
- * @fn        static int StringMatch(char *str1, char *str2)
- * @param[in] *str1 
- * @param[in] *str2
+ * @fn        static bool StringMatch(char *str1, char *str2)
+ * @param[in] *str1 - first string
+ * @param[in] *str2 - to match to
  * @return    true if str1 matches str2, false otherwise
  * @details   
  * @note
@@ -144,8 +143,8 @@ static bool StringMatch(char *str1,char *str2) {
 /**
  * @brief     Token types to string convert
  * @fn        char *TokenGetStringType(Token_t Token)
- * @param[in] Token
- * @return    char* string 
+ * @param[in] Token - to switch on
+ * @return    char* string - token as a string
  * @note
  */
 char *TokenGetStringType(Token_t Token) {
@@ -239,11 +238,11 @@ char *TokenGetStringType(Token_t Token) {
 
 /**
  * @brief     Look for any keywords or any direct commands
- * @fn        Token_t TokenKeyword (char *Bufferp) 
- * @param[in] **Bufferp - Buffer to tokenize
+ * @fn        Token_t TokenDirectKeyword (char *Bufferp) 
+ * @param[in] *Bufferp - Buffer to tokenize
  * @return    Token_t 
- * @details   Is this is Key word (Language or direct)
- * @note
+ * @details   Scan all Direct keywords to see of this is Key word
+ * @note      List is NULL terminated, stop when we reach here
  * @todo     
  */
 Token_t TokenDirectKeyword (char *Bufferp) {
@@ -267,7 +266,7 @@ Token_t TokenDirectKeyword (char *Bufferp) {
  * @return    Token_t 
  * @details   Is this is direct word 
  * @note
- * @todo     
+ * @todo      This should be combined with TokenDirectKeyword (or same array?)
  */
 Token_t TokenDirectCommand (char *Bufferp) {
   TokenCommandList_t *pRow;
@@ -284,23 +283,29 @@ Token_t TokenDirectCommand (char *Bufferp) {
 }
 
 /**
- * @brief     Process Number Token
- * @fn        Token_t TokenGetNumber(char *Bufferp, char *Tokenp) 
- * @param[in] **Bufferp - Buffer to tokenize
- * @param[out]*Tokenp  - add to tokenized buffer
- * @return    Token_t 
- * @details   Builds the value of the number as a literal integer and not ascii. 
- * @note
- * @todo      Floating point e.g. 2.56, -.25 .25
- *            Exponent       e.g. 2E10 or 2^10(?)
+ * @brief      Process Number Token
+ * @fn         Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) 
+ * @param[in]  **Bufferp - Buffer to tokenize, updates the pointer on return
+ * @param[out] *Tokenp   - tokenized buffer after parsing
+ * @param[in]  PreToken  - any already processed Tokens e.g. TOKEN_MINUS
+ * @return     Token_t 
+ * @details    Builds the value of the number as a literal integer or float and not ascii. 
+ * @note       Needs to support:
+ * @verbatim
+               integer values  e.g. 12, 199, 3
+               negative values e.g. -1 -199, -3
+               Floating point  e.g. 2.56, -.25 .25
+               Exponent        e.g. 2E10 or 2^10(?)
+ * @endverbatim
+ * @todo       Exponent        e.g. 2E10 or 2^10(?)
  */
 Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
-  char *Bufp;
-  uint32_t DigitCount = 0;
-  bool isFloatingPoint = false;  
+  bool isFloatingPoint = false;
+  uint32_t DigitCount = 0;  
   float power = 1.0;
   float value = 0.0;
-  
+  char *Bufp;  
+
   Bufp = *Bufferp;  
 
   if (Verbose) printf("TokenGetNumber %c \n", *Bufp);
@@ -353,12 +358,12 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
 }
 
 /**
- * @brief     Process word (alpha) token
- * @fn        Token_t TokenGetWord  (char *Bufferp, char *Tokenp) 
- * @param[in] Bufferp - Buffer to tokenize
- * @param[out]Tokenp  - add to tokenized buffer
- * @return    Token_t 
- * @note      Tokenizer ceases when a SPACE or end of line if found
+ * @brief      Process word (alpha) token
+ * @fn         Token_t TokenGetWord  (char **Bufferp, char *Tokenp) 
+ * @param[in]  **Bufferp - Buffer to tokenize
+ * @param[out] *Tokenp   - add to tokenized buffer
+ * @return     Token_t 
+ * @note       Tokenizer ceases when a SPACE or end of line is found
  * @details
  * @todo
  */
@@ -375,7 +380,6 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
       *Tokenp++ = *Bufp++;
   }
   *Tokenp = '\0';
-  //  printf("Last [%p] = %d\n", (void *)Tokenp, *Tokenp);
   
   *Bufferp = (char *)Bufp;
 
@@ -388,13 +392,13 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
 }
   
 /**
- * @brief     Process string (alpha) token
- * @fn        Token_t TokenGetString  (char *Bufferp, char *Tokenp) 
- * @param[in] Bufferp - Buffer to tokenize
- * @param[out]Tokenp  - add to tokenized buffer
- * @return    Token_t 
- * @note      Tokenizer ceases when a SPACE or end of line if found
- * @details
+ * @brief      Process string (alpha) token, string denoted by a quote
+ * @fn         Token_t TokenGetString  (char **Bufferp, char *Tokenp)
+ * @param[in]  **Bufferp - Buffer to tokenize 
+ * @param[out] *Tokenp   - add to tokenized buffer
+ * @return     Token_t 
+ * @note       Tokenizer ceases when a SPACE or end of line if found
+ * @details    Creates a LITERAL (string) 
  * @todo
  */
 Token_t TokenGetString (char **Bufferp, char *Tokenp) {
@@ -420,17 +424,19 @@ Token_t TokenGetString (char **Bufferp, char *Tokenp) {
 
 /**
  * @brief      Process Special Token
- * @fn         Token_t TokenGetSpecial(char *Bufferp, char *Tokenp) 
- * @param[in]  Bufferp - Buffer pointer to input characters. Pointer is moved and passed back.
- * @param[out] Tokenp  - add to token buffer for further processing. 
+ * @fn         Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) 
+ * @param[in]  **Bufferp - Buffer pointer to input characters. Pointer is moved and passed back.
+ * @param[out] *Tokenp   - add to token buffer for further processing. 
  * @return     Token_t - The type of tokem found
  * @note       The Special tokens are the non Alpha numerics. 
- *             Logical operators need extra handling e.g. >= <= <> requires the next character be parsed as well
- *             >  GT
- *             <  LT
- *             <> NE
- *             >= GE
- *             <= LE
+ * @verbatim
+               Logical operators need extra handling e.g. >= <= <> requires the next character be parsed as well
+               >  GT
+               <  LT
+               <> NE
+               >= GE
+               <= LE
+   @endverbatim
  */
 Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
     char *Bufp;
@@ -511,8 +517,8 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
 /**
  * @brief      Process direct commands
  * @fn         Token_t TokenGetDirect(char **Bufferp, char *Tokenp) 
- * @param[in]  Bufferp - Buffer to tokenize
- * @param[out] Tokenp  - add to tokenized buffer
+ * @param[in]  **Bufferp - Buffer to tokenize
+ * @param[out] *Tokenp   - add to tokenized buffer
  * @return     Token_t 
  * @note       None
  */
@@ -528,12 +534,12 @@ Token_t TokenGetDirect(char **Bufferp, char *Tokenp) {
 }
 
 /**
- * @brief     Print the token string
- * @fn        Token_t TokenGetWord  (char *Bufferp, char *Tokenp) 
+ * @brief     Print the token string, includes the original line plus the Token as a string
+ * @fn        void TokenPrint (char *TokenString, Token_t Token) 
  * @param[in] *TokenString - actual token buffer
- * @param[in] Token        - The token found
+ * @param[in] Token        - The token
  * @return    void
- * @note
+ * @note      
  * @details   Some tokens (SPACE) are ignored
  * @todo
  */
@@ -569,7 +575,7 @@ void TokenPrint (char *TokenString, Token_t Token) {
 /**
  * @brief     Tokenize a given file 
  * @fn        int32_t Tokenize (char *FileName)
- * @param[in] FileName - file containing lines to Tokenize
+ * @param[in] *FileName - file containing lines to Tokenize
  * @return    int32_t ErrorCode
  * @note      Reads a line of text until EOF
  *            For each line, spaces are skipped and all the characters are parsed until EOL (or ERROR)
