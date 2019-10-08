@@ -22,7 +22,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    Bufferp = Pattern;
    Tokenp  = TokenBuffer;
    
-   ReturnToken = TokenGetNumber(&Bufferp, Tokenp, false);
+   ReturnToken = TokenGetNumber(&Bufferp, Tokenp, TOKEN_NO_TOKEN);
 
    fail_unless(ReturnToken == TOKEN_DIGIT, "TokenGetNumber - wrong token return");
    fail_unless(Tokenp[0] == '1',           "TokenGetNumber - didnt copy token  ");
@@ -34,23 +34,22 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    char *Bufferp;
    char *Tokenp;
    char Pattern[3];
-
+   int i;
+   
    printf("TokenGetNumber_one_digit_negative_success\n");
    
    memset(TokenBuffer, '\0',sizeof(TokenBuffer));
-   
-   Pattern[0] = '-';
-   Pattern[1] = '1';
-   Pattern[2] = '0';   
+
+   Pattern[0] = '1';      /* Minus sign is already tokenized */
+   Pattern[1] = '0';
    Bufferp = Pattern;
    Tokenp  = TokenBuffer;
    
-   ReturnToken = TokenGetNumber(&Bufferp, Tokenp, true);
-
+   ReturnToken = TokenGetNumber(&Bufferp, TokenBuffer, TOKEN_MINUS);
+   
    fail_unless(ReturnToken == TOKEN_DIGIT, "TokenGetNumber - wrong token return");
-   fail_unless(Tokenp[0] == '-',           "TokenGetNumber - didnt copy token[0]");
-   fail_unless(Tokenp[1] == '1',           "TokenGetNumber - didnt copy token[1]");
-   fail_unless(Tokenp[2] == '0',           "TokenGetNumber - didnt copy token[2]");      
+   fail_unless(Tokenp[0] == '1',           "TokenGetNumber - didnt copy token[1]");
+   fail_unless(Tokenp[1] == '0',           "TokenGetNumber - didnt copy token[2]");      
 
 #test TokenGetNumber_one_digit_failure_not_a_digit
    Token_t ReturnToken;
