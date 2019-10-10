@@ -45,7 +45,7 @@ Includes
 /**
  * @brief Constants
  */
-#define MAX_DIGIT_COUNT         9                              /*!> Accuracy of original machine */
+#define MAX_DIGIT_COUNT         10                             /*!> Accuracy of original machine */
 #define MAX_INT_VALUE           512                            /*!> Ints are not very big        */
 
 /*

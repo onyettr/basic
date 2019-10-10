@@ -300,12 +300,13 @@ Token_t TokenDirectCommand (char *Bufferp) {
  * @todo       Exponent        e.g. 2E10 or 2^10(?)
  */
 Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
-  bool isFloatingPoint = false;
   uint32_t DigitCount = 0;  
   float power = 1.0;
   float value = 0.0;
   char *Bufp;  
-
+  bool isFloatingPoint = false;
+  bool isDot = false;
+  
   Bufp = *Bufferp;  
 
   if (Verbose) printf("TokenGetNumber %c \n", *Bufp);
@@ -324,21 +325,39 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
   } 
 #endif  
   if (DigitCount >= MAX_DIGIT_COUNT) {
-    Error("%s", ErrorToString(ERROR_NUMBER_TOO_LARGE));
+    Error("TokenGetNumber %s", ErrorToString(ERROR_NUMBER_TOO_LARGE));
 
     return TOKEN_ERROR;
   }
 
   if (*Bufp == '.' || PreToken == TOKEN_PERIOD ) {      /* This could be a floating point number */
     if (Verbose) printf("TokenGetNumber: floating point %f\n", value);
-    Bufp++;
-    while ((isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT)) {
+
+    *Tokenp++ = *Bufp++;
+
+    while ((isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT) && (*Bufp != ' ')) {
       value = 10.0 * value + (*Bufp -'0');
       power *= 10.0;
       *Tokenp++ = *Bufp++;
       DigitCount++;
       if (Verbose) printf("TokenGetNumber: %f\n", value);      
     }
+    isFloatingPoint = true;
+    isDot = true;
+  }
+
+  if (DigitCount >= MAX_DIGIT_COUNT) {
+    Error("TokenGetNumber %s", ErrorToString(ERROR_NUMBER_TOO_LARGE));
+
+    return TOKEN_ERROR;
+  }
+
+  /*
+   * Is this Exponent format?
+   */
+  if ((!isDot) && (*Bufp == 'E' || *Bufp == 'e') && (*Bufp == ' ')) {
+    if (Verbose) printf("TokenGetNumber: Exponent seen\n");
+    *Tokenp++ = *Bufp++;
     isFloatingPoint = true;
   }
   
