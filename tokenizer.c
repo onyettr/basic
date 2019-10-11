@@ -335,7 +335,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
 
     *Tokenp++ = *Bufp++;
 
-    while ((isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT) && (*Bufp != ' ')) {
+    while ((isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT)) {
       value = 10.0 * value + (*Bufp -'0');
       power *= 10.0;
       *Tokenp++ = *Bufp++;
@@ -355,7 +355,8 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
   /*
    * Is this Exponent format?
    */
-  if ((!isDot) && (*Bufp == 'E' || *Bufp == 'e') && (*Bufp == ' ')) {
+  Bufp = UtilsSkipSpaces(Bufp);
+  if ((!isDot) && (*Bufp == 'E' || *Bufp == 'e')) {
     if (Verbose) printf("TokenGetNumber: Exponent seen\n");
     *Tokenp++ = *Bufp++;
     isFloatingPoint = true;
@@ -572,7 +573,7 @@ void TokenPrint (char *TokenString, Token_t Token) {
 	if (Literal.Type == LITERAL_INTEGER) {
 	  printf("   INTEGER = %16d", Literal.value.IntegerValue);
 	} else if (Literal.Type == LITERAL_FLOAT) {
-	  printf("   FLOAT   = %16f", Literal.value.FloatValue);	  
+	  printf("   FLOAT   = %f", Literal.value.FloatValue);	  
 	} else {
 	  printf("   <UNKNOWN LITERAL?>\n");	  	  
 	}
