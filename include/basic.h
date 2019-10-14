@@ -20,6 +20,7 @@ Includes
 #include <stdarg.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 #include "utilities.h"
 #include "lister.h"
 #include "error.h"

@@ -303,6 +303,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
   uint32_t DigitCount = 0;  
   float power = 1.0;
   float value = 0.0;
+  float evalue = 0.0;  
   char *Bufp;  
   bool isFloatingPoint = false;
   bool isDot = false;
@@ -354,11 +355,29 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
 
   /*
    * Is this Exponent format?
+   * 
    */
-  Bufp = UtilsSkipSpaces(Bufp);
-  if ((!isDot) && (*Bufp == 'E' || *Bufp == 'e')) {
+  Bufp = UtilsSkipSpaces(Bufp);           /* Skip any leading spaces */
+  //  if ((!isDot) && (*Bufp == 'E' || *Bufp == 'e')) {
+  if ((*Bufp == 'E' || *Bufp == 'e')) {  
     if (Verbose) printf("TokenGetNumber: Exponent seen\n");
+
     *Tokenp++ = *Bufp++;
+
+    Bufp = UtilsSkipSpaces(Bufp);    
+    while ((isdigit(*Bufp)) && (DigitCount < MAX_DIGIT_COUNT)) {
+      evalue = 10.0 * evalue + (*Bufp -'0');
+      power *= 10.0;
+      *Tokenp++ = *Bufp++;
+      DigitCount++;
+
+      if (Verbose) printf("TokenGetNumber: Exponent = %f\n", evalue);      
+    }
+
+    Bufp = UtilsSkipSpaces(Bufp);
+    value *= pow(10, evalue);
+    power = 1.0;
+    if (Verbose) printf("TokenGetNumber: E = %f\n", value);          
     isFloatingPoint = true;
   }
   
