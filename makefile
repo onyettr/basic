@@ -6,6 +6,7 @@
 
 # Base location defaults
 SRC_DIR		= 	.
+SRC             =  	./src
 OBJECT_DIR	= 	$(SRC_DIR)/object
 LIB_DIR		= 	$(SRC_DIR)/libraries
 INC_DIR		= 	$(SRC_DIR)/include
@@ -91,20 +92,20 @@ $(LIB_DIR)/libtokenizer.a:	$(OBJECT_DIR)/tokenizer.o
 #*******************************************************************************
 # Object builds
 #*******************************************************************************
-$(OBJECT_DIR)/main.o:		main.c
-	$(CC) $(CFLAGS) $(DEBUG) main.c -o $(OBJECT_DIR)/main.o
-$(OBJECT_DIR)/error.o:		error.c
-	$(CC) $(CFLAGS) $(DEBUG) error.c -o $(OBJECT_DIR)/error.o
-$(OBJECT_DIR)/lister.o:		lister.c
-	$(CC) $(CFLAGS) $(DEBUG) lister.c -o $(OBJECT_DIR)/lister.o
-$(OBJECT_DIR)/utilities.o:	utilities.c
-	$(CC) $(CFLAGS) $(DEBUG) utilities.c -o $(OBJECT_DIR)/utilities.o
-$(OBJECT_DIR)/tokenizer.o:	tokenizer.c
-	$(CC) $(CFLAGS) $(DEBUG) tokenizer.c -o $(OBJECT_DIR)/tokenizer.o
-$(OBJECT_DIR)/interactive.o:	interactive.c
-	$(CC) $(CFLAGS) $(DEBUG) interactive.c -o $(OBJECT_DIR)/interactive.o
-$(OBJECT_DIR)/parsecommandline.o:	parsecommandline.c
-	$(CC) $(CFLAGS) $(DEBUG) parsecommandline.c -o $(OBJECT_DIR)/parsecommandline.o
+$(OBJECT_DIR)/main.o:		$(SRC)/misc/main.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/main.c -o $(OBJECT_DIR)/main.o
+$(OBJECT_DIR)/error.o:		$(SRC)/misc/error.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/error.c -o $(OBJECT_DIR)/error.o
+$(OBJECT_DIR)/lister.o:		$(SRC)/misc/lister.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/lister.c -o $(OBJECT_DIR)/lister.o
+$(OBJECT_DIR)/utilities.o:	$(SRC)/utilities/utilities.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/utilities.c -o $(OBJECT_DIR)/utilities.o
+$(OBJECT_DIR)/tokenizer.o:	$(SRC)/tokenizer/tokenizer.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/tokenizer/tokenizer.c -o $(OBJECT_DIR)/tokenizer.o
+$(OBJECT_DIR)/interactive.o:	$(SRC)/misc/interactive.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/interactive.c -o $(OBJECT_DIR)/interactive.o
+$(OBJECT_DIR)/parsecommandline.o:	$(SRC)/misc/parsecommandline.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/parsecommandline.c -o $(OBJECT_DIR)/parsecommandline.o
 
 #
 # This is the "checkmk" target: Test harness is in stack_check.ts file and 
@@ -146,7 +147,9 @@ else
 #	$(CODE_CHECK) $(CODE_CHECK_ARGS) lister.c
 #	$(CODE_CHECK) $(CODE_CHECK_ARGS) utilities.c
 #	$(CODE_CHECK) $(CODE_CHECK_ARGS) main.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) *.c
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/*.c
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/utilities/*.c
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/tokenizer/*.c
 endif
 
 # remove all libs, objs and intermediates
