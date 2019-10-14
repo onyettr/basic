@@ -15,13 +15,13 @@
 ** DONE Lister<name> 
 * Interactive Tasks
 ** TODO [Task 0019] One version of the main Tokenizer loop is needed
-* Scanner And Tokenizer Tasksn
-** TODO [Task 0015] TokenGetNumber - Exp support
+* Scanner And Tokenizer Tasks
 ** TODO [Task 0016] Interactive Mode - use callbacks to execute functions
 ** DONE [Task 0014] TokenGetNumber - floating point support
 ** DONE [Task 0018] TokenGetNumber - check for space after MINUS (a - b)
    CLOSED: [2019-09-30 Mon 15:02]
 ** DONE [Task 0013] TokenGetNumber - negative numbers support
+** DONE [Task 0015] TokenGetNumber - Exp support
 * Symbol Table
 ** TODO [Task 0017] Add linked list project to build
 * Parser Expressions
@@ -29,10 +29,10 @@
 ** TODO src directory seperate makefiles
 * Issues
 ** TODO [BUG 1006] TokenGetNumber - MAXINT not parsed correctly
-** TODO [BUG 1005] TokenGetNumber - 123456789 MAXINT not parsed correctly
 ** TODO [BUG 1004] Expression parsing fails with (x) = <WORD> not <LPAREN><WORD><RPAREN>
 ** TODO [BUG 1003] Parsing of 123abc should give <WORD> not <NUMBER><WORD>
 ** TODO [BUG 1002] Negative Numbers - <SPACE> <DIGIT> doesnt generate an error
+** DONE [BUG 1005] TokenGetNumber - 123456789 MAXINT not parsed correctly
 ** DONE [BUG 1000] Verbose mode declared cuases build issue with checkmk
    CLOSED: [2019-09-30 Mon 15:02]
 ** DONE [BUG 1001] Scanner output has extra newline?
