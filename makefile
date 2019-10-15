@@ -81,40 +81,48 @@ basic.exe:	$(OBJS) $(LIBS)
 
 #*******************************************************************************
 # Major library components
+#
+# lister                  Pretty prints the code
+# utilities               Small utilities and support functions
+# tokenizer               Routines to do the parsing
 #*******************************************************************************
+
 $(LIB_DIR)/liblister.a:	$(OBJECT_DIR)/lister.o 
 	$(AR) rcs $(LIB_DIR)/liblister.a $(OBJECT_DIR)/lister.o
-$(LIB_DIR)/libutilities.a:	$(OBJECT_DIR)/utilities.o 
-	$(AR) rcs $(LIB_DIR)/libutilities.a $(OBJECT_DIR)/utilities.o
+$(LIB_DIR)/libutilities.a:	$(OBJECT_DIR)/utilities.o $(OBJECT_DIR)/symboltable.o
+	$(AR) rcs $(LIB_DIR)/libutilities.a $(OBJECT_DIR)/utilities.o $(OBJECT_DIR)/symboltable.o
 $(LIB_DIR)/libtokenizer.a:	$(OBJECT_DIR)/tokenizer.o 
 	$(AR) rcs $(LIB_DIR)/libtokenizer.a $(OBJECT_DIR)/tokenizer.o
 
 #*******************************************************************************
 # Object builds
 #*******************************************************************************
-$(OBJECT_DIR)/main.o:		$(SRC)/misc/main.c
+
+$(OBJECT_DIR)/main.o:		 $(SRC)/misc/main.c
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/main.c -o $(OBJECT_DIR)/main.o
-$(OBJECT_DIR)/error.o:		$(SRC)/misc/error.c
+$(OBJECT_DIR)/error.o:		 $(SRC)/misc/error.c
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/error.c -o $(OBJECT_DIR)/error.o
-$(OBJECT_DIR)/lister.o:		$(SRC)/misc/lister.c
+$(OBJECT_DIR)/lister.o:		 $(SRC)/misc/lister.c
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/lister.c -o $(OBJECT_DIR)/lister.o
-$(OBJECT_DIR)/utilities.o:	$(SRC)/utilities/utilities.c
+$(OBJECT_DIR)/utilities.o:	 $(SRC)/utilities/utilities.c
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/utilities.c -o $(OBJECT_DIR)/utilities.o
-$(OBJECT_DIR)/tokenizer.o:	$(SRC)/tokenizer/tokenizer.c
+$(OBJECT_DIR)/tokenizer.o:	 $(SRC)/tokenizer/tokenizer.c
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/tokenizer/tokenizer.c -o $(OBJECT_DIR)/tokenizer.o
-$(OBJECT_DIR)/interactive.o:	$(SRC)/misc/interactive.c
+$(OBJECT_DIR)/interactive.o:	 $(SRC)/misc/interactive.c
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/interactive.c -o $(OBJECT_DIR)/interactive.o
-$(OBJECT_DIR)/parsecommandline.o:	$(SRC)/misc/parsecommandline.c
+$(OBJECT_DIR)/symboltable.o:	 $(SRC)/utilities/symboltable.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/symboltable.c -o $(OBJECT_DIR)/symboltable.o
+$(OBJECT_DIR)/parsecommandline.o:$(SRC)/misc/parsecommandline.c
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/parsecommandline.c -o $(OBJECT_DIR)/parsecommandline.o
 
-#
+#*******************************************************************************
 # This is the "checkmk" target: Test harness is in stack_check.ts file and 
 # this is converted by "check" into a C file which is linked to give another
 # executable. 
 # 
 # NOTE: This will not build if you have the Profiling enabled as the libstack.a 
 # contains gcov 
-#
+#*******************************************************************************
 test_harness: 
 #	@echo "** test harness TODO **"
 ifndef CHECK_FOR_CHK
@@ -130,16 +138,18 @@ else
 	-o basic_check.exe
 endif
 
+#*******************************************************************************
+# clang target
+#*******************************************************************************
 clang:
-		$(CLANG) $(CFLAGS) $(DEBUG) main.c        -o $(OBJECT_DIR)/main_clang.o
-		$(CLANG) $(CFLAGS) $(DEBUG) lister.c      -o $(OBJECT_DIR)/lister_clang.o
-		$(CLANG) $(CFLAGS) $(DEBUG) utilities.c   -o $(OBJECT_DIR)/utilities_clang.o
-		$(CLANG) $(CFLAGS) $(DEBUG) tokenizer.c   -o $(OBJECT_DIR)/tokenizer_clang.o
-		$(CLANG) $(CFLAGS) $(DEBUG) interactive.c -o $(OBJECT_DIR)/interactive_clang.o
-
-#
-# Code syntax checking target
-#
+	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/main.c       	-o $(OBJECT_DIR)/main_clang.o
+	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/lister.c      	-o $(OBJECT_DIR)/lister_clang.o
+	$(CLANG) $(CFLAGS) $(DEBUG) src/utilities/utilities.c   -o $(OBJECT_DIR)/utilities_clang.o
+	$(CLANG) $(CFLAGS) $(DEBUG) src/tokenizer/tokenizer.c   -o $(OBJECT_DIR)/tokenizer_clang.o
+	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/interactive.c 	-o $(OBJECT_DIR)/interactive_clang.o
+#*******************************************************************************
+# splint target
+#*******************************************************************************
 splint-it:
 ifndef CHECK_FOR_CPP
 	@echo "** cppcheck command not found"
@@ -152,7 +162,9 @@ else
 	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/tokenizer/*.c
 endif
 
+#*******************************************************************************
 # remove all libs, objs and intermediates
+#*******************************************************************************
 clean:
 	rm -f basic.exe
 	rm -f basic_check.exe
@@ -165,6 +177,7 @@ clean:
 	rm -f $(OBJECT_DIR)/lister.o
 	rm -f $(OBJECT_DIR)/utilities.o
 	rm -f $(OBJECT_DIR)/tokenizer.o
+	rm -f $(OBJECT_DIR)/symboltable.o
 	rm -f $(OBJECT_DIR)/interactive.o
 	rm -f $(OBJECT_DIR)/parsecommandline.o
 	rm -f *.gcno

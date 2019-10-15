@@ -1,4 +1,4 @@
-/**
+/**   
  *****************************************************************************
  * @brief   basic interpreter
  * @author  onyettr
@@ -25,6 +25,7 @@ Includes
 #include "lister.h"
 #include "error.h"
 #include "tokenizer.h"
+#include "symboltable.h"
 #include "interactive.h"
 
 #define PROGRAM_NAME            "basic"                        /*!> No name. no slogan           */
