@@ -65,7 +65,7 @@ Prototypes of all functions contained in this file (in order of occurance)
  * @todo  
  * @note        none
  */
-SymbolTableNodePtr_t SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
+SymbolTableNode_t *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
   int Compare = 0;
 
   while (pNode != NULL) {
@@ -95,6 +95,8 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
   SymbolTableNode_t *pNodeTest;  
   int Compare = 0;
 
+  printf("pNode %p, *pNode %p\n", pNode, *pNode);
+  
   /*
    * TODO Needs a bit more checking here!
    */
@@ -102,11 +104,13 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
   pNewNode->NameString = malloc(strlen(Name)+1);
   strcpy(pNewNode->NameString, Name);
 
+  printf("alloc %p\n", (void*)pNewNode);
+  
   pNewNode->pLeft = NULL;
   pNewNode->pRight= NULL;
   pNewNode->pNext = NULL;
-  pNewNode->InfoString = NULL:
-  pNewNode->Defun = KEY_UNDEFINIED;
+  pNewNode->InfoString = NULL;
+  pNewNode->Defun.Key = KEY_UNDEFINED;
   pNewNode->NestingLevel = 0;
   pNewNode->LabelIndex   = 0;
 
@@ -116,10 +120,12 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
   while ( (pNodeTest = *pNode) != NULL) {
     Compare = strcmp(Name,pNodeTest->NameString);
     pNode = (Compare < 0) ? &(pNodeTest->pLeft) : &(pNodeTest->pRight);
+    printf("cmp pNode %p pNodeTest %p\n", (void*)pNode, (void*)pNodeTest);
   }
 
   *pNode = pNewNode;
-
+  printf("%p = *p\n", (void*)pNode, (void*)pNewNode);
+  
   return pNewNode;                                
 }
 
@@ -138,6 +144,8 @@ SymbolTableNodePtr_t ShowSymbolTable (SymbolTableNode_t *pNode) {
 
   UNUSED(pNode);
   UNUSED(pNewNode);
+
+  return NULL;
 }
 
 

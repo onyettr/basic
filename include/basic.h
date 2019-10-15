@@ -71,7 +71,7 @@ extern bool Verbose;                 /*!> CLI option for more output   */
 extern bool Secret;                  /*!> CLI option for shhhh         */
 extern bool ListMode;                /*!> CLI option to enable listing */
 extern bool ScanMode;                /*!> CLI option to enable parsing */
-extern uint32_t LineNumber;
+//extern uint32_t LineNumber;
 
 /*
 ******************************************************************************

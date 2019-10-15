@@ -50,15 +50,13 @@ typedef struct {
       int32_t TotalLocalSize;
       int32_t TotalParameterSize;
     } Routine;
-
-    
   } Information;
 } DefinitionStruct_t;
 
 typedef struct SymbolTableNode {
-  struct SymbolTableNode_t *pLeft;
-  struct SymbolTableNode_t *pRight;  
-  struct SymbolTableNode_t *pNext;
+  struct SymbolTableNode *pLeft;
+  struct SymbolTableNode *pRight;  
+  struct SymbolTableNode *pNext;
   char *NameString;
   char *InfoString;
   DefinitionStruct_t      Defun;
@@ -89,8 +87,8 @@ Exported Global variables
 Prototypes of all functions contained in this file (in order of occurance)
 ******************************************************************************
 */
-SymbolTableNodePtr_t SearchSymbolTable (char *Name, SymbolTableNode_t *pNode);
-SymbolTableNodePtr_t AddSymbolTable    (char *Name, SymbolTableNode_t **pNode);
-SymbolTableNodePtr_t ShowSymbolTable   (SymbolTableNode_t *pNode) {
+SymbolTableNode_t    *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode);
+SymbolTableNodePtr_t AddNameToSymbolTable(char *Name, SymbolTableNode_t **pNode);
+SymbolTableNodePtr_t ShowSymbolTable   (SymbolTableNode_t *pNode);
   
 #endif  /* __SYMBOLTABLE__H__ */

@@ -230,3 +230,12 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    
    fail_unless(ReturnToken == TOKEN_GE, "TokenGetSpecial - wrong token return");
    fail_unless(Tokenp[0]   == '>',      "TokenGetSpecial - didnt copy token  ");
+
+#test SymbolTable_AddNameToSymboltable
+   SymbolTableNode_t RootSymbolTable;
+   SymbolTableNode_t *pNode;
+
+   pNode = (SymbolTableNode_t*)&RootSymbolTable;
+
+   AddNameToSymbolTable ("Test1", &pNode);
+   printf("AddName\n");
