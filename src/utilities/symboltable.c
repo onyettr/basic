@@ -68,6 +68,7 @@ Prototypes of all functions contained in this file (in order of occurance)
 SymbolTableNode_t *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
   int Compare = 0;
 
+  printf("Search %s, %p\n", Name, (void*)pNode);
   while (pNode != NULL) {
     Compare = strcmp(Name,pNode->NameString);
     if (Compare == 0) {
@@ -95,7 +96,7 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
   SymbolTableNode_t *pNodeTest;  
   int Compare = 0;
 
-  printf("pNode %p, *pNode %p\n", pNode, *pNode);
+  printf("pNode %p, *pNode %p\n", (void*)pNode, (void*)*pNode);
   
   /*
    * TODO Needs a bit more checking here!
@@ -118,20 +119,20 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
    * Look for insertion point
    */
   while ( (pNodeTest = *pNode) != NULL) {
+    printf("1st cmp pNode %p pNodeTest %p\n", (void*)pNode, (void*)pNodeTest);    
     Compare = strcmp(Name,pNodeTest->NameString);
     pNode = (Compare < 0) ? &(pNodeTest->pLeft) : &(pNodeTest->pRight);
-    printf("cmp pNode %p pNodeTest %p\n", (void*)pNode, (void*)pNodeTest);
+    printf("2nd cmp pNode %p pNodeTest %p\n", (void*)pNode, (void*)pNodeTest);
   }
 
   *pNode = pNewNode;
-  printf("%p = *p\n", (void*)pNode, (void*)pNewNode);
+  printf("Return %p = %p\n", (void*)*pNode, (void*)pNewNode);
   
   return pNewNode;                                
 }
 
-
 /**
- * @fn          SymbolTableNodePtr_t ShowSymbolTable (SymbolTableNode_t *pNode) 
+ * @fn          void ShowSymbolTable (SymbolTableNode_t *pNode) 
  * @brief       List the contents of the Symbol Table
  * @param[in]   *pNode  - Symbol table to list
  * @return      
@@ -139,13 +140,31 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
  * @todo  
  * @note        none
  */
-SymbolTableNodePtr_t ShowSymbolTable (SymbolTableNode_t *pNode) {
-  SymbolTableNode_t *pNewNode;
+void ShowSymbolTable (SymbolTableNode_t *pNode) {
+  SymbolTableNode_t *pLeftNode  = pNode;
+  //  SymbolTableNode_t *pRightNode = pNode;  
 
-  UNUSED(pNode);
-  UNUSED(pNewNode);
-
-  return NULL;
+  printf("\t\tLeft\tRight\tNext\tName\n");
+  while (pLeftNode != NULL) {
+    printf("[%8p]\t%8p\t%8p\t%8p\t%20s\n",
+           (void*)pNode,
+           (void*)pNode->pLeft,
+           (void*)pNode->pRight,
+           (void*)pNode->pNext,
+           (char*)pNode->NameString);           
+    pLeftNode = pNode->pNext;
+  }
+#if 0    
+  while (pRightNode != NULL) {
+    printf("[%8p]\t%8p\t%8p\t%8p\t%20s\n",
+           (void*)pNode,
+           (void*)pNode->pLeft,
+           (void*)pNode->pRight,
+           (void*)pNode->pNext,
+           (char*)pNode->NameString);            
+   pRightNode = pNode->pRight;
+  }
+#endif  
 }
 
 

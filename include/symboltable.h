@@ -89,6 +89,6 @@ Prototypes of all functions contained in this file (in order of occurance)
 */
 SymbolTableNode_t    *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode);
 SymbolTableNodePtr_t AddNameToSymbolTable(char *Name, SymbolTableNode_t **pNode);
-SymbolTableNodePtr_t ShowSymbolTable   (SymbolTableNode_t *pNode);
+void ShowSymbolTable   (SymbolTableNode_t *pNode);
   
 #endif  /* __SYMBOLTABLE__H__ */
