@@ -232,19 +232,22 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    fail_unless(Tokenp[0]   == '>',      "TokenGetSpecial - didnt copy token  ");
 
 #test SymbolTable_AddNameToSymboltable
-   SymbolTableNode_t *RootSymbolTable = NULL;
+   SymbolTableNode_t RootSymbolTable;
+   SymbolTableNode_t *RootSymbolTablep;
    SymbolTableNode_t *pNewNode = NULL;
 
-   printf("Calling AddName RootSymbolTable %p\n", (void*)RootSymbolTable);
+   printf("Calling AddName RootSymbolTable %p\n", (void*)RootSymbolTablep);
+   RootSymbolTablep = &RootSymbolTable;
 
-   pNewNode = SearchSymbolTable("Test1", RootSymbolTable);
+   pNewNode = SearchSymbolTable("Test1", RootSymbolTablep);
    if (pNewNode == NULL) {
-     AddNameToSymbolTable ("Test1", &RootSymbolTable);
-     ShowSymbolTable(RootSymbolTable);
+     AddNameToSymbolTable ("Test1", &RootSymbolTablep);
+     ShowSymbolTable(RootSymbolTablep);
    }
-
+#if 0
    pNewNode = SearchSymbolTable("Test2", RootSymbolTable);
    if (pNewNode == NULL) {
      AddNameToSymbolTable ("Test2", &RootSymbolTable);
      ShowSymbolTable(RootSymbolTable);
    }
+#endif

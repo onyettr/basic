@@ -53,7 +53,9 @@ typedef enum {
   ERROR_FILE_OPEN_FILENAME,
   ERROR_FILE_OPEN_FAILURE,
   ERROR_FILE_NO_FILENAME,
-  ERROR_NUMBER_TOO_LARGE,                 /* 9 digits only allowed */
+  ERROR_NUMBER_TOO_LARGE,                         /* 9 digits only allowed */
+  ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_NODE,
+  ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_STRING,
   ERROR_UNKNOWN
 } ErrorCode_t;
 

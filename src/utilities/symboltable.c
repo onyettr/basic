@@ -81,6 +81,35 @@ SymbolTableNode_t *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
   return NULL;                                             /* No match found      */
 }
 
+SymbolTableNode_t *CreateRootSymbolTable (SymbolTableNode_t **pRootNode) {
+  if (Verbose) printf("CreateRootSymbolTable %p\n", (void*)pRootNode);
+
+  return NULL;
+}
+
+SymbolTableNode_t *CreateSymbolTableNode(char *pNameString) {
+  SymbolTableNode_t *pNewNode = NULL;
+  
+  if (Verbose) printf("CreateSymbolTableNode STARTS\n");
+
+  pNewNode = malloc(sizeof(SymbolTableNode_t));
+  if (pNewNode == NULL) {
+    Error("CreateSymbolTableNode - %s", ErrorToString(ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_NODE));
+
+    return NULL;
+  }
+  
+  pNewNode->NameString = malloc(strlen(pNameString)+1);
+  if (pNewNode->NameString == NULL) {
+    Error("CreateSymbolTableNode - %s", ErrorToString(ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_STRING));
+
+    return NULL;
+  }
+  strcpy(pNewNode->NameString, pNameString);
+  
+  return pNewNode;
+}
+
 /**
  * @fn          AddNameToSymbolTableNodePtr_t AddSymbolTable (char *Name, SymbolTableNode_t **pNode) {
  * @brief       Add a new Node to the symbol table
@@ -93,17 +122,17 @@ SymbolTableNode_t *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
  */
 SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode) {
   SymbolTableNode_t *pNewNode;
-  SymbolTableNode_t *pNodeTest;  
+  SymbolTableNode_t *pNodeCurrent;
+  SymbolTableNode_t *pNodeParent;    
   int Compare = 0;
+  bool Constructing = true;
 
   printf("pNode %p, *pNode %p\n", (void*)pNode, (void*)*pNode);
   
   /*
-   * TODO Needs a bit more checking here!
+   * Create a new node for this entry
    */
-  pNewNode = malloc(sizeof(SymbolTableNode_t));
-  pNewNode->NameString = malloc(strlen(Name)+1);
-  strcpy(pNewNode->NameString, Name);
+  pNewNode = CreateSymbolTableNode(Name);
 
   printf("alloc %p\n", (void*)pNewNode);
   
@@ -115,6 +144,41 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
   pNewNode->NestingLevel = 0;
   pNewNode->LabelIndex   = 0;
 
+  if (*pNode == NULL) {  /* There is no Root */
+    printf("Root node created %p\n", pNode);
+    *pNode = pNewNode;
+
+    return *pNode;
+  }
+  
+  pNodeCurrent = *pNode;
+  pNodeParent  = NULL;
+
+  while (Constructing) {
+    pNodeParent = pNodeCurrent;
+    Compare = strcmp(Name,pNodeParent->NameString);
+    printf("cmp %d Parent %p Current %p\n", Compare, (void*)pNodeParent,
+           (void*)pNodeCurrent);
+    if (Compare < 0) {
+      pNodeCurrent = pNodeCurrent->pLeft;
+
+      if (pNodeCurrent == NULL) {
+        pNodeParent->pLeft = pNewNode;
+
+        Constructing = false;
+      }
+    } else {   /* Insert right */
+      pNodeCurrent = pNodeCurrent->pRight;
+
+      if (pNodeCurrent == NULL) {
+        pNodeParent->pRight = pNewNode;
+
+        Constructing = false;
+      }
+    }
+  }
+
+#if 0
   /*
    * Look for insertion point
    */
@@ -124,10 +188,11 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
     pNode = (Compare < 0) ? &(pNodeTest->pLeft) : &(pNodeTest->pRight);
     printf("2nd cmp pNode %p pNodeTest %p\n", (void*)pNode, (void*)pNodeTest);
   }
-
+#endif
+  
   *pNode = pNewNode;
   printf("Return %p = %p\n", (void*)*pNode, (void*)pNewNode);
-  
+
   return pNewNode;                                
 }
 
