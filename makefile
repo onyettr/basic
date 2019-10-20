@@ -89,8 +89,8 @@ basic.exe:	$(OBJS) $(LIBS)
 
 $(LIB_DIR)/liblister.a:	$(OBJECT_DIR)/lister.o 
 	$(AR) rcs $(LIB_DIR)/liblister.a $(OBJECT_DIR)/lister.o
-$(LIB_DIR)/libutilities.a:	$(OBJECT_DIR)/utilities.o $(OBJECT_DIR)/symboltable.o
-	$(AR) rcs $(LIB_DIR)/libutilities.a $(OBJECT_DIR)/utilities.o $(OBJECT_DIR)/symboltable.o
+$(LIB_DIR)/libutilities.a:	$(OBJECT_DIR)/utilities.o $(OBJECT_DIR)/binarytree.o
+	$(AR) rcs $(LIB_DIR)/libutilities.a $(OBJECT_DIR)/utilities.o $(OBJECT_DIR)/binarytree.o
 $(LIB_DIR)/libtokenizer.a:	$(OBJECT_DIR)/tokenizer.o 
 	$(AR) rcs $(LIB_DIR)/libtokenizer.a $(OBJECT_DIR)/tokenizer.o
 
@@ -112,6 +112,8 @@ $(OBJECT_DIR)/interactive.o:	 $(SRC)/misc/interactive.c
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/interactive.c -o $(OBJECT_DIR)/interactive.o
 $(OBJECT_DIR)/symboltable.o:	 $(SRC)/utilities/symboltable.c
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/symboltable.c -o $(OBJECT_DIR)/symboltable.o
+$(OBJECT_DIR)/binarytree.o:	 $(SRC)/utilities/binarytree.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/binarytree.c -o $(OBJECT_DIR)/binarytree.o
 $(OBJECT_DIR)/parsecommandline.o:$(SRC)/misc/parsecommandline.c
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/parsecommandline.c -o $(OBJECT_DIR)/parsecommandline.o
 
@@ -130,10 +132,11 @@ ifndef CHECK_FOR_CHK
 else
 	$(CHK_TOOL) basic_check.ts > basic_check.c
 	$(CC)  basic_check.c 	 			\
-	$(OBJECT_DIR)/interactive.o		 	\
+	$(OBJECT_DIR)/interactive.o			\
 	$(OBJECT_DIR)/error.o		 		\
 	-static -L$(LIB_DIR) -I $(INC_DIR)	 	\
-	-lcheck -llister -lutilities -ltokenizer 	\
+	-lutilities -ltokenizer -llister 		\
+	-lcheck						\
 	-lpthread				 	\
 	-o basic_check.exe
 endif
@@ -157,8 +160,9 @@ else
 #	$(CODE_CHECK) $(CODE_CHECK_ARGS) lister.c
 #	$(CODE_CHECK) $(CODE_CHECK_ARGS) utilities.c
 #	$(CODE_CHECK) $(CODE_CHECK_ARGS) main.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/*.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/utilities/*.c
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/*.
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/utilities/binarytree.c
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/utilities/utilities.c
 	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/tokenizer/*.c
 endif
 
@@ -177,6 +181,7 @@ clean:
 	rm -f $(OBJECT_DIR)/lister.o
 	rm -f $(OBJECT_DIR)/utilities.o
 	rm -f $(OBJECT_DIR)/tokenizer.o
+	rm -f $(OBJECT_DIR)/binarytree.o
 	rm -f $(OBJECT_DIR)/symboltable.o
 	rm -f $(OBJECT_DIR)/interactive.o
 	rm -f $(OBJECT_DIR)/parsecommandline.o

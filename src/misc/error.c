@@ -30,11 +30,13 @@ Private variables (static)
 ******************************************************************************
 */
 static ErrorCodeList_t ErrorRecord[] = {
-   { "OK"                ,  SUCCESS                  }, 
-   { "File open error "  ,  ERROR_FILE_OPEN_FILENAME },
-   { "File no filename"  ,  ERROR_FILE_NO_FILENAME   },
-   { "Number is too big" ,  ERROR_NUMBER_TOO_LARGE   },
-   { NULL                ,  ERROR_UNKNOWN            }
+   { "OK"                       ,  SUCCESS                                     }, 
+   { "File open error          ",  ERROR_FILE_OPEN_FILENAME                    },
+   { "File no filename         ",  ERROR_FILE_NO_FILENAME                      },
+   { "Number is too big        ",  ERROR_NUMBER_TOO_LARGE                      },
+   { "Node allocation failure  ",  ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_NODE  },
+   { "String allocation failure",  ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_STRING},
+   { NULL                       ,  ERROR_UNKNOWN                               }
 };
 
 /*

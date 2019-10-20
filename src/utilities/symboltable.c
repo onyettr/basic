@@ -81,12 +81,30 @@ SymbolTableNode_t *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
   return NULL;                                             /* No match found      */
 }
 
-SymbolTableNode_t *CreateRootSymbolTable (SymbolTableNode_t **pRootNode) {
+/**
+ * @fn          SymbolTableNode_t *CreateRootSymbolTable (SymbolTableNode_t **pRootNode) {
+ * @brief       create a new symbol table (root node)
+ * @param[in]   *pRootNode - name of new symbol table
+ * @return      NULL if not found, SymbolTableNodePtr if found
+ * @details     
+ * @todo        requires implementing
+ * @note        none
+ */
+SymbolTableNode_t *SymbolTableCreateNew (SymbolTableNode_t **pRootNode) {
   if (Verbose) printf("CreateRootSymbolTable %p\n", (void*)pRootNode);
 
   return NULL;
 }
 
+/**
+ * @fn          SymbolTableNode_t *CreateSymbolTableNode(char *pNameString) {
+ * @brief       create a new symbol table node
+ * @param[in]   *pNameString - name to store in symbol table
+ * @return      NULL if failure, SymbolTableNodePtr if not
+ * @details     
+ * @todo        
+ * @note        none
+ */
 SymbolTableNode_t *CreateSymbolTableNode(char *pNameString) {
   SymbolTableNode_t *pNewNode = NULL;
   

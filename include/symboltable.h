@@ -87,8 +87,20 @@ Exported Global variables
 Prototypes of all functions contained in this file (in order of occurance)
 ******************************************************************************
 */
-SymbolTableNode_t    *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode);
-SymbolTableNodePtr_t AddNameToSymbolTable(char *Name, SymbolTableNode_t **pNode);
-void ShowSymbolTable   (SymbolTableNode_t *pNode);
-  
+SymbolTableNode_t *SymbolTableCreate (void);
+SymbolTableNode_t *SymbolTableSearch (char *Name, SymbolTableNode_t *pNode);
+SymbolTableNode_t *SymbolTableAddName(char *Name, SymbolTableNode_t **pNode);
+SymbolTableNode_t *SymbolTableCreateNew (SymbolTableNode_t **pRootNode);
+SymbolTableNode_t *CreateSymbolTableNode(char *pNameString);
+void SymbolTableClean  (SymbolTableNode_t *pSymbolTable);
+void SymbolTableShow   (SymbolTableNode_t *pNode);
+
 #endif  /* __SYMBOLTABLE__H__ */
+
+
+
+
+
+
+
+

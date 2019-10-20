@@ -231,23 +231,35 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    fail_unless(ReturnToken == TOKEN_GE, "TokenGetSpecial - wrong token return");
    fail_unless(Tokenp[0]   == '>',      "TokenGetSpecial - didnt copy token  ");
 
-#test SymbolTable_AddNameToSymboltable
-   SymbolTableNode_t RootSymbolTable;
-   SymbolTableNode_t *RootSymbolTablep;
+
+#test SymbolTable_SymboltableSearch
    SymbolTableNode_t *pNewNode = NULL;
 
-   printf("Calling AddName RootSymbolTable %p\n", (void*)RootSymbolTablep);
-   RootSymbolTablep = &RootSymbolTable;
+   pNewNode = SymbolTableSearch("Test1", pNewNode);
 
-   pNewNode = SearchSymbolTable("Test1", RootSymbolTablep);
+   fail_unless(pNewNode == NULL, "SymbolTableSearch - didnt return NULL");
+
+
+#test SymbolTable_SymboltableAddName
+   SymbolTableNode_t *pNewNode = NULL;
+   SymbolTableNode_t *pSymbolRoot  = NULL;
+
+   pNewNode = SymbolTableAddName ("Test1", &pSymbolRoot);
+
+   fail_unless(pNewNode    != NULL, "SymbolTableAddName - didnt return NULL");
+   fail_unless(pSymbolRoot != NULL, "SymbolTableAddName - SymbolRoot not created");
+
+#test SymbolTable_APISequence
+   SymbolTableNode_t *pNewNode = NULL;
+   SymbolTableNode_t *pSymbolRoot  = NULL;
+
+   pNewNode = SymbolTableSearch("Test1", pSymbolRoot);
+
+   fail_unless(pNewNode == NULL, "SymbolTableSearch - didnt return NULL");
+
    if (pNewNode == NULL) {
-     AddNameToSymbolTable ("Test1", &RootSymbolTablep);
-     ShowSymbolTable(RootSymbolTablep);
+     pNewNode = SymbolTableAddName ("Test1", &pSymbolRoot);
    }
-#if 0
-   pNewNode = SearchSymbolTable("Test2", RootSymbolTable);
-   if (pNewNode == NULL) {
-     AddNameToSymbolTable ("Test2", &RootSymbolTable);
-     ShowSymbolTable(RootSymbolTable);
-   }
-#endif
+
+   fail_unless(pNewNode    != NULL, "SymbolTableAddName - didnt return NULL");
+   fail_unless(pSymbolRoot != NULL, "SymbolTableAddName - SymbolRoot not created");

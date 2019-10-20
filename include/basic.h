@@ -43,6 +43,7 @@ Includes
  */
 #define UNUSED( X )             (void)X
 #define DIM( X )                (sizeof(X) / sizeof(X[0])
+#define MY_DIM( X )             (*&X + 1) - X
 
 /**
  * @brief Constants
