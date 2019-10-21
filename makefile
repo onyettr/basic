@@ -36,7 +36,12 @@ PROFLAGS	= 	-pg
 # Main CC and Link build strings
 DEBUG		= 	-g
 CFLAGS		= 	-c -std=c99 -Wall -pedantic $(PFLAGS) -I $(INC_DIR)
-LFLAGS		= 	$(PFLAGS) -static -L. -L./$(LIB_DIR)
+OS_NAME		:=	$(shell uname -s)
+ifeq ($(OS_NAME),Linux)
+LFLAGS		= 	$(PFLAGS) -L. -L./$(LIB_DIR) -lm
+else
+LFLAGS		= 	$(PFLAGS) -static -L. -L./$(LIB_DIR) -lm
+endif
 
 # -DDEBUG_TRACE	Will turn on deep trace per function
 
@@ -44,7 +49,7 @@ LFLAGS		= 	$(PFLAGS) -static -L. -L./$(LIB_DIR)
 # Code checking with splint or cppcheck
 #
 #CODE_CHECK_ARGS	 = 	-showfunc -mustfreefresh -nullpass -nullret -noeffect
-CODE_CHECK_ARGS	=  	--enable=all
+CODE_CHECK_ARGS	=  	--enable=all 
 #
 # Libraries and objects targets
 #
@@ -132,9 +137,10 @@ ifndef CHECK_FOR_CHK
 else
 	$(CHK_TOOL) basic_check.ts > basic_check.c
 	$(CC)  basic_check.c 	 			\
+	-std=c99 -Wall -pedantic -I $(INC_DIR)		\
 	$(OBJECT_DIR)/interactive.o			\
 	$(OBJECT_DIR)/error.o		 		\
-	-static -L$(LIB_DIR) -I $(INC_DIR)	 	\
+	$(LFLAGS)					\
 	-lutilities -ltokenizer -llister 		\
 	-lcheck						\
 	-lpthread				 	\
@@ -147,9 +153,10 @@ endif
 clang:
 	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/main.c       	-o $(OBJECT_DIR)/main_clang.o
 	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/lister.c      	-o $(OBJECT_DIR)/lister_clang.o
+	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/interactive.c 	-o $(OBJECT_DIR)/interactive_clang.o
 	$(CLANG) $(CFLAGS) $(DEBUG) src/utilities/utilities.c   -o $(OBJECT_DIR)/utilities_clang.o
 	$(CLANG) $(CFLAGS) $(DEBUG) src/tokenizer/tokenizer.c   -o $(OBJECT_DIR)/tokenizer_clang.o
-	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/interactive.c 	-o $(OBJECT_DIR)/interactive_clang.o
+
 #*******************************************************************************
 # splint target
 #*******************************************************************************
@@ -157,13 +164,14 @@ splint-it:
 ifndef CHECK_FOR_CPP
 	@echo "** cppcheck command not found"
 else
-#	$(CODE_CHECK) $(CODE_CHECK_ARGS) lister.c
-#	$(CODE_CHECK) $(CODE_CHECK_ARGS) utilities.c
-#	$(CODE_CHECK) $(CODE_CHECK_ARGS) main.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/*.
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/main.c
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/error.c
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/lister.c
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/interactive.c
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/parsecommandline.c
+	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/tokenizer/tokenizer.c
 	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/utilities/binarytree.c
 	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/utilities/utilities.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/tokenizer/*.c
 endif
 
 #*******************************************************************************

@@ -29,10 +29,6 @@ Private Types
 Private variables (static)
 ******************************************************************************
 */
-SymbolTableNode_t *pSymbolTableRoot  = NULL;
-#if defined(TEST_HARNESS)
-bool Verbose = true;
-#endif
 
 /*
 ******************************************************************************
@@ -45,6 +41,10 @@ Private Macros
 Global variables
 ******************************************************************************
 */
+SymbolTableNode_t *pSymbolTableRoot  = NULL;
+#if defined(TEST_HARNESS)
+bool Verbose = true;
+#endif
 
 /*
 ******************************************************************************
@@ -177,7 +177,7 @@ SymbolTableNode_t *SymbolTableAddName (char *Name, SymbolTableNode_t **pNode) {
 }
 
 /**
- * @fn          void ShowSymbolTable (SymbolTableNode_t *pNode) 
+ * @fn          void SymbolTableShow (SymbolTableNode_t *pNode) 
  * @brief       List the contents of the Symbol Table
  * @param[in]   *pNode  - Symbol table to list
  * @return      
@@ -186,7 +186,7 @@ SymbolTableNode_t *SymbolTableAddName (char *Name, SymbolTableNode_t **pNode) {
  * @note        none
  */
 void SymbolTableShow (SymbolTableNode_t *pNode) {
-  static bool BannerPrint = true;  
+  static bool BannerPrint = true;
 
   if (BannerPrint) {
     printf("\t\t    Left\t    Right\t\tNext\t\tName\n");
@@ -218,7 +218,7 @@ static void Padding ( char ch, int n) {
 void SymbolTableShowNew (SymbolTableNode_t *pNode, int Level) {
 
   if (pNode == NULL) {
-    Padding('\t', Level);
+    Padding(' ', Level);
     printf("~");
   } else {
     SymbolTableShowNew(pNode->pRight,Level+1);
@@ -248,13 +248,16 @@ int main (void) {
                        "aaaNo8",
                        "aaaaa9",
                        "bbzz10",
-                       "longerNode"
+                       "longerNode",
+		       "varx",
+		       "x",
+		       "pi"
   };
   int i = 0;
   int Dimension = sizeof(NodeNames)/sizeof(NodeNames[0]);
   printf("%s Test Harness %d\n", __FILE__, Dimension);
 
-  for (i=0; i < 11; i++) {
+  for (i=0; i < 13; i++) {
     pNewNode = SymbolTableSearch  (NodeNames[i], pSymbolRoot);
     if (pNewNode == NULL) {
       pNewNode = SymbolTableAddName(NodeNames[i], &pSymbolRoot);
@@ -264,8 +267,9 @@ int main (void) {
 
   SymbolTableShowNew (pSymbolRoot, 0);  
 
-  //  SymbolTableClean(pSymbolRoot);
+  SymbolTableClean(pSymbolRoot);
 
+  UNUSED(pNewNode);
   UNUSED(pSymbolRoot);
 }
 #endif

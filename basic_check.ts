@@ -34,7 +34,6 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    char *Bufferp;
    char *Tokenp;
    char Pattern[3];
-   int i;
    
    printf("TokenGetNumber_one_digit_negative_success\n");
    
