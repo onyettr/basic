@@ -155,7 +155,8 @@ typedef enum {
     TOKEN_FRI,                      /* Friden mode                      */
     TOKEN_NFR,                      /* Exit FRI mode                    */
     TOKEN_EXPLAIN,                  /* Help command                     */
-    TOKEN_SYMBOLTABLE_LIST,         /* SHow contents of Symbol Tabke    */
+    TOKEN_HELP,                     /* Help command                     */
+    TOKEN_SYMTABLE_LIST,            /* SHow contents of Symbol Tabke    */
     
     TOKEN_EOF,
     TOKEN_OK, 
@@ -204,6 +205,7 @@ typedef struct {
  */
 typedef struct {
   char *cmdstr;                      /*!> String containing Command                    */
+  char *HelpString;                  /*!> parameters and help                          */
   Token_t TokenValue;                /*!> Token value for this command                 */
   //  int (*pDirectFunction)(int argc, char *argv[]);
   int32_t (*pDirectFunction)(void);  /*!> For future use to add callbacks for Keywords */

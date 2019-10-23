@@ -62,6 +62,13 @@ LIBS  		     = 	$(LIB_DIR)/liblister.a 		\
 			$(LIB_DIR)/libtokenizer.a	\
 			$(LIB_DIR)/libutilities.a
 
+HDRS		     =  $(INC_DIR)/basic.h		\
+			$(INC_DIR)/error.h		\
+			$(INC_DIR)/lister.h		\
+			$(INC_DIR)/tokenizer.h		\
+			$(INC_DIR)/utilities.h		\
+			$(INC_DIR)/symboltable.h
+
 #*******************************************************************************
 # Build targets:
 # all		Creates object directory, builds executable test harness  and
@@ -82,7 +89,7 @@ $(OBJECT_DIR):
 	-$(MAKE_DIR_CMD)
 
 basic.exe:	$(OBJS) $(LIBS)
-	$(LINK) $(OBJS) $(LFLAGS) -llister -lutilities -ltokenizer -o basic.exe
+	$(LINK) $(OBJS) $(LFLAGS) -ltokenizer -lutilities -llister -o basic.exe
 
 #*******************************************************************************
 # Major library components
@@ -103,23 +110,23 @@ $(LIB_DIR)/libtokenizer.a:	$(OBJECT_DIR)/tokenizer.o
 # Object builds
 #*******************************************************************************
 
-$(OBJECT_DIR)/parsecommandline.o:$(SRC)/misc/parsecommandline.c
+$(OBJECT_DIR)/parsecommandline.o:$(SRC)/misc/parsecommandline.c $(HDRS)
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/parsecommandline.c -o $(OBJECT_DIR)/parsecommandline.o
-$(OBJECT_DIR)/symboltable.o:	 $(SRC)/utilities/symboltable.c
+$(OBJECT_DIR)/symboltable.o:	 $(SRC)/utilities/symboltable.c $(HDRS)
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/symboltable.c -o $(OBJECT_DIR)/symboltable.o
-$(OBJECT_DIR)/binarytree.o:	 $(SRC)/utilities/binarytree.c
+$(OBJECT_DIR)/binarytree.o:	 $(SRC)/utilities/binarytree.c  $(HDRS)
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/binarytree.c -o $(OBJECT_DIR)/binarytree.o
-$(OBJECT_DIR)/tokenizer.o:	 $(SRC)/tokenizer/tokenizer.c
+$(OBJECT_DIR)/tokenizer.o:	 $(SRC)/tokenizer/tokenizer.c $(HDRS)
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/tokenizer/tokenizer.c -o $(OBJECT_DIR)/tokenizer.o
-$(OBJECT_DIR)/utilities.o:	 $(SRC)/utilities/utilities.c
+$(OBJECT_DIR)/utilities.o:	 $(SRC)/utilities/utilities.c $(HDRS)
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/utilities.c -o $(OBJECT_DIR)/utilities.o
-$(OBJECT_DIR)/interactive.o:	 $(SRC)/misc/interactive.c
+$(OBJECT_DIR)/interactive.o:	 $(SRC)/misc/interactive.c $(HDRS)
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/interactive.c -o $(OBJECT_DIR)/interactive.o
-$(OBJECT_DIR)/lister.o:		 $(SRC)/misc/lister.c
+$(OBJECT_DIR)/lister.o:		 $(SRC)/misc/lister.c $(HDRS)
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/lister.c -o $(OBJECT_DIR)/lister.o
-$(OBJECT_DIR)/error.o:		 $(SRC)/misc/error.c
+$(OBJECT_DIR)/error.o:		 $(SRC)/misc/error.c $(HDRS)
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/error.c -o $(OBJECT_DIR)/error.o
-$(OBJECT_DIR)/main.o:		 $(SRC)/misc/main.c
+$(OBJECT_DIR)/main.o:		 $(SRC)/misc/main.c $(HDRS)
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/main.c -o $(OBJECT_DIR)/main.o
 
 #*******************************************************************************

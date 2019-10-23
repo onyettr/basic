@@ -47,5 +47,6 @@ Prototypes of all functions contained in this file (in order of occurance)
 ******************************************************************************
 */
 int32_t CommandLineMode (void);
+int32_t TT_InteractiveHelp (void);
 
 #endif  /* __INTERACTIVE_H__ */

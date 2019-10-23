@@ -62,6 +62,7 @@ Token_t DirectCommand(char *TokenString) {
   return TOKEN_ERROR;
 }
 
+
 /**
  * @brief     Tokenize a given input stream
  * @fn        int32_t CommandLineMode (void)

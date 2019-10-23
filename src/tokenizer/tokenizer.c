@@ -48,27 +48,34 @@ static char TokenBuffer [MAX_SOURCE_LINE_LENGTH+10];   /*!> All tokens after par
 static char SourceBuffer[MAX_SOURCE_LINE_LENGTH+10];   /*!> Line read from the file            */
 static Literal_t Literal;
 
+//extern int32_t TT_SymbolTableShow (void);
+
 /**
  *  @brief  All Direct (not keywords) commands
  *  @struct TokenCommandList_t
  */
 static TokenCommandList_t TokenCommand[] = {
-    { "HELLO"   , TOKEN_HELLO   , NULL },
-    { "NEW"     , TOKEN_NEW     , NULL },
-    { "OLD"     , TOKEN_OLD     , NULL },
-    { "SAVE"    , TOKEN_SAVE    , NULL },
-    { "REPLACE" , TOKEN_REPLACE , NULL },
-    { "RENAME"  , TOKEN_RENAME  , NULL },
-    { "CAT"     , TOKEN_CAT     , NULL },
-    { "LIST"    , TOKEN_LIST    , NULL },
-    { "RUN"     , TOKEN_RUN     , NULL },
-    { "STOP"    , TOKEN_CMD_STOP, NULL },
-    { "UNSAVE"  , TOKEN_UNSAVE  , NULL },
-    { "SYSTEM"  , TOKEN_SYSTEM  , NULL },
-    { "BYE"     , TOKEN_BYE     , NULL },
-    { "GOODBYE" , TOKEN_GOODBYE , NULL },
-    { "SYMLIST" , TOKEN_SYMBOLTABLE_LIST, TT_SymbolTableShow },
-    { NULL      , TOKEN_WORD    , NULL }    
+    { "HELLO"   , "<sign on>    " , TOKEN_HELLO     , NULL },
+    { "NEW"     , "new program  " , TOKEN_NEW       , NULL },
+    { "OLD"     , "last program " , TOKEN_OLD       , NULL },
+    { "SAVE"    , "save current " , TOKEN_SAVE      , NULL },
+    { "REPLACE" , "overwrite    " , TOKEN_REPLACE   , NULL },
+    { "RENAME"  , "replace      " , TOKEN_RENAME    , NULL },
+    { "CAT"     , "list         " , TOKEN_CAT       , NULL },
+    { "LIST"    , "list         " , TOKEN_LIST      , NULL },
+    { "RUN"     , "execute      " , TOKEN_RUN       , NULL },
+    { "STOP"    , "stop         " , TOKEN_CMD_STOP  , NULL },
+    { "UNSAVE"  , "undo         " , TOKEN_UNSAVE    , NULL },
+    { "SYSTEM"  , "system cmd   " , TOKEN_SYSTEM    , NULL },
+    { "BYE"     , "logoff       " , TOKEN_BYE       , NULL },
+    { "GOODBYE" , "really logoff" , TOKEN_GOODBYE   , NULL },
+    { "SCRATCH" , "new          " , TOKEN_SCRATCH   , NULL },
+    { "FRI"     , "friden mode  " , TOKEN_FRI       , NULL },
+    { "NFR"     , "exit friden  " , TOKEN_NFR       , NULL },
+    { "EXPLAIN" , "help         " , TOKEN_EXPLAIN   , TT_InteractiveHelp },
+    { "SYMLIST" , "DBG symtable " , TOKEN_SYMTABLE_LIST, TT_SymbolTableShow },
+    { "HELP"    , "help         " , TOKEN_HELP      , TT_InteractiveHelp },
+    { NULL      , NULL            , TOKEN_WORD      , NULL }    
 };
 
 /**
@@ -76,35 +83,35 @@ static TokenCommandList_t TokenCommand[] = {
  *  @struct TokenCommandList_t 
  */
 static TokenCommandList_t TokenKeyword[] = {
-    { "LET"     , TOKEN_LET     , NULL },
-    { "PRINT"   , TOKEN_PRINT   , NULL },
-    { "END"     , TOKEN_END     , NULL },
-    { "READ"    , TOKEN_READ    , NULL },
-    { "DATA"    , TOKEN_DATA    , NULL },
-    { "GOTO"    , TOKEN_GOTO    , NULL },
-    { "IF"      , TOKEN_IF      , NULL },
-    { "THEN"    , TOKEN_THEN    , NULL },    
-    { "FOR"     , TOKEN_FOR     , NULL },
-    { "TO"      , TOKEN_TO      , NULL },    
-    { "NEXT"    , TOKEN_NEXT    , NULL },
-    { "GOSUB"   , TOKEN_GOSUB   , NULL },
-    { "RETURN"  , TOKEN_RETURN  , NULL },
-    { "DEF"     , TOKEN_DEF     , NULL },
-    { "DIM"     , TOKEN_DIM     , NULL },    
-    { "REM"     , TOKEN_REM     , NULL },
-    { "MAT"     , TOKEN_MAT     , NULL },      /* 2nd edition */
-    { "SGN"     , TOKEN_SGN     , NULL },      /* 3rd edition */
-    { "RESTORE" , TOKEN_RESTORE , NULL },
-    { "INPUT"   , TOKEN_INPUT   , NULL },
-    { "RANDOMIZE",TOKEN_RANDOMIZE,NULL },      /* 4th edition */
-    { "ON"      , TOKEN_ON      , NULL },
-    { "CHANGE"  , TOKEN_CHANGE  , NULL },
-    { "RESET"   , TOKEN_RESET   , NULL },      /* 5th edition */
-    { "LOC"     , TOKEN_LOC     , NULL },
-    { "LOF"     , TOKEN_LOF     , NULL },
-    { "CHAIN"   , TOKEN_CHAIN   , NULL },
-    { "COMMON"  , TOKEN_COMMON  , NULL },
-    { NULL      , TOKEN_WORD    , NULL }    
+    { "LET"     , NULL, TOKEN_LET     , NULL },
+    { "PRINT"   , NULL, TOKEN_PRINT   , NULL },
+    { "END"     , NULL, TOKEN_END     , NULL },
+    { "READ"    , NULL, TOKEN_READ    , NULL },
+    { "DATA"    , NULL, TOKEN_DATA    , NULL },
+    { "GOTO"    , NULL, TOKEN_GOTO    , NULL },
+    { "IF"      , NULL, TOKEN_IF      , NULL },
+    { "THEN"    , NULL, TOKEN_THEN    , NULL },    
+    { "FOR"     , NULL, TOKEN_FOR     , NULL },
+    { "TO"      , NULL, TOKEN_TO      , NULL },    
+    { "NEXT"    , NULL, TOKEN_NEXT    , NULL },
+    { "GOSUB"   , NULL, TOKEN_GOSUB   , NULL },
+    { "RETURN"  , NULL, TOKEN_RETURN  , NULL },
+    { "DEF"     , NULL, TOKEN_DEF     , NULL },
+    { "DIM"     , NULL, TOKEN_DIM     , NULL },    
+    { "REM"     , NULL, TOKEN_REM     , NULL },
+    { "MAT"     , NULL, TOKEN_MAT     , NULL },      /* 2nd edition */
+    { "SGN"     , NULL, TOKEN_SGN     , NULL },      /* 3rd edition */
+    { "RESTORE" , NULL, TOKEN_RESTORE , NULL },
+    { "INPUT"   , NULL, TOKEN_INPUT   , NULL },
+    { "RANDOMIZE",NULL, TOKEN_RANDOMIZE,NULL },      /* 4th edition */
+    { "ON"      , NULL, TOKEN_ON      , NULL },
+    { "CHANGE"  , NULL, TOKEN_CHANGE  , NULL },
+    { "RESET"   , NULL, TOKEN_RESET   , NULL },      /* 5th edition */
+    { "LOC"     , NULL, TOKEN_LOC     , NULL },
+    { "LOF"     , NULL, TOKEN_LOF     , NULL },
+    { "CHAIN"   , NULL, TOKEN_CHAIN   , NULL },
+    { "COMMON"  , NULL, TOKEN_COMMON  , NULL },
+    { NULL      , NULL, TOKEN_WORD    , NULL }    
 };
 
 /*
@@ -132,12 +139,33 @@ Prototypes of all functions contained in this file (in order of occurance)
 static bool StringMatch(char *str1,char *str2) {
   int i;
 
+  UtilsToUpper(str1);        /* Convert to all upper case */
+
   for (i=0; i < (int)strlen(str2); i++) {
-    if (str1[i] != str2[i] )
-      return false;           /* No match */
+    if (str1[i] != str2[i] ) {
+      return false;           /* No match                 */
+    }
   }
 
+  //  printf("Match cmp %s with %s\n", str1, str2);
   return(!(strncmp(str1,str2, strlen(str1))));
+}
+
+int32_t TT_InteractiveHelp(void) {
+  int32_t ErrorCode = SUCCESS;
+  TokenCommandList_t *pRow;
+
+  pRow = (TokenCommandList_t *)&TokenCommand[0]; 
+  while (pRow->cmdstr != NULL) {
+    printf("[%8s] %10s %s\n",
+	   pRow->cmdstr,
+	   pRow->HelpString,
+	   pRow->pDirectFunction == NULL ? "<empty>" : "<full>");
+	   
+    pRow++;
+  }
+
+  return ErrorCode;
 }
 
 /**
@@ -229,7 +257,11 @@ char *TokenGetStringType(Token_t Token) {
      case TOKEN_RUN:           return ("<CMD RUN>");    break;
      case TOKEN_UNSAVE:        return ("<CMD UNSAVE>"); break;
      case TOKEN_SYSTEM:        return ("<CMD SYSTEM>"); break;
+     case TOKEN_SCRATCH:       return ("<CMD SCRATCH>");break;
+     case TOKEN_EXPLAIN:       return ("<CMD EXPLAIN>");break;
      case TOKEN_BYE:           return ("<CMD BYE>");    break;
+     case TOKEN_HELP:          return ("<DBG HELP>");   break;
+     case TOKEN_SYMTABLE_LIST: return ("<DBG SYMLIST>");break;
      case TOKEN_GOODBYE:       return ("<CMD GOODBYE>");break;
      case TOKEN_OK:            return ("<OK>");         break;
      default:                  return ("????");         break;
@@ -247,12 +279,13 @@ char *TokenGetStringType(Token_t Token) {
  */
 Token_t TokenDirectKeyword (char *Bufferp) {
   TokenCommandList_t *pRow;
-
+  
   pRow = (TokenCommandList_t *)&TokenKeyword[0];  
   while (pRow->cmdstr != NULL) {
     if (StringMatch(Bufferp,pRow->cmdstr)) {
        return pRow->TokenValue;
     }
+
     pRow++;
   }    
  
@@ -260,9 +293,9 @@ Token_t TokenDirectKeyword (char *Bufferp) {
 }
 
 /**
- * @brief     Look for any direct commands
+ * @brief     Look for any direct commands in supplied buffer
  * @fn        Token_t TokenDirectCommand (char *Bufferp) 
- * @param[in] **Bufferp - Buffer to tokenize
+ * @param[in] *Bufferp - Buffer to tokenize
  * @return    Token_t 
  * @details   Is this is direct word 
  * @note
@@ -270,10 +303,10 @@ Token_t TokenDirectKeyword (char *Bufferp) {
  */
 Token_t TokenDirectCommand (char *Bufferp) {
   TokenCommandList_t *pRow;
-
+  
   pRow = (TokenCommandList_t *)&TokenCommand[0];  
   while (pRow->cmdstr != NULL) {
-    if (StringMatch(Bufferp,pRow->cmdstr)) {
+    if (StringMatch(Bufferp,pRow->cmdstr)) {    
        return pRow->TokenValue;
     }
     pRow++;

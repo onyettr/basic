@@ -189,7 +189,14 @@ void SymbolTableShow (SymbolTableNode_t *pNode) {
   static bool BannerPrint = true;
 
   if (BannerPrint) {
+    if (pNode== NULL) {
+      printf("*** Symbol table is empty ***\n");
+
+      return;
+    }
+    
     printf("\t\t    Left\t    Right\t\tNext\t\tName\n");
+    
     BannerPrint = false;
   }
 

@@ -109,3 +109,20 @@ bool isEndOfLine(char *SourceBuffer) {
 
    return false;
 }
+
+
+/**
+ * @fn          void UtilsToUpper(char *SourceBuffer) {
+ * @brief       Convert input string to upper case
+ * @param[in]   *SourceBuffer 
+ * @return      none
+ * @note        none
+ * @details     
+ * @todo        
+ */
+void UtilsToUpper(char *SourceBuffer) {
+  while (*SourceBuffer != '\0') {
+    *SourceBuffer = toupper(*SourceBuffer);
+    SourceBuffer++;
+  }
+}

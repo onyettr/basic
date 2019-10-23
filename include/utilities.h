@@ -1,11 +1,11 @@
-/**
+/**  
  *****************************************************************************
  * @brief   basic interpreter
  * @author  onyettr
  * @file    basic.h
  ***************************************************************************** 
  */
-#ifndef __UTILITIES__H__
+#ifndef __UTILITIES__H__  
 #define __UTILITIES__H__
 
 /*
@@ -55,5 +55,6 @@ void ParseCommandLine (char *argv[], int argc, char *InputFileName);
 bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer);
 char *UtilsSkipSpaces (char *SourceBuffer);
 bool isendofline(char *SourceBuffer);
+void UtilsToUpper(char *SourceBuffer);
 
 #endif  /* __UTILITIES__H__ */
