@@ -95,6 +95,8 @@ SymbolTableNode_t *CreateSymbolTableNode(char *pNameString);
 void SymbolTableClean  (SymbolTableNode_t *pSymbolTable);
 void SymbolTableShow   (SymbolTableNode_t *pNode);
 
+int32_t TT_SymbolTableShow (void);
+
 #endif  /* __SYMBOLTABLE__H__ */
 
 

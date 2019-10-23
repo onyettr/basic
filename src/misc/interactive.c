@@ -72,7 +72,7 @@ int32_t CommandLineMode (void) {
   int32_t ErrorCode = SUCCESS;
   char *Bufferp;
   Token_t Token = TOKEN_OK;
-  
+
   /*
    * read until Exit
    */
@@ -113,11 +113,12 @@ int32_t CommandLineMode (void) {
 
       if (Token == TOKEN_WORD) {                           /* Test for direct command                  */
         Token = TokenDirectCommand(TokenBuffer);
+        TokenExecuteDirectCommand(Token);                  /* Execute direct command                   */
       }
 
-      TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
+      TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst          */
               
-      memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse     */
+      memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse    */
     }
   }
   TokenPrint(TokenBuffer, Token);  

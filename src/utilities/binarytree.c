@@ -207,6 +207,21 @@ void SymbolTableShow (SymbolTableNode_t *pNode) {
   }
 }
 
+/**
+ * @fn          int32_t TT_SymbolTableShow (void)
+ * @brief       Callharness from Direct Command Table
+ * @param[in]   
+ * @return      
+ * @details     
+ * @todo  
+ * @note        none
+ */
+int32_t TT_SymbolTableShow (void) {
+  SymbolTableShow(pSymbolTableRoot);
+
+  return SUCCESS;
+}
+
 static void Padding ( char ch, int n) {
   int i;
 

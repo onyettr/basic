@@ -103,24 +103,24 @@ $(LIB_DIR)/libtokenizer.a:	$(OBJECT_DIR)/tokenizer.o
 # Object builds
 #*******************************************************************************
 
-$(OBJECT_DIR)/main.o:		 $(SRC)/misc/main.c
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/main.c -o $(OBJECT_DIR)/main.o
-$(OBJECT_DIR)/error.o:		 $(SRC)/misc/error.c
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/error.c -o $(OBJECT_DIR)/error.o
-$(OBJECT_DIR)/lister.o:		 $(SRC)/misc/lister.c
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/lister.c -o $(OBJECT_DIR)/lister.o
-$(OBJECT_DIR)/utilities.o:	 $(SRC)/utilities/utilities.c
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/utilities.c -o $(OBJECT_DIR)/utilities.o
-$(OBJECT_DIR)/tokenizer.o:	 $(SRC)/tokenizer/tokenizer.c
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/tokenizer/tokenizer.c -o $(OBJECT_DIR)/tokenizer.o
-$(OBJECT_DIR)/interactive.o:	 $(SRC)/misc/interactive.c
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/interactive.c -o $(OBJECT_DIR)/interactive.o
+$(OBJECT_DIR)/parsecommandline.o:$(SRC)/misc/parsecommandline.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/parsecommandline.c -o $(OBJECT_DIR)/parsecommandline.o
 $(OBJECT_DIR)/symboltable.o:	 $(SRC)/utilities/symboltable.c
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/symboltable.c -o $(OBJECT_DIR)/symboltable.o
 $(OBJECT_DIR)/binarytree.o:	 $(SRC)/utilities/binarytree.c
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/binarytree.c -o $(OBJECT_DIR)/binarytree.o
-$(OBJECT_DIR)/parsecommandline.o:$(SRC)/misc/parsecommandline.c
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/parsecommandline.c -o $(OBJECT_DIR)/parsecommandline.o
+$(OBJECT_DIR)/tokenizer.o:	 $(SRC)/tokenizer/tokenizer.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/tokenizer/tokenizer.c -o $(OBJECT_DIR)/tokenizer.o
+$(OBJECT_DIR)/utilities.o:	 $(SRC)/utilities/utilities.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/utilities.c -o $(OBJECT_DIR)/utilities.o
+$(OBJECT_DIR)/interactive.o:	 $(SRC)/misc/interactive.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/interactive.c -o $(OBJECT_DIR)/interactive.o
+$(OBJECT_DIR)/lister.o:		 $(SRC)/misc/lister.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/lister.c -o $(OBJECT_DIR)/lister.o
+$(OBJECT_DIR)/error.o:		 $(SRC)/misc/error.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/error.c -o $(OBJECT_DIR)/error.o
+$(OBJECT_DIR)/main.o:		 $(SRC)/misc/main.c
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/main.c -o $(OBJECT_DIR)/main.o
 
 #*******************************************************************************
 # This is the "checkmk" target: Test harness is in stack_check.ts file and 

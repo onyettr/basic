@@ -53,7 +53,6 @@ static Literal_t Literal;
  *  @struct TokenCommandList_t
  */
 static TokenCommandList_t TokenCommand[] = {
-
     { "HELLO"   , TOKEN_HELLO   , NULL },
     { "NEW"     , TOKEN_NEW     , NULL },
     { "OLD"     , TOKEN_OLD     , NULL },
@@ -68,6 +67,7 @@ static TokenCommandList_t TokenCommand[] = {
     { "SYSTEM"  , TOKEN_SYSTEM  , NULL },
     { "BYE"     , TOKEN_BYE     , NULL },
     { "GOODBYE" , TOKEN_GOODBYE , NULL },
+    { "SYMLIST" , TOKEN_SYMBOLTABLE_LIST, TT_SymbolTableShow },
     { NULL      , TOKEN_WORD    , NULL }    
 };
 
@@ -280,6 +280,32 @@ Token_t TokenDirectCommand (char *Bufferp) {
   }    
  
   return pRow->TokenValue;
+}
+
+/**
+ * @brief     Execute the direct aommand
+ * @fn        int32_t TokenExecuteDirectCommand (Token_t CommandToken)
+ * @param[in] CommandToken - execute this command
+ * @return    int32_t
+ * @details   Execute the Direct command callback, if present
+ * @note
+ * @todo      This should be combined as we have to search again
+ */
+int32_t TokenExecuteDirectCommand (Token_t CommandToken) {
+  int32_t ErrorCode = SUCCESS;
+  TokenCommandList_t *pRow;
+
+  pRow = (TokenCommandList_t *)&TokenCommand[0];  
+  while (pRow->cmdstr != NULL) {
+    if (CommandToken == pRow->TokenValue) { /* Found a match for the CommandToken */
+      if (pRow->pDirectFunction != NULL) {  
+        (pRow->pDirectFunction)();               /* Execute the command callback       */
+      }
+    }
+    pRow++;
+  }    
+ 
+  return ErrorCode;
 }
 
 /**

@@ -155,6 +155,7 @@ typedef enum {
     TOKEN_FRI,                      /* Friden mode                      */
     TOKEN_NFR,                      /* Exit FRI mode                    */
     TOKEN_EXPLAIN,                  /* Help command                     */
+    TOKEN_SYMBOLTABLE_LIST,         /* SHow contents of Symbol Tabke    */
     
     TOKEN_EOF,
     TOKEN_OK, 
@@ -202,10 +203,10 @@ typedef struct {
  * @addtogrpup Tokenizer
  */
 typedef struct {
-  char *cmdstr;                  /*!> String containing Command                    */
-  Token_t TokenValue;            /*!> Token value for this command                 */
+  char *cmdstr;                      /*!> String containing Command                    */
+  Token_t TokenValue;                /*!> Token value for this command                 */
   //  int (*pDirectFunction)(int argc, char *argv[]);
-  int (*pDirectFunction)(void);  /*!> For future use to add callbacks for Keywords */
+  int32_t (*pDirectFunction)(void);  /*!> For future use to add callbacks for Keywords */
 } TokenCommandList_t;
 
 /*
@@ -240,6 +241,7 @@ Token_t TokenGetDirect     (char **Bufferp, char *Tokenp);
 void    TokenPrint         (char *TokenString, Token_t Token);
 Token_t TokenDirectKeyword (char *Bufferp);
 Token_t TokenDirectCommand (char *Bufferp);
+int32_t TokenExecuteDirectCommand (Token_t CommandToken);
 char    *TokenGetStringType(Token_t Token);
 
 #endif  /* __TOKENIZER_H__ */
