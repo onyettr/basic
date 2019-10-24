@@ -53,26 +53,29 @@ static Literal_t Literal;
 /**
  *  @brief  All Direct (not keywords) commands
  *  @struct TokenCommandList_t
+ * 
+ *  @note   Not part of the BASIC dialect, but commands used for the 
+ *          DTSS (Dartmouth Timesharing System)
  */
 static TokenCommandList_t TokenCommand[] = {
-    { "HELLO"   , "<sign on>    " , TOKEN_HELLO     , NULL },
-    { "NEW"     , "new program  " , TOKEN_NEW       , NULL },
-    { "OLD"     , "last program " , TOKEN_OLD       , NULL },
-    { "SAVE"    , "save current " , TOKEN_SAVE      , NULL },
-    { "REPLACE" , "overwrite    " , TOKEN_REPLACE   , NULL },
-    { "RENAME"  , "replace      " , TOKEN_RENAME    , NULL },
-    { "CAT"     , "list         " , TOKEN_CAT       , NULL },
-    { "LIST"    , "list         " , TOKEN_LIST      , NULL },
-    { "RUN"     , "execute      " , TOKEN_RUN       , NULL },
-    { "STOP"    , "stop         " , TOKEN_CMD_STOP  , NULL },
-    { "UNSAVE"  , "undo         " , TOKEN_UNSAVE    , NULL },
-    { "SYSTEM"  , "system cmd   " , TOKEN_SYSTEM    , NULL },
+    { "HELLO"   , "<sign on>    " , TOKEN_HELLO     , DTSSCommandHello },
+    { "NEW"     , "new program  " , TOKEN_NEW       , DTSSCommandNew   },
+    { "OLD"     , "last program " , TOKEN_OLD       , DTSSCommandOld   },
+    { "SAVE"    , "save current " , TOKEN_SAVE      , DTSSCommandSave  },
+    { "REPLACE" , "overwrite    " , TOKEN_REPLACE   , DTSSCommandReplace},
+    { "RENAME"  , "replace      " , TOKEN_RENAME    , DTSSCommandRename},
+    { "CAT"     , "list         " , TOKEN_CAT       , DTSSCommandCat   },
+    { "LIST"    , "list         " , TOKEN_LIST      , DTSSCommandList  },
+    { "RUN"     , "execute      " , TOKEN_RUN       , DTSSCommandRun   },
+    { "STOP"    , "stop         " , TOKEN_CMD_STOP  , DTSSCommandStop  },
+    { "UNSAVE"  , "undo         " , TOKEN_UNSAVE    , DTSSCommandUnsave},
+    { "SYSTEM"  , "system cmd   " , TOKEN_SYSTEM    , DTSSCommandSystem},
     { "BYE"     , "logoff       " , TOKEN_BYE       , NULL },
     { "GOODBYE" , "really logoff" , TOKEN_GOODBYE   , NULL },
-    { "SCRATCH" , "new          " , TOKEN_SCRATCH   , NULL },
+    { "SCRATCH" , "new          " , TOKEN_SCRATCH   , DTSSCommandScratch},
     { "FRI"     , "friden mode  " , TOKEN_FRI       , NULL },
     { "NFR"     , "exit friden  " , TOKEN_NFR       , NULL },
-    { "EXPLAIN" , "help         " , TOKEN_EXPLAIN   , TT_InteractiveHelp },
+    { "EXPLAIN" , "help         " , TOKEN_EXPLAIN   , DTSSCommandExplain},
     { "SYMLIST" , "DBG symtable " , TOKEN_SYMTABLE_LIST, TT_SymbolTableShow },
     { "HELP"    , "help         " , TOKEN_HELP      , TT_InteractiveHelp },
     { NULL      , NULL            , TOKEN_WORD      , NULL }    
@@ -319,12 +322,14 @@ Token_t TokenDirectCommand (char *Bufferp) {
  * @brief     Execute the direct aommand
  * @fn        int32_t TokenExecuteDirectCommand (Token_t CommandToken)
  * @param[in] CommandToken - execute this command
+ * @param[in] TokenStr     - execute this command
  * @return    int32_t
  * @details   Execute the Direct command callback, if present
  * @note
  * @todo      This should be combined as we have to search again
+ * @todo      should use int argc, char *argv[] for params to DirectFunction callback
  */
-int32_t TokenExecuteDirectCommand (Token_t CommandToken) {
+int32_t TokenExecuteDirectCommand (Token_t CommandToken, char *Tokenp) {
   int32_t ErrorCode = SUCCESS;
   TokenCommandList_t *pRow;
 
@@ -337,7 +342,9 @@ int32_t TokenExecuteDirectCommand (Token_t CommandToken) {
     }
     pRow++;
   }    
- 
+
+  UNUSED(Tokenp);
+  
   return ErrorCode;
 }
 
@@ -362,7 +369,6 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
   uint32_t DigitCount = 0;  
   float power = 1.0;
   float value = 0.0;
-  float evalue = 0.0;  
   char *Bufp;  
   bool isFloatingPoint = false;
   bool isDot = false;
@@ -418,7 +424,9 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
    */
   Bufp = UtilsSkipSpaces(Bufp);           /* Skip any leading spaces */
   //  if ((!isDot) && (*Bufp == 'E' || *Bufp == 'e')) {
-  if ((*Bufp == 'E' || *Bufp == 'e')) {  
+  if ((*Bufp == 'E' || *Bufp == 'e')) {
+    float evalue = 0.0;
+    
     if (Verbose) printf("TokenGetNumber: Exponent seen\n");
 
     *Tokenp++ = *Bufp++;

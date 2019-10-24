@@ -114,7 +114,7 @@ int32_t CommandLineMode (void) {
 
       if (Token == TOKEN_WORD) {                           /* Test for direct command                  */
         Token = TokenDirectCommand(TokenBuffer);
-        TokenExecuteDirectCommand(Token);                  /* Execute direct command                   */
+        TokenExecuteDirectCommand(Token, TokenBuffer);     /* Execute direct command                   */
       }
 
       TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst          */

@@ -66,10 +66,12 @@ Prototypes of all functions contained in this file (in order of occurance)
  * @note        none
  */
 SymbolTableNode_t *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
-  int Compare = 0;
 
   printf("Search %s, %p\n", Name, (void*)pNode);
+  
   while (pNode != NULL) {
+    int Compare = 0;
+    
     Compare = strcmp(Name,pNode->NameString);
     if (Compare == 0) {
       return pNode;                                        /* Search matched      */
@@ -142,7 +144,6 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
   SymbolTableNode_t *pNewNode;
   SymbolTableNode_t *pNodeCurrent;
   SymbolTableNode_t *pNodeParent;    
-  int Compare = 0;
   bool Constructing = true;
 
   printf("pNode %p, *pNode %p\n", (void*)pNode, (void*)*pNode);
@@ -173,6 +174,8 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
   pNodeParent  = NULL;
 
   while (Constructing) {
+    int Compare = 0;
+    
     pNodeParent = pNodeCurrent;
     Compare = strcmp(Name,pNodeParent->NameString);
     printf("cmp %d Parent %p Current %p\n", Compare, (void*)pNodeParent,

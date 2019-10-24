@@ -103,8 +103,8 @@ $(LIB_DIR)/liblister.a:	$(OBJECT_DIR)/lister.o
 	$(AR) rcs $(LIB_DIR)/liblister.a $(OBJECT_DIR)/lister.o
 $(LIB_DIR)/libutilities.a:	$(OBJECT_DIR)/utilities.o $(OBJECT_DIR)/binarytree.o
 	$(AR) rcs $(LIB_DIR)/libutilities.a $(OBJECT_DIR)/utilities.o $(OBJECT_DIR)/binarytree.o
-$(LIB_DIR)/libtokenizer.a:	$(OBJECT_DIR)/tokenizer.o 
-	$(AR) rcs $(LIB_DIR)/libtokenizer.a $(OBJECT_DIR)/tokenizer.o
+$(LIB_DIR)/libtokenizer.a:	$(OBJECT_DIR)/tokenizer.o $(OBJECT_DIR)/dtss.o	
+	$(AR) rcs $(LIB_DIR)/libtokenizer.a $(OBJECT_DIR)/tokenizer.o $(OBJECT_DIR)/dtss.o	
 
 #*******************************************************************************
 # Object builds
@@ -126,6 +126,8 @@ $(OBJECT_DIR)/lister.o:		 $(SRC)/misc/lister.c $(HDRS)
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/lister.c -o $(OBJECT_DIR)/lister.o
 $(OBJECT_DIR)/error.o:		 $(SRC)/misc/error.c $(HDRS)
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/error.c -o $(OBJECT_DIR)/error.o
+$(OBJECT_DIR)/dtss.o:		 $(SRC)/misc/dtss.c $(HDRS)
+	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/dtss.c -o $(OBJECT_DIR)/dtss.o
 $(OBJECT_DIR)/main.o:		 $(SRC)/misc/main.c $(HDRS)
 	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/main.c -o $(OBJECT_DIR)/main.o
 
@@ -171,14 +173,15 @@ splint-it:
 ifndef CHECK_FOR_CPP
 	@echo "** cppcheck command not found"
 else
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/main.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/error.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/lister.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/interactive.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/parsecommandline.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/tokenizer/tokenizer.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/utilities/binarytree.c
-	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/utilities/utilities.c
+#	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/main.c
+#	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/error.c
+#	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/lister.c
+#	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/interactive.c
+#	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/misc/parsecommandline.c
+#	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/tokenizer/tokenizer.c
+#	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/utilities/binarytree.c
+#	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/utilities/utilities.c
+	$(CODE_CHECK) --language=c --enable=all -v -I ./include src/*
 endif
 
 #*******************************************************************************
@@ -192,6 +195,7 @@ clean:
 	rm -f $(LIB_DIR)/libutilities.a
 	rm -f $(LIB_DIR)/libtokenizer.a
 	rm -f $(OBJECT_DIR)/main.o
+	rm -f $(OBJECT_DIR)/dtss.o
 	rm -f $(OBJECT_DIR)/error.o
 	rm -f $(OBJECT_DIR)/lister.o
 	rm -f $(OBJECT_DIR)/utilities.o

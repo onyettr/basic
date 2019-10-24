@@ -24,6 +24,7 @@ Includes
 #include "utilities.h"
 #include "lister.h"
 #include "error.h"
+#include "dtss.h"
 #include "tokenizer.h"
 #include "symboltable.h"
 #include "interactive.h"

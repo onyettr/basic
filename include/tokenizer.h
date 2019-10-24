@@ -26,6 +26,9 @@ Private Types
  * @addtogrpup Tokenizer
  */
 typedef enum {
+    /*
+     * Tokem main entities
+     */              
     TOKEN_WORD,
     TOKEN_STRING,
     TOKEN_IDENTIFIER,
@@ -33,6 +36,10 @@ typedef enum {
     TOKEN_LETTER,
     TOKEN_SPECIAL,
     TOKEN_NO_TOKEN,
+
+    /*
+     * QWERTY keyboard tokens
+     */
     TOKEN_TILDE,
     TOKEN_OPEN_QUOTE,
     TOKEN_PLING,
@@ -71,9 +78,10 @@ typedef enum {
     TOKEN_SPACE,
     
     /*
-     * Reserved words tokens, based on Dartmouth BASIC original dialect (Edition #1_
+     * Based on Dartmouth BASIC original dialect (Edition #1_
+     * Reserved words tokens, 
      */
-    TOKEN_LET,
+    TOKEN_LET,                   /* 1st edition */
     TOKEN_PRINT,
     TOKEN_END,
     TOKEN_READ,
@@ -134,7 +142,8 @@ typedef enum {
     TOKEN_TAN,
 
     /*
-     * Direct commands
+     * Dartmouth Time Sharing System (DTSS) Direct commands
+     * Not part of the BASIC language, but used to run programmes
      */
     TOKEN_HELLO,                    /* Log onto DTSS                    */
     TOKEN_BYE,                      /* Log off  DTSS                    */
@@ -155,6 +164,10 @@ typedef enum {
     TOKEN_FRI,                      /* Friden mode                      */
     TOKEN_NFR,                      /* Exit FRI mode                    */
     TOKEN_EXPLAIN,                  /* Help command                     */
+
+    /*
+     * Debug and extra commands: 
+     */
     TOKEN_HELP,                     /* Help command                     */
     TOKEN_SYMTABLE_LIST,            /* SHow contents of Symbol Tabke    */
     
@@ -243,7 +256,7 @@ Token_t TokenGetDirect     (char **Bufferp, char *Tokenp);
 void    TokenPrint         (char *TokenString, Token_t Token);
 Token_t TokenDirectKeyword (char *Bufferp);
 Token_t TokenDirectCommand (char *Bufferp);
-int32_t TokenExecuteDirectCommand (Token_t CommandToken);
+int32_t TokenExecuteDirectCommand (Token_t CommandToken, char *Tokenp);
 char    *TokenGetStringType(Token_t Token);
 
 #endif  /* __TOKENIZER_H__ */
