@@ -30,6 +30,7 @@ Private Types
 Private variables (static)
 ******************************************************************************
 */
+static SymbolTableNode_t *symTable = NULL;
 
 /*
 ******************************************************************************
@@ -742,7 +743,8 @@ int32_t Tokenize (char *FileName) {
   int32_t ErrorCode = SUCCESS;
   char *Bufferp;
   Token_t Token;  
-
+  SymbolTableNode_t *pNewNode;
+  
   if (*FileName == '\0') {
     Error("No filename provided");
 
@@ -784,6 +786,22 @@ int32_t Tokenize (char *FileName) {
          Token = TokenGetSpecial(&Bufferp, TokenBuffer);       
        }
 
+       if (Token == TOKEN_WORD) {                           
+	 if (IsTokenDirectCommand(TokenBuffer)) {           /* Test for Direct Command                  */
+           Token = TokenDirectCommand(TokenBuffer);         /* Which direct command?                    */
+           TokenExecuteDirectCommand(Token, TokenBuffer);   /* Execute direct command                   */
+	 } else if (IsTokenDirectKeyword(TokenBuffer)) {    /* Test for a Keyword                       */
+	   printf("TODO Keyword...\n");
+	 } else {                                           /* This is an identifier                    */
+	   pNewNode = SymbolTableSearch  (TokenBuffer, symTable);
+	   if (pNewNode == NULL) {
+	     pNewNode = SymbolTableAddName(TokenBuffer, &symTable);
+	   }
+
+	   Token = TOKEN_IDENTIFIER;
+	 }
+       }
+       
        TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
               
        memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse     */
@@ -791,6 +809,10 @@ int32_t Tokenize (char *FileName) {
   }
   Token = TOKEN_EOF;
   TokenPrint(TokenBuffer, Token);  
+
+  if (symTable != NULL) {
+    SymbolTableClean(symTable);
+  }
   
   return ErrorCode;
 }

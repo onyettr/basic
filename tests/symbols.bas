@@ -1,0 +1,3 @@
+20 LET X = 10
+30 LET Y = 20
+40 SYMLIST

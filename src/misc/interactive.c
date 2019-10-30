@@ -43,6 +43,7 @@ Global variables
 */
 static char TokenBuffer [MAX_SOURCE_LINE_LENGTH+10];
 static char SourceBuffer[MAX_SOURCE_LINE_LENGTH+10];
+static SymbolTableNode_t *symTable = NULL;
 
 /*
 ******************************************************************************
@@ -62,6 +63,12 @@ Token_t DirectCommand(char *TokenString) {
   return TOKEN_ERROR;
 }
 
+int32_t TT_SymbolTableShow (void) {
+  SymbolTableShow(symTable);
+
+  return SUCCESS;
+}
+
 
 /**
  * @brief     Tokenize a given input stream
@@ -73,14 +80,8 @@ int32_t CommandLineMode (void) {
   int32_t ErrorCode = SUCCESS;
   char *Bufferp;
   Token_t Token = TOKEN_OK;
-  SymbolTableNode_t *symTable;
   SymbolTableNode_t *pNewNode;
-  
-  symTable = SymbolTableCreate();
-  if (symTable == NULL) {
-    return ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_NODE;
-  }
-                          
+
   /*
    * read until Exit
    */
@@ -126,13 +127,11 @@ int32_t CommandLineMode (void) {
         } else if (IsTokenDirectKeyword(TokenBuffer)) {    /* Test for a Keyword                       */
           printf("TODO Keyword...\n");
         } else {                                           /* This is an identifier                    */
-#if 0          
           pNewNode = SymbolTableSearch  (TokenBuffer, symTable);
           if (pNewNode == NULL) {
             pNewNode = SymbolTableAddName(TokenBuffer, &symTable);
           }
-#endif
-          SymbolTableAddName(TokenBuffer, &symTable);          
+
           Token = TOKEN_IDENTIFIER;
         }
       }
@@ -141,7 +140,11 @@ int32_t CommandLineMode (void) {
       memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse    */
     }
   }
-  TokenPrint(TokenBuffer, Token);  
+  TokenPrint(TokenBuffer, Token);
+
+  if (symTable != NULL) {
+    SymbolTableClean(symTable);
+  }
   
   return ErrorCode;
 }
