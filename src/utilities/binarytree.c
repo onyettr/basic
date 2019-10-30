@@ -70,8 +70,18 @@ SymbolTableNode_t *SymbolTableCreate(void) {
   SymbolTableNode_t *pNewNode;
 
   pNewNode = malloc(sizeof(SymbolTableNode_t));
+  pNewNode->pLeft        = NULL;
+  pNewNode-> pRight      = NULL;
+  pNewNode-> pNext       = NULL;
+  pNewNode->NameString   = NULL;
+  pNewNode->InfoString   = NULL;
+  pNewNode->NestingLevel = 0;
+  pNewNode->LabelIndex   = 0;
+  
+  if (Verbose) printf ("SymbolTableCreate %p\n", (void*)pNewNode);
+  
   if (pNewNode == NULL) {
-    // Error("SymbolTableCreate - %s\n", ErrorToString(ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_NODE));
+    Error("SymbolTableCreate - %s\n", ErrorToString(ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_NODE));
   }
 
   return pNewNode;                                         
@@ -103,17 +113,24 @@ void SymbolTableClean(SymbolTableNode_t *pSymbolTable) {
  * @param[in]   *pNode   - Which tree to search in
  * @return      NULL if not found, SymbolTableNodePtr if found
  * @details     
- * @todo  
+ * @todo        return bool?
  * @note        none
  */
 SymbolTableNode_t *SymbolTableSearch (char *Name, SymbolTableNode_t *pNode) {
 
-  if (Verbose) printf("Search %s, %p\n", Name, (void*)pNode);
+  if (Verbose) printf("SymbolTableSearch %s, %p\n", Name, (void*)pNode);
   
   while (pNode != NULL) {
     int Compare = 0;     
 
-    Compare = strcmp(Name,pNode->NameString);
+    //    if (Verbose) printf("SymbolTableSearch [%p] %s, %s, cmp %d\n", (void*)pNode, Name, pNode->NameString, Compare);
+    if (Verbose) printf("SymbolTableSearch [%p] %s\n", (void*)pNode, Name);    
+    
+    //    Compare = strcmp(Name,pNode->NameString);
+
+    //    if (Verbose) printf("SymbolTableSearch [%p] %s, %s, cmp %d\n", (void*)pNode, Name, pNode->NameString, Compare);
+    if (Verbose) printf("SymbolTableSearch [%p] %s\n", (void*)pNode, Name);
+    
     if (Compare == 0) {
       return pNode;                                        /* Search matched      */
     }
@@ -138,7 +155,6 @@ SymbolTableNode_t *SymbolTableAddName (char *Name, SymbolTableNode_t **pNode) {
   SymbolTableNode_t *pNewNode = NULL;
   SymbolTableNode_t *pNodeTest = NULL;  
 
-
   if (Verbose) printf("SymbolTableAddName: pNode %p, *pNode %p\n", (void*)pNode, (void*)*pNode);
   
   /*
@@ -160,18 +176,18 @@ SymbolTableNode_t *SymbolTableAddName (char *Name, SymbolTableNode_t **pNode) {
   /*
    * Look for insertion point
    */
-  while ( (pNodeTest = *pNode) != NULL) {
+  while ((pNodeTest = *pNode) != NULL) {
     int Compare = 0;    
-    //    printf("1st cmp pNode %p pNodeTest %p\n", (void*)pNode, (void*)pNodeTest);    
+    printf("1st cmp pNode %p pNodeTest %p\n", (void*)pNode, (void*)pNodeTest);    
 
     Compare = strcmp(Name,pNodeTest->NameString);
     pNode = (Compare < 0) ? &(pNodeTest->pLeft) : &(pNodeTest->pRight);
-    //    printf("2nd cmp pNode %p pNodeTest %p\n", (void*)pNode, (void*)pNodeTest);
+    printf("2nd cmp pNode %p pNodeTest %p\n", (void*)pNode, (void*)pNodeTest);
   }
 
   *pNode = pNewNode;
 
-  //  printf("Return %p = %p\n", (void*)*pNode, (void*)pNewNode);
+  printf("Return %p = %p\n", (void*)*pNode, (void*)pNewNode);
   
   return pNewNode;                                
 }

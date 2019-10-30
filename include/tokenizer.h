@@ -256,6 +256,8 @@ Token_t TokenGetDirect     (char **Bufferp, char *Tokenp);
 void    TokenPrint         (char *TokenString, Token_t Token);
 Token_t TokenDirectKeyword (char *Bufferp);
 Token_t TokenDirectCommand (char *Bufferp);
+bool    IsTokenDirectCommand (char *Bufferp);
+bool    IsTokenDirectKeyword (char *Bufferp);
 int32_t TokenExecuteDirectCommand (Token_t CommandToken, char *Tokenp);
 char    *TokenGetStringType(Token_t Token);
 
