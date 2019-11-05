@@ -30,7 +30,7 @@ Private Types
 Private variables (static)
 ******************************************************************************
 */
-static SymbolTableNode_t *symTable = NULL;
+extern SymbolTableNode_t *symTable;
 
 /*
 ******************************************************************************
@@ -48,8 +48,6 @@ Global variables
 static char TokenBuffer [MAX_SOURCE_LINE_LENGTH+10];   /*!> All tokens after parsing each line */
 static char SourceBuffer[MAX_SOURCE_LINE_LENGTH+10];   /*!> Line read from the file            */
 static Literal_t Literal;
-
-//extern int32_t TT_SymbolTableShow (void);
 
 /**
  *  @brief  All Direct (not keywords) commands

@@ -10,3 +10,5 @@
 100 GOTO 50
 
 200 END
+
+symlist    

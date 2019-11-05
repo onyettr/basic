@@ -103,7 +103,7 @@ void SymbolTableClean(SymbolTableNode_t *pSymbolTable) {
     free(pSymbolTable->NameString);
     free(pSymbolTable->InfoString);
     free(pSymbolTable);
-    if (Verbose) printf("SymbolTableClean: %p\n", pSymbolTable);
+    if (Verbose) printf("SymbolTableClean: %p\n", (void*)pSymbolTable);
   }
 }
 

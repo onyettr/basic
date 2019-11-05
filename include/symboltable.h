@@ -57,9 +57,9 @@ typedef struct SymbolTableNode {
   struct SymbolTableNode *pLeft;
   struct SymbolTableNode *pRight;  
   struct SymbolTableNode *pNext;
+  DefinitionStruct_t      Defun;  
   char *NameString;
   char *InfoString;
-  DefinitionStruct_t      Defun;
   int32_t NestingLevel;
   int32_t LabelIndex;
 } SymbolTableNode_t, *SymbolTableNodePtr_t;

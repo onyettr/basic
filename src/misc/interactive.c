@@ -43,7 +43,8 @@ Global variables
 */
 static char TokenBuffer [MAX_SOURCE_LINE_LENGTH+10];
 static char SourceBuffer[MAX_SOURCE_LINE_LENGTH+10];
-static SymbolTableNode_t *symTable = NULL;
+
+SymbolTableNode_t *symTable = NULL;
 
 /*
 ******************************************************************************
