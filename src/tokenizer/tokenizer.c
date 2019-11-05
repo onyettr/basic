@@ -740,8 +740,8 @@ int32_t Tokenize (char *FileName) {
   FILE *fp;
   int32_t ErrorCode = SUCCESS;
   char *Bufferp;
-  Token_t Token;  
-  SymbolTableNode_t *pNewNode;
+  Token_t Token = TOKEN_NO_TOKEN;
+  SymbolTableNode_t *pNewNode = NULL;
   
   if (*FileName == '\0') {
     Error("No filename provided");
@@ -811,6 +811,8 @@ int32_t Tokenize (char *FileName) {
   if (symTable != NULL) {
     SymbolTableClean(symTable);
   }
+
+  fclose(fp);
   
   return ErrorCode;
 }
