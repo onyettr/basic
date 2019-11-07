@@ -22,7 +22,7 @@ CHK_TOOL	= 	checkmk
 CLANG		= 	clang
 CODE_CHECK	= 	cppcheck
 CODE_SPELL      =       codespell
-CODE_SPELL_ARGS =       --skip="*.o,*.a,*.lib,*.elf,*.bin,*.exe,*.clang,*.pyc,*.xlsx,*.ppt,*.xlsm,*.pdf,*.zip,*.pptx,*.docx,*.dat,./esm,./.git"
+CODE_SPELL_ARGS =       --skip="*.o,*.a,*.lib,*.elf,*.bin,*.exe,./.git,./tests" 
 CHECK_FOR_CHK	:= 	$(shell command -v $(CHK_TOOL)   2> /dev/null)
 CHECK_FOR_CPP	:=	$(shell command -v $(CODE_CHECK) 2> /dev/null)
 CHECK_FOR_SPELL :=      $(shell command -v $(CODE_SPELL) 2> /dev/null)
