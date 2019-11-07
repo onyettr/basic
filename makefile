@@ -21,8 +21,11 @@ CHK_TOOL	= 	checkmk
 #CODE_CHECK       = 	splint
 CLANG		= 	clang
 CODE_CHECK	= 	cppcheck
-CHECK_FOR_CHK	:= 	$(shell command -v $(CHK_TOOL) 2> /dev/null)
+CODE_SPELL      =       codespell
+CODE_SPELL_ARGS =       --skip="*.o,*.a,*.lib,*.elf,*.bin,*.exe,*.clang,*.pyc,*.xlsx,*.ppt,*.xlsm,*.pdf,*.zip,*.pptx,*.docx,*.dat,./esm,./.git"
+CHECK_FOR_CHK	:= 	$(shell command -v $(CHK_TOOL)   2> /dev/null)
 CHECK_FOR_CPP	:=	$(shell command -v $(CODE_CHECK) 2> /dev/null)
+CHECK_FOR_SPELL :=      $(shell command -v $(CODE_SPELL) 2> /dev/null)
 
 #*******************************************************************************
 # Build options
@@ -78,7 +81,7 @@ HDRS		     =  $(INC_DIR)/basic.h		\
 # clean		Delete object and library files and intermediates
 #*******************************************************************************
 
-all:	$(OBJECT_DIR) $(LIB_DIR) $(LIBS) basic.exe test_harness splint-it
+all:	$(OBJECT_DIR) $(LIB_DIR) $(LIBS) basic.exe test_harness splint-it spellcheck-it
 
 lib:	$(LIBS)
 
@@ -182,6 +185,16 @@ else
 #	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/utilities/binarytree.c
 #	$(CODE_CHECK) $(CODE_CHECK_ARGS) $(SRC)/utilities/utilities.c
 	$(CODE_CHECK) --language=c --enable=all -v -I ./include src/*
+endif
+
+#*******************************************************************************
+# spellcheck target
+#*******************************************************************************
+spellcheck-it:
+ifndef CHECK_FOR_SPELL
+	@echo "** codespell command not found"
+else
+	$(CODE_SPELL) $(CODE_SPELL_ARGS)
 endif
 
 #*******************************************************************************

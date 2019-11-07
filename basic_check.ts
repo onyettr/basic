@@ -25,7 +25,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    ReturnToken = TokenGetNumber(&Bufferp, Tokenp, TOKEN_NO_TOKEN);
 
    fail_unless(ReturnToken == TOKEN_DIGIT, "TokenGetNumber - wrong token return");
-   fail_unless(Tokenp[0] == '1',           "TokenGetNumber - didnt copy token  ");
+   fail_unless(Tokenp[0] == '1',           "TokenGetNumber - didn't copy token  ");
    fail_unless(strlen(Tokenp) == 1,        "TokenGetNumber - wrong size token  ");
 
 #test TokenGetNumber_one_digit_negative_success
@@ -47,8 +47,8 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    ReturnToken = TokenGetNumber(&Bufferp, TokenBuffer, TOKEN_MINUS);
    
    fail_unless(ReturnToken == TOKEN_DIGIT, "TokenGetNumber - wrong token return");
-   fail_unless(Tokenp[0] == '1',           "TokenGetNumber - didnt copy token[1]");
-   fail_unless(Tokenp[1] == '0',           "TokenGetNumber - didnt copy token[2]");      
+   fail_unless(Tokenp[0] == '1',           "TokenGetNumber - didn't copy token[1]");
+   fail_unless(Tokenp[1] == '0',           "TokenGetNumber - didn't copy token[2]");      
 
 #test TokenGetNumber_one_digit_failure_not_a_digit
    Token_t ReturnToken;
@@ -106,7 +106,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    printf("Token = %s\n", TokenGetStringType(ReturnToken));
    
    fail_unless(ReturnToken == TOKEN_WORD, "TokenGetWord - wrong token return");
-   fail_unless(Tokenp[0] == 'W',          "TokenGetWord- didnt copy token  ");
+   fail_unless(Tokenp[0] == 'W',          "TokenGetWord- didn't copy token  ");
    fail_unless(strlen(Tokenp) == 4,       "TokenGetWord - wrong size token  ");
 
 #test TokenGetWord_word_keyword_success
@@ -126,7 +126,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    printf("Token = %s\n", TokenGetStringType(ReturnToken));
    
    fail_unless(ReturnToken == TOKEN_REM, "TokenGetWord - wrong token return");
-   fail_unless(Tokenp[0] == 'R',          "TokenGetWord- didnt copy token  ");
+   fail_unless(Tokenp[0] == 'R',          "TokenGetWord- didn't copy token  ");
    fail_unless(strlen(Tokenp) == 3,       "TokenGetWord - wrong size token  ");
 
 #test TokenGetString_String_success
@@ -149,7 +149,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    printf("Token = %s\n", TokenGetStringType(ReturnToken));
    
    fail_unless(ReturnToken == TOKEN_STRING, "TokenGetString - wrong token return");
-   fail_unless(Tokenp[0] == '"',            "TokenGetString- didnt copy token  ");
+   fail_unless(Tokenp[0] == '"',            "TokenGetString- didn't copy token  ");
 
 #test TokenGetSpecial_success
    Token_t ReturnToken;
@@ -168,7 +168,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    printf("Token = %s\n", TokenGetStringType(ReturnToken));
    
    fail_unless(ReturnToken == TOKEN_QUESTION_MARK, "TokenGetSpecial - wrong token return");
-   fail_unless(Tokenp[0]   == '?',                 "TokenGetSpecial - didnt copy token  ");
+   fail_unless(Tokenp[0]   == '?',                 "TokenGetSpecial - didn't copy token  ");
 
 #test TokenGetSpecial_logic_NE_success
    Token_t ReturnToken;
@@ -188,7 +188,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    printf("Token = %s\n", TokenGetStringType(ReturnToken));
    
    fail_unless(ReturnToken == TOKEN_NE, "TokenGetSpecial - wrong token return");
-   fail_unless(Tokenp[0]   == '<',      "TokenGetSpecial - didnt copy token  ");
+   fail_unless(Tokenp[0]   == '<',      "TokenGetSpecial - didn't copy token  ");
 
 #test TokenGetSpecial_logic_LE_success
    Token_t ReturnToken;
@@ -208,7 +208,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    printf("Token = %s\n", TokenGetStringType(ReturnToken));
    
    fail_unless(ReturnToken == TOKEN_LE, "TokenGetSpecial - wrong token return");
-   fail_unless(Tokenp[0]   == '<',      "TokenGetSpecial - didnt copy token  ");
+   fail_unless(Tokenp[0]   == '<',      "TokenGetSpecial - didn't copy token  ");
 
 #test TokenGetSpecial_logic_GE_success
    Token_t ReturnToken;
@@ -228,7 +228,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
    printf("Token = %s\n", TokenGetStringType(ReturnToken));
    
    fail_unless(ReturnToken == TOKEN_GE, "TokenGetSpecial - wrong token return");
-   fail_unless(Tokenp[0]   == '>',      "TokenGetSpecial - didnt copy token  ");
+   fail_unless(Tokenp[0]   == '>',      "TokenGetSpecial - didn't copy token  ");
 
 
 #test SymbolTable_SymboltableSearch
@@ -236,7 +236,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
 
    pNewNode = SymbolTableSearch("Test1", pNewNode);
 
-   fail_unless(pNewNode == NULL, "SymbolTableSearch - didnt return NULL");
+   fail_unless(pNewNode == NULL, "SymbolTableSearch - didn't return NULL");
 
 
 #test SymbolTable_SymboltableAddName
@@ -245,7 +245,7 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
 
    pNewNode = SymbolTableAddName ("Test1", &pSymbolRoot);
 
-   fail_unless(pNewNode    != NULL, "SymbolTableAddName - didnt return NULL");
+   fail_unless(pNewNode    != NULL, "SymbolTableAddName - didn't return NULL");
    fail_unless(pSymbolRoot != NULL, "SymbolTableAddName - SymbolRoot not created");
 
 #test SymbolTable_APISequence
@@ -254,11 +254,11 @@ bool Verbose  = false;    /* This is required as we do not include parsecommandl
 
    pNewNode = SymbolTableSearch("Test1", pSymbolRoot);
 
-   fail_unless(pNewNode == NULL, "SymbolTableSearch - didnt return NULL");
+   fail_unless(pNewNode == NULL, "SymbolTableSearch - didn't return NULL");
 
    if (pNewNode == NULL) {
      pNewNode = SymbolTableAddName ("Test1", &pSymbolRoot);
    }
 
-   fail_unless(pNewNode    != NULL, "SymbolTableAddName - didnt return NULL");
+   fail_unless(pNewNode    != NULL, "SymbolTableAddName - didn't return NULL");
    fail_unless(pSymbolRoot != NULL, "SymbolTableAddName - SymbolRoot not created");

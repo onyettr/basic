@@ -25,7 +25,7 @@ Private variables (static)
 ******************************************************************************
 */
 static char USAGE_STRING[] = {
-    "basic: interpretor                        \n"
+    "basic: interpreter                        \n"
     "Usage: basic {option} {filename}        \n\n"
     "Options:                                \n\n"
     "l   list programme                        \n"
@@ -57,7 +57,7 @@ Exported Global variables
 
 /*
 ******************************************************************************
-Prototypes of all functions contained in this file (in order of occurance)
+Prototypes of all functions contained in this file (in order of occurrence)
 ******************************************************************************
 */
 
@@ -66,7 +66,7 @@ Prototypes of all functions contained in this file (in order of occurance)
  * @fn          void ParseCommandLine ( char *argv[], int argc, char *InputFileName)
  * @brief       Parse the optins from argv
  * @param[in]   *argv[] -  The arguments.
- * @param[in]   argc    - The numer of arguments.
+ * @param[in]   argc    - The number of arguments.
  * @param[out]  *InputFileName - return any filename found
  * @return      none
  * @note        breaks down the command line

@@ -54,7 +54,7 @@ Exported Global variables
 
 /*
 ******************************************************************************
-Prototypes of all functions contained in this file (in order of occurance)
+Prototypes of all functions contained in this file (in order of occurrence)
 ******************************************************************************
 */
 

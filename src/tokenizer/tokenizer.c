@@ -123,7 +123,7 @@ Exported Global variables
 
 /*
 ******************************************************************************
-Prototypes of all functions contained in this file (in order of occurance)
+Prototypes of all functions contained in this file (in order of occurrence)
 ******************************************************************************
 */
 
@@ -344,7 +344,7 @@ bool IsTokenDirectCommand (char *Bufferp) {
  * @brief     Is this a Keyword?
  * @fn        bool IsTokenDirectKeyword (char *Bufferp) 
  * @param[in] *Bufferp - Buffer to tokenize
- * @return    true if a Keyword, false otehrwise
+ * @return    true if a Keyword, false otherwise
  * @details  
  * @note      List is NULL terminated, stop when we reach here
  * @todo     
@@ -538,7 +538,7 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   *Bufferp = (char *)Bufp;
 
   /*
-   * Test if this s Keyword, TOKEN_ERROR means it isnt
+   * Test if this s Keyword, TOKEN_ERROR means it isn't
    */
   TokenReturn = TokenDirectKeyword(t);
 

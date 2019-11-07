@@ -30,13 +30,13 @@
 ** TODO [Task 0019] Add SymbolTableShow as a direct command in interactive mode
 * Parser Expressions
 * Misc Build
-** TODO src directory seperate makefiles
+** TODO src directory separate makefiles
 * Issues
 ** TODO [BUG 1006] TokenGetNumber - MAXINT not parsed correctly
 ** TODO [BUG 1004] Expression parsing fails with (x) = <WORD> not <LPAREN><WORD><RPAREN>
 ** TODO [BUG 1003] Parsing of 123abc should give <WORD> not <NUMBER><WORD>
-** TODO [BUG 1002] Negative Numbers - <SPACE> <DIGIT> doesnt generate an error
+** TODO [BUG 1002] Negative Numbers - <SPACE> <DIGIT> does not generate an error
 ** DONE [BUG 1005] TokenGetNumber - 123456789 MAXINT not parsed correctly
-** DONE [BUG 1000] Verbose mode declared cuases build issue with checkmk
+** DONE [BUG 1000] Verbose mode declared causes build issue with checkmk
    CLOSED: [2019-09-30 Mon 15:02]
 ** DONE [BUG 1001] Scanner output has extra newline?

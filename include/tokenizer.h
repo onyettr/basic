@@ -17,7 +17,7 @@ Includes
 /*
 ******************************************************************************
 Private Types
-*****************************************************************************
+******************************************************************************
 */
 
 /**
@@ -169,7 +169,7 @@ typedef enum {
      * Debug and extra commands: 
      */
     TOKEN_HELP,                     /* Help command                     */
-    TOKEN_SYMTABLE_LIST,            /* SHow contents of Symbol Tabke    */
+    TOKEN_SYMTABLE_LIST,            /* SHow contents of Symbol Table    */
     
     TOKEN_EOF,
     TOKEN_OK, 
@@ -244,7 +244,7 @@ Exported Global variables
 
 /*
 ******************************************************************************
-Prototypes of all functions contained in this file (in order of occurance)
+Prototypes of all functions contained in this file (in order of occurrence)
 ******************************************************************************
 */
 int32_t Tokenize (char *FileName);
