@@ -15,8 +15,9 @@
 ** DONE Lister<name> 
 * Interactive Tasks
 ** [Task 0019] One version of the main Tokenizer loop is needed
-** [Task 0020] DTSS command set addition
+** DONE [Task 0020] DTSS command set addition
 * Scanner And Tokenizer Tasks
+** TODO {Task 0020] Xref tool implemenentation
 ** TODO [Task 0016] Interactive Mode - use callbacks to execute functions
 ** TODO [Task 0018] Execute special and direct commands in Interactive mode
 ** DONE [Task 0021] DTSS Command Help addition
@@ -32,6 +33,7 @@
 * Misc Build
 ** TODO src directory separate makefiles
 * Issues
+** TODO [BUG 1007] REM <WORD> - being treated as an identifier
 ** TODO [BUG 1006] TokenGetNumber - MAXINT not parsed correctly
 ** TODO [BUG 1004] Expression parsing fails with (x) = <WORD> not <LPAREN><WORD><RPAREN>
 ** TODO [BUG 1003] Parsing of 123abc should give <WORD> not <NUMBER><WORD>

@@ -20,19 +20,6 @@ Source Code
 -----------
 All written in ANSI C.
 
-./
-+
-+- include/
-+
-+- libraries/
-+
-+- object/
-+
-+- tests/
-+
-+- TODO.txt
-
-Major source code elements will eventually have their own subdirectory. 
 
 Implementation
 --------------
