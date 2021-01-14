@@ -5,27 +5,27 @@
 #*******************************************************************************
 
 # Base location defaults
-SRC_DIR		= 	.
-SRC             =  	./src
-OBJECT_DIR	= 	$(SRC_DIR)/object
-LIB_DIR		= 	$(SRC_DIR)/libraries
-INC_DIR		= 	$(SRC_DIR)/include
+SRC_DIR				= 	.
+SRC        	 	=  	./src
+OBJECT_DIR		= 	$(SRC_DIR)/object
+LIB_DIR				= 	$(SRC_DIR)/libraries
+INC_DIR				= 	$(SRC_DIR)/include
 MAKE_DIR_CMD	= 	mkdir $(OBJECT_DIR)
 MAKE_LIB_CMD	= 	mkdir $(LIB_DIR)
 
 # Tools and options
-CC  		= 	gcc
-LINK  		= 	gcc
-AR		= 	ar
-CHK_TOOL	= 	checkmk
+CC  	= gcc
+LINK  = gcc
+AR		= ar
+CHK_TOOL	= checkmk
 #CODE_CHECK       = 	splint
-CLANG		= 	clang
-CODE_CHECK	= 	cppcheck
-CODE_SPELL      =       codespell
+CLANG		= clang
+CODE_CHECK	= cppcheck
+CODE_SPELL  = codespell
 CODE_SPELL_ARGS =       --skip="*.o,*.a,*.lib,*.elf,*.bin,*.exe,./.git,./tests" 
-CHECK_FOR_CHK	:= 	$(shell command -v $(CHK_TOOL)   2> /dev/null)
-CHECK_FOR_CPP	:=	$(shell command -v $(CODE_CHECK) 2> /dev/null)
-CHECK_FOR_SPELL :=      $(shell command -v $(CODE_SPELL) 2> /dev/null)
+CHECK_FOR_CHK		:= 	$(shell command -v $(CHK_TOOL)   2> /dev/null)
+CHECK_FOR_CPP		:=	$(shell command -v $(CODE_CHECK) 2> /dev/null)
+CHECK_FOR_SPELL := $(shell command -v $(CODE_SPELL) 2> /dev/null)
 
 #*******************************************************************************
 # Build options
@@ -56,21 +56,21 @@ CODE_CHECK_ARGS	=  	--enable=all
 #
 # Libraries and objects targets
 #
-OBJS  		     = 	$(OBJECT_DIR)/main.o  		\
-			$(OBJECT_DIR)/error.o		\
-			$(OBJECT_DIR)/interactive.o	\
-			$(OBJECT_DIR)/parsecommandline.o
+OBJS  		   = 	$(OBJECT_DIR)/main.o  					\
+								$(OBJECT_DIR)/error.o						\
+								$(OBJECT_DIR)/interactive.o			\
+								$(OBJECT_DIR)/parsecommandline.o
 
-LIBS  		     = 	$(LIB_DIR)/liblister.a 		\
-			$(LIB_DIR)/libtokenizer.a	\
-			$(LIB_DIR)/libutilities.a
+LIBS  		   = 	$(LIB_DIR)/liblister.a 					\
+								$(LIB_DIR)/libtokenizer.a				\
+								$(LIB_DIR)/libutilities.a
 
-HDRS		     =  $(INC_DIR)/basic.h		\
-			$(INC_DIR)/error.h		\
-			$(INC_DIR)/lister.h		\
-			$(INC_DIR)/tokenizer.h		\
-			$(INC_DIR)/utilities.h		\
-			$(INC_DIR)/symboltable.h
+HDRS		     =  $(INC_DIR)/basic.h							\
+								$(INC_DIR)/error.h							\
+								$(INC_DIR)/lister.h							\
+								$(INC_DIR)/tokenizer.h					\
+								$(INC_DIR)/utilities.h					\
+								$(INC_DIR)/symboltable.h
 
 #*******************************************************************************
 # Build targets:
@@ -81,7 +81,7 @@ HDRS		     =  $(INC_DIR)/basic.h		\
 # clean		Delete object and library files and intermediates
 #*******************************************************************************
 
-all:	$(OBJECT_DIR) $(LIB_DIR) $(LIBS) basic.exe test_harness splint-it spellcheck-it
+all:	$(OBJECT_DIR) $(LIB_DIR) $(LIBS) basic.exe test_harness spellcheck-it
 
 lib:	$(LIBS)
 
@@ -148,26 +148,28 @@ ifndef CHECK_FOR_CHK
 	@echo "** checkmk command not found"
 else
 	$(CHK_TOOL) basic_check.ts > basic_check.c
-	$(CC)  basic_check.c 	 			\
-	-std=c99 -Wall -pedantic -I $(INC_DIR)		\
-	$(OBJECT_DIR)/interactive.o			\
-	$(OBJECT_DIR)/error.o		 		\
-	$(LFLAGS)					\
-	-lutilities -ltokenizer -llister 		\
-	-lcheck						\
-	-lpthread				 	\
-	-o basic_check.exe
+	$(CC) basic_check.c 	 						\
+				-std=c99 -I $(INC_DIR)			\
+				$(OBJECT_DIR)/interactive.o	\
+				$(OBJECT_DIR)/error.o		 		\
+				$(LFLAGS)										\
+				-lutilities 								\
+				-ltokenizer 								\
+				-llister 										\
+				-lcheck											\
+				-lpthread				 						\
+				-o basic_check.exe
 endif
 
 #*******************************************************************************
 # clang target
 #*******************************************************************************
 clang:
-	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/main.c       	-o $(OBJECT_DIR)/main_clang.o
-	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/lister.c      	-o $(OBJECT_DIR)/lister_clang.o
-	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/interactive.c 	-o $(OBJECT_DIR)/interactive_clang.o
-	$(CLANG) $(CFLAGS) $(DEBUG) src/utilities/utilities.c   -o $(OBJECT_DIR)/utilities_clang.o
-	$(CLANG) $(CFLAGS) $(DEBUG) src/tokenizer/tokenizer.c   -o $(OBJECT_DIR)/tokenizer_clang.o
+	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/main.c 	-o $(OBJECT_DIR)/main_clang.o
+	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/lister.c	-o $(OBJECT_DIR)/lister_clang.o
+	$(CLANG) $(CFLAGS) $(DEBUG) src/misc/interactive.c -o $(OBJECT_DIR)/interactive_clang.o
+	$(CLANG) $(CFLAGS) $(DEBUG) src/utilities/utilities.c -o $(OBJECT_DIR)/utilities_clang.o
+	$(CLANG) $(CFLAGS) $(DEBUG) src/tokenizer/tokenizer.c -o $(OBJECT_DIR)/tokenizer_clang.o
 
 #*******************************************************************************
 # splint target
@@ -197,6 +199,20 @@ else
 	$(CODE_SPELL) $(CODE_SPELL_ARGS)
 endif
 
+#*******************************************************************************
+# help
+#*******************************************************************************
+
+help:
+	@echo "make all           - build libraries, executable"
+	@echo "make libs          - build libraries"
+	@echo "make clean         - clean objects and executable"
+	@echo "make spellcheck-it - run spelling check"
+	@echo "make splint-it     - run cppcheck"
+	@echo "make clang         - run clang, no exe generated"
+	@echo "make test_harness  - build checkmk test harness"
+	
+	 
 #*******************************************************************************
 # remove all libs, objs and intermediates
 #*******************************************************************************
