@@ -30,7 +30,7 @@ Includes
 #include "interactive.h"
 
 #define PROGRAM_NAME   "basic"                        /*!> No name. no slogan */
-#define VERSION        "(v1.0.0) DEVELOPMENT Version" /*!> Version            */
+#define VERSION        "(v1.0.1) DEVELOPMENT Version" /*!> Version            */
 #define AUTHOR_STRING  "()"                           /*!> Who did this?      */
 
 /**
