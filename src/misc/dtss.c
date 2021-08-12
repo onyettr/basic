@@ -3,6 +3,7 @@
  * @brief   basic interpreter - DTSS command
  * @author  onyettr
  * @file    dtss.c
+ * @ingroup Misc
  ***************************************************************************** 
  */
 
@@ -54,11 +55,10 @@ Prototypes of all functions contained in this file (in order of occurrence)
 */
   
 /**
- * @fn          
- * @brief       
- * @param[in]   
- * @return      
- * @note        
+ * @fn         int32_t  DTSSCommandHello ( void )
+ * @brief      Stubbed
+ * @return     ErrorCode
+ * @note
  */
 int32_t  DTSSCommandHello ( void ) {
   int32_t ErrorCode = SUCCESS;
@@ -67,9 +67,8 @@ int32_t  DTSSCommandHello ( void ) {
 }
 
 /**
- * @fn          
- * @brief       
- * @param[in]   
+ * @fn          int32_t  DTSSCommandNew ( void )
+ * @brief       Stubbed
  * @return      
  * @note        
  */
@@ -80,9 +79,8 @@ int32_t  DTSSCommandNew ( void ) {
 }
 
 /**
- * @fn          
- * @brief       
- * @param[in]   
+ * @fn          int32_t  DTSSCommandOld ( void )
+ * @brief       Stubbed
  * @return      
  * @note        
  */
@@ -94,8 +92,7 @@ int32_t  DTSSCommandOld ( void ) {
 
 /**
  * @fn          
- * @brief       
- * @param[in]   
+ * @brief       Stubbed
  * @return      
  * @note        
  */
@@ -108,7 +105,6 @@ int32_t  DTSSCommandSave ( void ) {
 /**
  * @fn          
  * @brief       
- * @param[in]   
  * @return      
  * @note        
  */
@@ -121,7 +117,6 @@ int32_t  DTSSCommandReplace ( void ) {
 /**
  * @fn          
  * @brief       
- * @param[in]   
  * @return      
  * @note        
  */
@@ -134,7 +129,6 @@ int32_t  DTSSCommandRename ( void ) {
 /**
  * @fn          
  * @brief       
- * @param[in]   
  * @return      
  * @note        
  */
@@ -147,7 +141,6 @@ int32_t  DTSSCommandCat( void ) {
 /**
  * @fn          
  * @brief       
- * @param[in]   
  * @return      
  * @note        
  */
@@ -160,7 +153,6 @@ int32_t  DTSSCommandList ( void ) {
 /**
  * @fn          
  * @brief       
- * @param[in]   
  * @return      
  * @note        
  */
@@ -173,7 +165,6 @@ int32_t  DTSSCommandRun ( void ) {
 /**
  * @fn          
  * @brief       
- * @param[in]   
  * @return      
  * @note        
  */
@@ -186,7 +177,6 @@ int32_t  DTSSCommandStop ( void ) {
 /**
  * @fn          
  * @brief       
- * @param[in]   
  * @return      
  * @note        
  */
@@ -199,7 +189,6 @@ int32_t  DTSSCommandUnsave ( void ) {
 /**
  * @fn          
  * @brief       
- * @param[in]   
  * @return      
  * @note        
  */
@@ -213,7 +202,6 @@ int32_t  DTSSCommandSystem ( void ) {
 /**
  * @fn          
  * @brief       
- * @param[in]   
  * @return      
  * @note        
  */
@@ -226,7 +214,6 @@ int32_t  DTSSCommandScratch( void ) {
 /**
  * @fn          
  * @brief       
- * @param[in]   
  * @return      
  * @note        
  */

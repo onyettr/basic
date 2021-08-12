@@ -3,6 +3,7 @@
  * @brief   basic interpreter
  * @author  onyettr
  * @file    parsecommandline.c
+ * @ingroup Misc
  ***************************************************************************** 
  */
 

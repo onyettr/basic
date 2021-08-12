@@ -2,7 +2,8 @@
  *****************************************************************************
  * @brief   basic interpreter
  * @author  onyettr
- * @file    basic.h
+ * @file    utilities,h
+ * @ingroup Utilities
  ***************************************************************************** 
  */
 #ifndef __UTILITIES__H__  

@@ -3,6 +3,7 @@
  * @brief   basic interpreter - list programme
  * @author  onyettr
  * @file    utilities.c
+ * @ingroup Utilities
  ***************************************************************************** 
  */
 

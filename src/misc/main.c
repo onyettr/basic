@@ -19,9 +19,7 @@
  * @page     InteractiveMode
  * @ref      Interactive "Interactive"
  *
- * @defgroup Tokenizer
- *
- * @defgroup Interactive
+ * @ingroup  Misc
  ***************************************************************************** 
  */
 

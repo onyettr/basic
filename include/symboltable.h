@@ -3,7 +3,8 @@
  * @brief    Basic interpreter
  * @author   onyettr
  * @file     symboltable.h
- * @defgroup symboltable
+ * @defgroup Symboltable Symboltable
+ * @ingroup  Symboltable
  *           Utilities to drive the symbol table
  *******************************************************************************
  */
@@ -29,13 +30,18 @@ typedef union {
   int32_t IntegerValue;        /*!> Integer value        */
   float   RealValue;           /*!> Floating point value */
   uint8_t CharacterValue;      /*!> Character value      */
-  uint8_t *String;             /*!> String valie         */
+  uint8_t *String;             /*!> String value         */
 } Value_t;
 
+/**
+ *  @brief Definition key
+ *  @enum DefinitionKey_t
+ *  @addtogroup Utilities
+ */
 typedef enum {
-  KEY_UNDEFINED,               /*!> Variable is undefined */
-  KEY_CONSTANT,                /*!> variable is constant  */
-  KEY_VARIABLE                 /*!> variable is variable  */
+  KEY_UNDEFINED,               /*!> Variable is undefined *//**< KEY_UNDEFINED */
+  KEY_CONSTANT,                /*!> variable is constant  *//**< KEY_CONSTANT */
+  KEY_VARIABLE                 /*!> variable is variable  *//**< KEY_VARIABLE */
 } DefinitionKey_t;
 
 typedef struct {

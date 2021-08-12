@@ -3,7 +3,8 @@
  * @brief    Basic interpreter
  * @author   onyettr
  * @file     interactive.h
- * @defgroup Interactive
+ * @defgroup Interactive Interactive
+ * @ingroup  Interactive
  *           Ability to tokenize and parse via the command line
  ***************************************************************************** 
  */

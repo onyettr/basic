@@ -3,6 +3,7 @@
  * @brief   basic interpreter - interactive
  * @author  onyettr
  * @file    interactive.c
+ * @ingroup Misc
  ***************************************************************************** 
  */
 

@@ -3,6 +3,7 @@
  * @brief   basic interpreter - binary tree
  * @author  onyettr
  * @file    binarytree.c
+ * @ingroup Utilities
  ***************************************************************************** 
  */
 

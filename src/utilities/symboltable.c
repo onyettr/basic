@@ -3,6 +3,8 @@
  * @brief   basic interpreter - symbol table
  * @author  onyettr
  * @file    symboltable.c
+ * @ingroup Symboltable
+ * @ingroup Utilities
  ***************************************************************************** 
  */
 
@@ -29,7 +31,7 @@ Private Types
 Private variables (static)
 ******************************************************************************
 */
-SymbolTableNodePtr_t SymbolTableRoot;
+SymbolTableNodePtr_t SymbolTableRoot; /*!< Start of symbol table             */
 
 /*
 ******************************************************************************
@@ -58,12 +60,12 @@ Prototypes of all functions contained in this file (in order of occurrence)
 /**
  * @fn          SymbolTableNodePtr SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
  * @brief       Searches the Symbol Table for Name
- * @param[in]   *Name    - Name to search for
- * @param[in]   *pNode   - Which tree to search in
+ * @param[in]   Name    - Name to search for
+ * @param[in]   pNode   - Which tree to search in
  * @return      NULL if not found, SymbolTableNodePtr if found
  * @details     
  * @todo  
- * @note        none
+ * @note
  */
 SymbolTableNode_t *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
 
@@ -84,22 +86,24 @@ SymbolTableNode_t *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
 }
 
 /**
- * @fn          SymbolTableNode_t *CreateRootSymbolTable (SymbolTableNode_t **pRootNode) {
+ * @fn          SymbolTableNode_t *SymbolTableCreateNew (SymbolTableNode_t **pRootNode)
  * @brief       create a new symbol table (root node)
- * @param[in]   *pRootNode - name of new symbol table
+ * @param[out]  *pRootNode - name of new symbol table
  * @return      NULL if not found, SymbolTableNodePtr if found
  * @details     
  * @todo        requires implementing
  * @note        none
  */
 SymbolTableNode_t *SymbolTableCreateNew (SymbolTableNode_t **pRootNode) {
-  if (Verbose) printf("CreateRootSymbolTable %p\n", (void*)pRootNode);
+  if (Verbose) {
+	  printf("CreateRootSymbolTable %p\n", (void*)pRootNode);
+  }
 
   return NULL;
 }
 
 /**
- * @fn          SymbolTableNode_t *CreateSymbolTableNode(char *pNameString) {
+ * @fn          SymbolTableNode_t *CreateSymbolTableNode(char *pNameString)
  * @brief       create a new symbol table node
  * @param[in]   *pNameString - name to store in symbol table
  * @return      NULL if failure, SymbolTableNodePtr if not
@@ -110,18 +114,22 @@ SymbolTableNode_t *SymbolTableCreateNew (SymbolTableNode_t **pRootNode) {
 SymbolTableNode_t *CreateSymbolTableNode(char *pNameString) {
   SymbolTableNode_t *pNewNode = NULL;
   
-  if (Verbose) printf("CreateSymbolTableNode STARTS\n");
+  if (Verbose) {
+	  printf("CreateSymbolTableNode STARTS\n");
+  }
 
   pNewNode = malloc(sizeof(SymbolTableNode_t));
   if (pNewNode == NULL) {
-    Error("CreateSymbolTableNode - %s", ErrorToString(ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_NODE));
+    Error("CreateSymbolTableNode - %s",
+    	ErrorToString(ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_NODE));
 
     return NULL;
   }
   
   pNewNode->NameString = malloc(strlen(pNameString)+1);
   if (pNewNode->NameString == NULL) {
-    Error("CreateSymbolTableNode - %s", ErrorToString(ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_STRING));
+    Error("CreateSymbolTableNode - %s",
+    		ErrorToString(ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_STRING));
 
     return NULL;
   }
@@ -131,10 +139,10 @@ SymbolTableNode_t *CreateSymbolTableNode(char *pNameString) {
 }
 
 /**
- * @fn          AddNameToSymbolTableNodePtr_t AddSymbolTable (char *Name, SymbolTableNode_t **pNode) {
+ * @fn          SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode)
  * @brief       Add a new Node to the symbol table
  * @param[in]   *Name    - Name to search for
- * @param[in]   **pNode  - Symbol table to add to 
+ * @param[out]  **pNode  - Symbol table to add to
  * @return      
  * @details     
  * @todo  

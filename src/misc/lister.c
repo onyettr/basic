@@ -3,6 +3,7 @@
  * @brief   basic interpreter - list programme to stdout
  * @author  onyettr
  * @file    lister.c
+ * @ingroup Misc
  ***************************************************************************** 
  */
 

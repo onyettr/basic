@@ -3,7 +3,8 @@
  * @brief    Basic interpreter
  * @author   onyettr
  * @file     lister.h
- * @defgroup Lister
+ * @defgroup Lister Lister
+ * @ingroup  Lister
  *           Utilities to list files to stdout
  *******************************************************************************
  */

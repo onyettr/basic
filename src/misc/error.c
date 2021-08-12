@@ -3,6 +3,7 @@
  * @brief   basic interpreter - Error handling
  * @author  onyettr
  * @file    error.c
+ * @ingroup Misc
  ***************************************************************************** 
  */
 

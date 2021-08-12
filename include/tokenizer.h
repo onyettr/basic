@@ -3,6 +3,7 @@
  * @brief   basic interpreter
  * @author  onyettr
  * @file    tokenizer.h
+ * @ingroup Tokenizer
  *******************************************************************************
  */
 #ifndef __TOKENIZER__H__
@@ -23,7 +24,7 @@ Private Types
 /**
  * @brief TOKEN values for the various elements
  * @enum  TokenValues_t
- * @addtogroup Tokenizer
+ * @ingroup Tokenizer
  */
 typedef enum {
     /*
@@ -178,7 +179,7 @@ typedef enum {
 
 /**
  *  @brief Token_t enumeration for Tokens
- *  @addtogrpup Tokenizer
+ *  @addtogroup Tokenizer
  */
 typedef int32_t Token_t;
 
