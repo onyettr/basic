@@ -13,6 +13,9 @@ INC_DIR				= 	$(SRC_DIR)/include
 MAKE_DIR_CMD	= 	mkdir $(OBJECT_DIR)
 MAKE_LIB_CMD	= 	mkdir $(LIB_DIR)
 
+OS_NAME				:=	$(shell uname -s)
+BRANCH_NAME_STRING := $(shell git rev-parse --abbrev-ref HEAD)	
+
 # Tools and options
 CC  					= gcc
 LINK 				 	= gcc
@@ -39,7 +42,8 @@ PROFLAGS			= 	-pg
 # Main CC and Link build strings
 DEBUG					= 	-g
 CFLAGS				= 	-c -std=c99 -Wall -pedantic $(PFLAGS) -I $(INC_DIR)
-OS_NAME				:=	$(shell uname -s)
+
+CFLAGS				+= -DBRANCH_NAME=$(BRANCH_NAME_STRING)
 ifeq ($(OS_NAME),Linux)
 LFLAGS		= 	$(PFLAGS) -L. -L./$(LIB_DIR) -lm
 else
@@ -56,10 +60,11 @@ CODE_CHECK_ARGS	=  	--enable=all
 #
 # Libraries and objects targets
 #
-OBJS  		   = 	$(OBJECT_DIR)/main.o  					\
-								$(OBJECT_DIR)/error.o						\
+OBJS  		   = 	$(OBJECT_DIR)/parsecommandline.o\
 								$(OBJECT_DIR)/interactive.o			\
-								$(OBJECT_DIR)/parsecommandline.o
+								$(OBJECT_DIR)/banner.o					\
+								$(OBJECT_DIR)/error.o						\
+								$(OBJECT_DIR)/main.o  					\
 
 LIBS  		   = 	$(LIB_DIR)/liblister.a 					\
 								$(LIB_DIR)/libtokenizer.a				\
@@ -116,10 +121,6 @@ $(LIB_DIR)/libtokenizer.a:	$(OBJECT_DIR)/tokenizer.o $(OBJECT_DIR)/dtss.o
 # Object builds
 #*******************************************************************************
 
-$(OBJECT_DIR)/parsecommandline.o:$(SRC)/misc/parsecommandline.c $(HDRS)
-	@echo 'Compiling file: $<' 
-	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
-
 $(OBJECT_DIR)/symboltable.o:	 $(SRC)/utilities/symboltable.c $(HDRS)
 	@echo 'Compiling file: $<' 
 	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
@@ -136,6 +137,10 @@ $(OBJECT_DIR)/utilities.o:	 $(SRC)/utilities/utilities.c $(HDRS)
 	@echo 'Compiling file: $<' 
 	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
 
+$(OBJECT_DIR)/parsecommandline.o:$(SRC)/misc/parsecommandline.c $(HDRS)
+	@echo 'Compiling file: $<' 
+	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
+
 $(OBJECT_DIR)/interactive.o:	 $(SRC)/misc/interactive.c $(HDRS)
 	@echo 'Compiling file: $<' 
 	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
@@ -145,6 +150,10 @@ $(OBJECT_DIR)/lister.o:		 $(SRC)/misc/lister.c $(HDRS)
 	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
 
 $(OBJECT_DIR)/error.o:		 $(SRC)/misc/error.c $(HDRS)
+	@echo 'Compiling file: $<' 
+	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
+
+$(OBJECT_DIR)/banner.o:		 $(SRC)/misc/banner.c $(HDRS)
 	@echo 'Compiling file: $<' 
 	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
 
@@ -226,15 +235,25 @@ endif
 #*******************************************************************************
 
 help:
-	@echo "make all           - build libraries, executable"
-	@echo "make libs          - build libraries"
+	@echo "make all           - build libraries, executable "
+	@echo "make libs          - build libraries             "
 	@echo "make clean         - clean objects and executable"
-	@echo "make spellcheck-it - run spelling check"
-	@echo "make splint-it     - run cppcheck"
-	@echo "make clang         - run clang, no exe generated"
-	@echo "make test_harness  - build checkmk test harness"
-	
-	 
+	@echo "make spellcheck-it - run spelling check          "
+	@echo "make splint-it     - run cppcheck                "
+	@echo "make clang         - run clang, no exe generated "
+	@echo "make test_harness  - build checkmk test harness  "
+	@echo "make display       - environment details         "
+
+#*******************************************************************************
+# remove all libs, objs and intermediates
+#*******************************************************************************
+display:
+	@echo "make variables"	
+	@echo "OS_NAME            " $(OS_NAME)
+	@echo "BRANCH_NAME_STRING " $(BRANCH_NAME_STRING)
+	@echo "CC                 " $(CC)
+	@echo "LINK               " $(LINK)
+
 #*******************************************************************************
 # remove all libs, objs and intermediates
 #*******************************************************************************
