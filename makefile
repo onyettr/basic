@@ -14,32 +14,32 @@ MAKE_DIR_CMD	= 	mkdir $(OBJECT_DIR)
 MAKE_LIB_CMD	= 	mkdir $(LIB_DIR)
 
 # Tools and options
-CC  	= gcc
-LINK  = gcc
-AR		= ar
-CHK_TOOL	= checkmk
+CC  					= gcc
+LINK 				 	= gcc
+AR						= ar
+CHK_TOOL			= checkmk
 #CODE_CHECK       = 	splint
-CLANG		= clang
-CODE_CHECK	= cppcheck
-CODE_SPELL  = codespell
-CODE_SPELL_ARGS =       --skip="*.o,*.a,*.lib,*.elf,*.bin,*.exe,./.git,./tests" 
+CLANG					= clang
+CODE_CHECK		= cppcheck
+CODE_SPELL  	= codespell
+CODE_SPELL_ARGS = --skip="*.o,*.a,*.lib,*.elf,*.bin,*.exe,./.git,./tests,./html" 
 CHECK_FOR_CHK		:= 	$(shell command -v $(CHK_TOOL)   2> /dev/null)
 CHECK_FOR_CPP		:=	$(shell command -v $(CODE_CHECK) 2> /dev/null)
-CHECK_FOR_SPELL := $(shell command -v $(CODE_SPELL) 2> /dev/null)
+CHECK_FOR_SPELL := 	$(shell command -v $(CODE_SPELL) 2> /dev/null)
 
 #*******************************************************************************
 # Build options
 #*******************************************************************************
 
 # gcov and gprof build options
-COVPFLAGS	= 	-fprofile-arcs -ftest-coverage
-PROFLAGS	= 	-pg
-#PFLAGS		= 	$(COVFLAGS)
+COVPFLAGS			= 	-fprofile-arcs -ftest-coverage
+PROFLAGS			= 	-pg
+#PFLAGS				= 	$(COVFLAGS)
 
 # Main CC and Link build strings
-DEBUG		= 	-g
-CFLAGS		= 	-c -std=c99 -Wall -pedantic $(PFLAGS) -I $(INC_DIR)
-OS_NAME		:=	$(shell uname -s)
+DEBUG					= 	-g
+CFLAGS				= 	-c -std=c99 -Wall -pedantic $(PFLAGS) -I $(INC_DIR)
+OS_NAME				:=	$(shell uname -s)
 ifeq ($(OS_NAME),Linux)
 LFLAGS		= 	$(PFLAGS) -L. -L./$(LIB_DIR) -lm
 else
@@ -92,7 +92,8 @@ $(OBJECT_DIR):
 	-$(MAKE_DIR_CMD)
 
 basic.exe:	$(OBJS) $(LIBS)
-	$(LINK) $(OBJS) $(LFLAGS) -ltokenizer -lutilities -llister -o basic.exe
+	@echo 'Linking...'
+	@$(LINK) $(OBJS) $(LFLAGS) -ltokenizer -lutilities -llister -o basic.exe
 
 #*******************************************************************************
 # Major library components
@@ -103,36 +104,57 @@ basic.exe:	$(OBJS) $(LIBS)
 #*******************************************************************************
 
 $(LIB_DIR)/liblister.a:	$(OBJECT_DIR)/lister.o 
-	$(AR) rcs $(LIB_DIR)/liblister.a $(OBJECT_DIR)/lister.o
+	@$(AR) rcs $(LIB_DIR)/liblister.a $(OBJECT_DIR)/lister.o
+
 $(LIB_DIR)/libutilities.a:	$(OBJECT_DIR)/utilities.o $(OBJECT_DIR)/binarytree.o
-	$(AR) rcs $(LIB_DIR)/libutilities.a $(OBJECT_DIR)/utilities.o $(OBJECT_DIR)/binarytree.o
+	@$(AR) rcs $(LIB_DIR)/libutilities.a $(OBJECT_DIR)/utilities.o $(OBJECT_DIR)/binarytree.o
+
 $(LIB_DIR)/libtokenizer.a:	$(OBJECT_DIR)/tokenizer.o $(OBJECT_DIR)/dtss.o	
-	$(AR) rcs $(LIB_DIR)/libtokenizer.a $(OBJECT_DIR)/tokenizer.o $(OBJECT_DIR)/dtss.o	
+	@$(AR) rcs $(LIB_DIR)/libtokenizer.a $(OBJECT_DIR)/tokenizer.o $(OBJECT_DIR)/dtss.o	
 
 #*******************************************************************************
 # Object builds
 #*******************************************************************************
 
 $(OBJECT_DIR)/parsecommandline.o:$(SRC)/misc/parsecommandline.c $(HDRS)
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/parsecommandline.c -o $(OBJECT_DIR)/parsecommandline.o
+	@echo 'Compiling file: $<' 
+	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
+
 $(OBJECT_DIR)/symboltable.o:	 $(SRC)/utilities/symboltable.c $(HDRS)
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/symboltable.c -o $(OBJECT_DIR)/symboltable.o
+	@echo 'Compiling file: $<' 
+	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
+	
 $(OBJECT_DIR)/binarytree.o:	 $(SRC)/utilities/binarytree.c  $(HDRS)
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/binarytree.c -o $(OBJECT_DIR)/binarytree.o
+	@echo 'Compiling file: $<' 
+	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
+
 $(OBJECT_DIR)/tokenizer.o:	 $(SRC)/tokenizer/tokenizer.c $(HDRS)
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/tokenizer/tokenizer.c -o $(OBJECT_DIR)/tokenizer.o
+	@echo 'Compiling file: $<' 
+	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
+
 $(OBJECT_DIR)/utilities.o:	 $(SRC)/utilities/utilities.c $(HDRS)
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/utilities/utilities.c -o $(OBJECT_DIR)/utilities.o
+	@echo 'Compiling file: $<' 
+	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
+
 $(OBJECT_DIR)/interactive.o:	 $(SRC)/misc/interactive.c $(HDRS)
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/interactive.c -o $(OBJECT_DIR)/interactive.o
+	@echo 'Compiling file: $<' 
+	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
+
 $(OBJECT_DIR)/lister.o:		 $(SRC)/misc/lister.c $(HDRS)
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/lister.c -o $(OBJECT_DIR)/lister.o
+	@echo 'Compiling file: $<' 
+	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
+
 $(OBJECT_DIR)/error.o:		 $(SRC)/misc/error.c $(HDRS)
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/error.c -o $(OBJECT_DIR)/error.o
+	@echo 'Compiling file: $<' 
+	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
+
 $(OBJECT_DIR)/dtss.o:		 $(SRC)/misc/dtss.c $(HDRS)
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/dtss.c -o $(OBJECT_DIR)/dtss.o
+	@echo 'Compiling file: $<' 
+	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
+
 $(OBJECT_DIR)/main.o:		 $(SRC)/misc/main.c $(HDRS)
-	$(CC) $(CFLAGS) $(DEBUG) $(SRC)/misc/main.c -o $(OBJECT_DIR)/main.o
+	@echo 'Compiling file: $<' 
+	@$(CC) $(CFLAGS) $(DEBUG) -o "$@" "$<"
 
 #*******************************************************************************
 # This is the "checkmk" target: Test harness is in stack_check.ts file and 
@@ -148,7 +170,7 @@ ifndef CHECK_FOR_CHK
 	@echo "** checkmk command not found"
 else
 	$(CHK_TOOL) basic_check.ts > basic_check.c
-	$(CC) basic_check.c 	 						\
+	@$(CC) basic_check.c 	 						\
 				-std=c99 -I $(INC_DIR)			\
 				$(OBJECT_DIR)/interactive.o	\
 				$(OBJECT_DIR)/error.o		 		\
