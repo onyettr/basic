@@ -58,7 +58,7 @@ Prototypes of all functions contained in this file (in order of occurrence)
 */
 
 /**
- * @fn          SymbolTableNodePtr SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
+ * @fn          SymbolTableNodePtr symbol_table_search (char *Name, SymbolTableNode_t *pNode) {
  * @brief       Searches the Symbol Table for Name
  * @param[in]   Name    - Name to search for
  * @param[in]   pNode   - Which tree to search in
@@ -67,7 +67,7 @@ Prototypes of all functions contained in this file (in order of occurrence)
  * @todo  
  * @note
  */
-SymbolTableNode_t *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
+SymbolTableNode_t *symbol_table_search (char *Name, SymbolTableNode_t *pNode) {
 
   printf("Search %s, %p\n", Name, (void*)pNode);
   
@@ -86,7 +86,7 @@ SymbolTableNode_t *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
 }
 
 /**
- * @fn          SymbolTableNode_t *SymbolTableCreateNew (SymbolTableNode_t **pRootNode)
+ * @fn          SymbolTableNode_t *symbol_table_create (SymbolTableNode_t **pRootNode)
  * @brief       create a new symbol table (root node)
  * @param[out]  *pRootNode - name of new symbol table
  * @return      NULL if not found, SymbolTableNodePtr if found
@@ -94,16 +94,16 @@ SymbolTableNode_t *SearchSymbolTable (char *Name, SymbolTableNode_t *pNode) {
  * @todo        requires implementing
  * @note        none
  */
-SymbolTableNode_t *SymbolTableCreateNew (SymbolTableNode_t **pRootNode) {
+SymbolTableNode_t *symbol_table_create(SymbolTableNode_t **pRootNode) {
   if (Verbose) {
-	  printf("CreateRootSymbolTable %p\n", (void*)pRootNode);
+	  printf("symbol_table_create %p\n", (void*)pRootNode);
   }
 
   return NULL;
 }
 
 /**
- * @fn          SymbolTableNode_t *CreateSymbolTableNode(char *pNameString)
+ * @fn          SymbolTableNode_t *symbol_table_create_node (char *pNameString)
  * @brief       create a new symbol table node
  * @param[in]   *pNameString - name to store in symbol table
  * @return      NULL if failure, SymbolTableNodePtr if not
@@ -111,7 +111,7 @@ SymbolTableNode_t *SymbolTableCreateNew (SymbolTableNode_t **pRootNode) {
  * @todo        
  * @note        none
  */
-SymbolTableNode_t *CreateSymbolTableNode(char *pNameString) {
+SymbolTableNode_t *symbol_table_create_node (char *pNameString) {
   SymbolTableNode_t *pNewNode = NULL;
   
   if (Verbose) {
@@ -139,7 +139,8 @@ SymbolTableNode_t *CreateSymbolTableNode(char *pNameString) {
 }
 
 /**
- * @fn          SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode)
+ * @fn          SymbolTableNodePtr_t symbol_table_add_node
+ *                               (char *Name, SymbolTableNode_t **pNode)
  * @brief       Add a new Node to the symbol table
  * @param[in]   *Name    - Name to search for
  * @param[out]  **pNode  - Symbol table to add to
@@ -148,7 +149,9 @@ SymbolTableNode_t *CreateSymbolTableNode(char *pNameString) {
  * @todo  
  * @note        none
  */
-SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode) {
+SymbolTableNodePtr_t symbol_table_add_node (char *Name,
+		                                    SymbolTableNode_t **pNode)
+{
   SymbolTableNode_t *pNewNode;
   SymbolTableNode_t *pNodeCurrent;
   SymbolTableNode_t *pNodeParent;    
@@ -159,7 +162,7 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
   /*
    * Create a new node for this entry
    */
-  pNewNode = CreateSymbolTableNode(Name);
+  pNewNode = symbol_table_create_node(Name);
 
   printf("alloc %p\n", (void*)pNewNode);
   
@@ -226,7 +229,7 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
 }
 
 /**
- * @fn          void ShowSymbolTable (SymbolTableNode_t *pNode) 
+ * @fn          void symbol_table_show (SymbolTableNode_t *pNode)
  * @brief       List the contents of the Symbol Table
  * @param[in]   *pNode  - Symbol table to list
  * @return      
@@ -234,7 +237,7 @@ SymbolTableNodePtr_t AddNameToSymbolTable (char *Name, SymbolTableNode_t **pNode
  * @todo  
  * @note        none
  */
-void ShowSymbolTable (SymbolTableNode_t *pNode) {
+void symbol_table_show (SymbolTableNode_t *pNode) {
   SymbolTableNode_t *pLeftNode  = pNode;
   //  SymbolTableNode_t *pRightNode = pNode;  
 
@@ -260,6 +263,4 @@ void ShowSymbolTable (SymbolTableNode_t *pNode) {
   }
 #endif  
 }
-
-
-
+\

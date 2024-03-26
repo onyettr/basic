@@ -791,9 +791,9 @@ int32_t Tokenize (char *FileName) {
 	 } else if (IsTokenDirectKeyword(TokenBuffer)) {    /* Test for a Keyword                       */
 	   printf("TODO Keyword...\n");
 	 } else {                                           /* This is an identifier                    */
-	   pNewNode = SymbolTableSearch  (TokenBuffer, symTable);
+	   pNewNode = symbol_table_search(TokenBuffer, symTable);
 	   if (pNewNode == NULL) {
-	     pNewNode = SymbolTableAddName(TokenBuffer, &symTable);
+	     pNewNode = symbol_table_add_name(TokenBuffer, &symTable);
 	   }
 
 	   Token = TOKEN_IDENTIFIER;
@@ -809,7 +809,7 @@ int32_t Tokenize (char *FileName) {
   TokenPrint(TokenBuffer, Token);  
 
   if (symTable != NULL) {
-    SymbolTableClean(symTable);
+    aymbol_table_clean(symTable);
   }
 
   fclose(fp);
