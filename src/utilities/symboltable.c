@@ -263,4 +263,3 @@ void symbol_table_show (SymbolTableNode_t *pNode) {
   }
 #endif  
 }
-\

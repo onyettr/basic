@@ -809,7 +809,7 @@ int32_t Tokenize (char *FileName) {
   TokenPrint(TokenBuffer, Token);  
 
   if (symTable != NULL) {
-    aymbol_table_clean(symTable);
+    symbol_table_clean(symTable);
   }
 
   fclose(fp);
