@@ -1,24 +1,21 @@
 cmake_minimum_required(VERSION 3.28)
 
-set(BASIC_LIB_TARGET misc)
+set(BASIC_LIB_TARGET lister)
 
 project(${BASIC_LIB_TARGET}
-    DESCRIPTION     "basic misc library"
+    DESCRIPTION     "basic lister library"
     LANGUAGES       C ASM)
 
 add_library(${BASIC_LIB_TARGET} STATIC)
     
 target_include_directories(${BASIC_LIB_TARGET}
            PRIVATE
-           ${PROJECT_SOURCE_DIR}/src/misc
+           ${PROJECT_SOURCE_DIR}/src/lister
            )
 
 target_sources(${BASIC_LIB_TARGET}
     PRIVATE
-    ${CMAKE_SOURCE_DIR}/src/misc/parsecommandline.c
-    ${CMAKE_SOURCE_DIR}/src/misc/interactive.c
-    ${CMAKE_SOURCE_DIR}/src/misc/banner.c
-    ${CMAKE_SOURCE_DIR}/src/misc/error.c
+    ${CMAKE_SOURCE_DIR}/src/lister/lister.c
     )
 
 #message(STATUS "CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR})

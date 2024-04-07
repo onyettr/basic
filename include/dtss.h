@@ -43,7 +43,7 @@ Exported Global variables
 Prototypes of all functions contained in this file (in order of occurrence)
 ******************************************************************************
 */
-int32_t  DTSSCommandHello  ( void );
+int32_t  DTSS_command_hello  ( void );
 int32_t  DTSSCommandNew    ( void );
 int32_t  DTSSCommandOld    ( void );
 int32_t  DTSSCommandSave   ( void );

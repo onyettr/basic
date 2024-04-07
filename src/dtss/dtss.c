@@ -60,7 +60,7 @@ Prototypes of all functions contained in this file (in order of occurrence)
  * @return     ErrorCode
  * @note
  */
-int32_t  DTSSCommandHello ( void ) {
+int32_t  DTSS_command_hello ( void ) {
   int32_t ErrorCode = SUCCESS;
   
   return ErrorCode;

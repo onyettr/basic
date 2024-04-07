@@ -76,13 +76,13 @@ SymbolTableNode_t *symbol_table_search (char *Name, SymbolTableNode_t *pNode) {
     
     Compare = strcmp(Name,pNode->NameString);
     if (Compare == 0) {
-      return pNode;                                        /* Search matched      */
+      return pNode;                                   /* Search matched      */
     }
 
     pNode = (Compare < 0) ? pNode->pLeft : pNode->pRight;  /* Continue the search */
   }
 
-  return NULL;                                             /* No match found      */
+  return NULL;                                        /* No match found      */
 }
 
 /**
@@ -186,7 +186,7 @@ SymbolTableNodePtr_t symbol_table_add_node (char *Name,
 
   while (Constructing) {
     int Compare = 0;
-    
+
     pNodeParent = pNodeCurrent;
     Compare = strcmp(Name,pNodeParent->NameString);
     printf("cmp %d Parent %p Current %p\n", Compare, (void*)pNodeParent,
@@ -225,8 +225,18 @@ SymbolTableNodePtr_t symbol_table_add_node (char *Name,
   *pNode = pNewNode;
   printf("Return %p = %p\n", (void*)*pNode, (void*)pNewNode);
 
-  return pNewNode;                                
+  return pNewNode;
 }
+
+/**
+ * @brief
+ *
+ * @param pNode
+ */
+void symbol_table_clean(SymbolTableNode_t *pNode) {
+ UNUSED(pNode);
+}
+
 
 /**
  * @fn          void symbol_table_show (SymbolTableNode_t *pNode)

@@ -18,6 +18,7 @@ Includes
 #include <stdbool.h>
 #include <time.h>
 #include "basic.h"
+#include "symboltable.h"
 
 /*
 ******************************************************************************
@@ -59,18 +60,28 @@ Prototypes of all functions contained in this file (in order of occurrence)
 ******************************************************************************
 */
 
+/**
+ * @brief
+ *
+ * @param TokenString
+ * @return
+ */
 Token_t DirectCommand(char *TokenString) {
   // Token_t Token;
 
   return TOKEN_ERROR;
 }
 
+/**
+ * @brief
+ *
+ * @return
+ */
 int32_t TT_SymbolTableShow (void) {
-  SymbolTableShow(symTable);
+	symbol_table_show(symTable);
 
   return SUCCESS;
 }
-
 
 /**
  * @brief     Tokenize a given input stream
@@ -129,9 +140,9 @@ int32_t CommandLineMode (void) {
         } else if (IsTokenDirectKeyword(TokenBuffer)) {    /* Test for a Keyword                       */
           printf("TODO Keyword...\n");
         } else {                                           /* This is an identifier                    */
-          pNewNode = SymbolTableSearch  (TokenBuffer, symTable);
+          pNewNode = symbol_table_search(TokenBuffer, symTable);
           if (pNewNode == NULL) {
-            pNewNode = SymbolTableAddName(TokenBuffer, &symTable);
+            pNewNode = symbol_table_add_node(TokenBuffer, &symTable);
           }
 
           Token = TOKEN_IDENTIFIER;
@@ -145,7 +156,7 @@ int32_t CommandLineMode (void) {
   TokenPrint(TokenBuffer, Token);
 
   if (symTable != NULL) {
-    SymbolTableClean(symTable);
+	  symbol_table_clean(symTable);
   }
   
   return ErrorCode;

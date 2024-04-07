@@ -18,6 +18,7 @@ Includes
 #include <stdbool.h>
 #include <time.h>
 #include "basic.h"
+#include "dtss.h"
 
 /*
 ******************************************************************************
@@ -56,7 +57,7 @@ static Literal_t Literal;
  *          DTSS (Dartmouth Timesharing System)
  */
 static TokenCommandList_t TokenDirectCommandList[] = {
-    { "HELLO"   , "<sign on>    " , TOKEN_HELLO     , DTSSCommandHello  },
+    { "HELLO"   , "<sign on>    " , TOKEN_HELLO     , DTSS_command_hello  },
     { "NEW"     , "new program  " , TOKEN_NEW       , DTSSCommandNew    },
     { "OLD"     , "last program " , TOKEN_OLD       , DTSSCommandOld    },
     { "SAVE"    , "save current " , TOKEN_SAVE      , DTSSCommandSave   },
@@ -559,9 +560,11 @@ Token_t TokenGetString (char **Bufferp, char *Tokenp) {
   char *Bufp;
 
   Bufp = *Bufferp;
-  
-  if (Verbose) printf("TokenGetString %c\n", (int)*Bufp);
-  
+
+  if (Verbose) {
+	  printf("TokenGetString %c\n", (int)*Bufp);
+  }
+
   while ( ((isalnum(*Bufp)) || (*Bufp != '\0')) && (!isspace(*Bufp)) ) {
       *Tokenp++ = *Bufp++;
       if (Verbose) printf("[%p] %c = %c\n", (void *)Tokenp, *Tokenp, *Bufp);            
@@ -607,7 +610,7 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
       case '!': TokenReturn = TOKEN_PLING;         break;
       case '@': TokenReturn = TOKEN_AT;            break;
       case '#': TokenReturn = TOKEN_HASH;          break;
-      case '$': TokenReturn = TOKEN_DOLLAR;        break;        
+      case '$': TokenReturn = TOKEN_DOLLAR;        break;
       case '%': TokenReturn = TOKEN_PERCENT;       break;
       case '^': TokenReturn = TOKEN_HAT;           break;
       case '&': TokenReturn = TOKEN_AMPERSAND;     break;
@@ -623,15 +626,15 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
       case '{': TokenReturn = TOKEN_L_CURLY;       break;
       case '}': TokenReturn = TOKEN_R_CURLY;       break;
       case '/': TokenReturn = TOKEN_DIVIDE;        break;
-      case '|': TokenReturn = TOKEN_VERTICAL_BAR;  break;        
+      case '|': TokenReturn = TOKEN_VERTICAL_BAR;  break;
       case ',': TokenReturn = TOKEN_COMMA;         break;
       case '\\':TokenReturn = TOKEN_BACK_SLASH;    break;
       case '"': TokenReturn = TOKEN_QUOTE;         break;
       case '\'':TokenReturn = TOKEN_SINGLE_QUOTE;  break;
-      case '`': TokenReturn = TOKEN_OPEN_QUOTE;    break;        
+      case '`': TokenReturn = TOKEN_OPEN_QUOTE;    break;
       case '.': TokenReturn = TOKEN_PERIOD;        break;
       case ':': TokenReturn = TOKEN_COLON;         break;
-      case ';': TokenReturn = TOKEN_SEMI_COLON;    break;                
+      case ';': TokenReturn = TOKEN_SEMI_COLON;    break;
       case '?': TokenReturn = TOKEN_QUESTION_MARK; break;
       case '<': {                           /* < <> <= */
         if (*(Bufp+1) == '=') {
@@ -742,7 +745,7 @@ int32_t Tokenize (char *FileName) {
   char *Bufferp;
   Token_t Token = TOKEN_NO_TOKEN;
   SymbolTableNode_t *pNewNode = NULL;
-  
+
   if (*FileName == '\0') {
     Error("No filename provided");
 
@@ -763,7 +766,7 @@ int32_t Tokenize (char *FileName) {
    */
   while (UtilsReadSourceLine(fp, Bufferp) == true) {
     Bufferp = UtilsSkipSpaces(Bufferp);
-     
+
      printf(">> %s", Bufferp);
 
      while (*Bufferp != '\0' && Token != TOKEN_ERROR) {     /* Test for Numbers including -ve ones      */
@@ -793,7 +796,7 @@ int32_t Tokenize (char *FileName) {
 	 } else {                                           /* This is an identifier                    */
 	   pNewNode = symbol_table_search(TokenBuffer, symTable);
 	   if (pNewNode == NULL) {
-	     pNewNode = symbol_table_add_name(TokenBuffer, &symTable);
+	     pNewNode = symbol_table_add_node(TokenBuffer, &symTable);
 	   }
 
 	   Token = TOKEN_IDENTIFIER;

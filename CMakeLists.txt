@@ -24,15 +24,20 @@ include_directories(
     )
 
 
-add_executable(${PROJECT_NAME})
+add_executable(${PROJECT_NAME} src/main.c)
 target_sources(${PROJECT_NAME} PRIVATE "src/main.c")
 target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}")
 add_subdirectory("src/misc")
+add_subdirectory("src/dtss")
+add_subdirectory("src/lister")
 add_subdirectory("src/utilities")
 add_subdirectory("src/tokenizer")
 target_link_libraries(${PROJECT_NAME} PRIVATE 
+                      lister
                       misc
+                      tokenizer
+                      dtss
                       utilities
-                      tokenizer)
+                      )
  
 install(TARGETS misc basic)
