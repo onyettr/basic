@@ -73,7 +73,7 @@ Prototypes of all functions contained in this file (in order of occurrence)
  * @note
  * @todo     
  */
-char *ErrorToString (ErrorCode_t ErrorCode) {
+char *error_to_string (ErrorCode_t ErrorCode) {
   ErrorCodeList_t *pRow;
 
   pRow = (ErrorCodeList_t *)&ErrorRecord[0];  
@@ -102,7 +102,7 @@ void Error ( char *format, ... ) {
     (void)vsprintf (Buffer, format, ap);
     va_end (ap);
 
-    printf ("Error-%s-%s\n", PROGRAM_NAME, Buffer );
+    printf ("[ERROR] -%s-%s\n", PROGRAM_NAME, Buffer );
 
     exit (0);
 }

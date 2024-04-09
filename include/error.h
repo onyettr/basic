@@ -65,6 +65,6 @@ typedef struct {
 } ErrorCodeList_t;
 
 void Error (char *format, ...);
-char *ErrorToString (ErrorCode_t ErrorCode);
+char *error_to_string (ErrorCode_t ErrorCode);
 
 #endif  /* _ERROR_H__ */

@@ -130,15 +130,15 @@ Prototypes of all functions contained in this file (in order of occurrence)
 
 /**
  * @brief     Match strings
- * @fn        static bool StringMatch(char *str1, char *str2)
+ * @fn        static bool string_match(char *str1, char *str2)
  * @param[in] *str1 - first string
  * @param[in] *str2 - to match to
  * @return    true if str1 matches str2, false otherwise
- * @details   
+ * @details
  * @note
- * @todo     
+ * @todo
  */
-static bool StringMatch(char *str1,char *str2) {
+static bool string_match(char *str1,char *str2) {
   int i;
 
   UtilsToUpper(str1);        /* Convert to all upper case */
@@ -153,6 +153,11 @@ static bool StringMatch(char *str1,char *str2) {
   return(!(strncmp(str1,str2, strlen(str1))));
 }
 
+/**
+ * @brief show the list of token commands
+ *
+ * @return
+ */
 int32_t TT_InteractiveHelp(void) {
   int32_t ErrorCode = SUCCESS;
   TokenCommandList_t *pRow;
@@ -163,7 +168,7 @@ int32_t TT_InteractiveHelp(void) {
 	   pRow->cmdstr,
 	   pRow->HelpString,
 	   pRow->pDirectFunction == NULL ? "<empty>" : "<full>");
-	   
+
     pRow++;
   }
 
@@ -172,12 +177,12 @@ int32_t TT_InteractiveHelp(void) {
 
 /**
  * @brief     Token types to string convert
- * @fn        char *TokenGetStringType(Token_t Token)
+ * @fn        char *TOKEN_type_to_string(Token_t Token)
  * @param[in] Token - to switch on
  * @return    char* string - token as a string
  * @note
  */
-char *TokenGetStringType(Token_t Token) {
+char *TOKEN_type_to_string(Token_t Token) {
 
   switch (Token) {
      case TOKEN_WORD:          return ("<WORD>");       break;
@@ -285,7 +290,7 @@ Token_t TokenDirectKeyword (char *Bufferp) {
   
   pRow = (TokenCommandList_t *)&TokenKeywordList[0];  
   while (pRow->cmdstr != NULL) {
-    if (StringMatch(Bufferp,pRow->cmdstr)) {
+    if (string_match(Bufferp,pRow->cmdstr)) {
        return pRow->TokenValue;
     }
 
@@ -309,7 +314,7 @@ Token_t TokenDirectCommand (char *Bufferp) {
   
   pRow = (TokenCommandList_t *)&TokenDirectCommandList[0];  
   while (pRow->cmdstr != NULL) {
-    if (StringMatch(Bufferp,pRow->cmdstr)) {    
+    if (string_match(Bufferp,pRow->cmdstr)) {
        return pRow->TokenValue;
     }
     pRow++;
@@ -332,7 +337,7 @@ bool IsTokenDirectCommand (char *Bufferp) {
   
   pRow = (TokenCommandList_t *)&TokenDirectCommandList[0];  
   while (pRow->cmdstr != NULL) {
-    if (StringMatch(Bufferp,pRow->cmdstr)) {    
+    if (string_match(Bufferp,pRow->cmdstr)) {
        return true;
     }
     pRow++;
@@ -355,7 +360,7 @@ bool IsTokenDirectKeyword (char *Bufferp) {
   
   pRow = (TokenCommandList_t *)&TokenKeywordList[0];  
   while (pRow->cmdstr != NULL) {
-    if (StringMatch(Bufferp,pRow->cmdstr)) {
+    if (string_match(Bufferp,pRow->cmdstr)) {
        return true;
     }
 
@@ -438,7 +443,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
   } 
 #endif  
   if (DigitCount >= MAX_DIGIT_COUNT) {
-    Error("TokenGetNumber %s", ErrorToString(ERROR_NUMBER_TOO_LARGE));
+    Error("TokenGetNumber %s", error_to_string(ERROR_NUMBER_TOO_LARGE));
 
     return TOKEN_ERROR;
   }
@@ -460,7 +465,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
   }
 
   if (DigitCount >= MAX_DIGIT_COUNT) {
-    Error("TokenGetNumber %s", ErrorToString(ERROR_NUMBER_TOO_LARGE));
+    Error("TokenGetNumber %s", error_to_string(ERROR_NUMBER_TOO_LARGE));
 
     return TOKEN_ERROR;
   }
@@ -598,10 +603,13 @@ Token_t TokenGetString (char **Bufferp, char *Tokenp) {
 Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
     char *Bufp;
     Token_t TokenReturn;
-    
+
     Bufp = *Bufferp;
 
-    if (Verbose) printf("TokenGetSpecial %c\n", *Bufp);
+    if (Verbose)
+    {
+      printf("[DBG] TokenGetSpecial %c\n", *Bufp);
+    }
 
     *Tokenp++ = *Bufp;     /* Copy input buffer character to the Token Buffer */
     
@@ -640,11 +648,11 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
         if (*(Bufp+1) == '=') {
           TokenReturn = TOKEN_LE;
           Bufp++;
-	  *Tokenp++ = '=';
+          *Tokenp++ = '=';
         } else if (*(Bufp+1) == '>') {
           TokenReturn = TOKEN_NE;
           Bufp++;
-	  *Tokenp++ = '>';
+	      *Tokenp++ = '>';
         } else {
           TokenReturn = TOKEN_LT;
         }
@@ -654,21 +662,26 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
         if (*(Bufp+1) == '=') {
           TokenReturn = TOKEN_GE;
           Bufp++;
-	  *Tokenp++ = '=';
+          *Tokenp++ = '=';
         } else {
           TokenReturn = TOKEN_GT;
         }
         break;
       }
-      default:  TokenReturn = TOKEN_ERROR;
+      default:
+    	  TokenReturn = TOKEN_ERROR;
     }
 
+    if (Verbose)
+    {
+    	printf("[DBG] TokenGetSpecial %s\n", TOKEN_type_to_string(TokenReturn));
+    }
     Bufp++;
     *Tokenp = '\0';
 
     *Bufferp = Bufp;    /* Return last position in the input buffer */
     
-    return TokenReturn;    
+    return TokenReturn;
 }
 
 /**
@@ -691,7 +704,8 @@ Token_t TokenGetDirect(char **Bufferp, char *Tokenp) {
 }
 
 /**
- * @brief     Print the token string, includes the original line plus the Token as a string
+ * @brief     Print the token string, includes the original line plus the Token
+ * 			  as a string
  * @fn        void TokenPrint (char *TokenString, Token_t Token) 
  * @param[in] *TokenString - actual token buffer
  * @param[in] Token        - The token
@@ -705,7 +719,7 @@ void TokenPrint (char *TokenString, Token_t Token) {
     if (*TokenString != '\0') {
       char *Return;
 
-      printf("\t> %16s   %16s", TokenGetStringType(Token), TokenString);
+      printf("\t> %16s   %16s", TOKEN_type_to_string(Token), TokenString);
       if (Token == TOKEN_DIGIT ) {
 	if (Literal.Type == LITERAL_INTEGER) {
 	  printf("   INTEGER = %16d", Literal.value.IntegerValue);

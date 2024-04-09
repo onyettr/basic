@@ -121,7 +121,7 @@ SymbolTableNode_t *symbol_table_create_node (char *pNameString) {
   pNewNode = malloc(sizeof(SymbolTableNode_t));
   if (pNewNode == NULL) {
     Error("CreateSymbolTableNode - %s",
-    	ErrorToString(ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_NODE));
+    		error_to_string(ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_NODE));
 
     return NULL;
   }
@@ -129,7 +129,7 @@ SymbolTableNode_t *symbol_table_create_node (char *pNameString) {
   pNewNode->NameString = malloc(strlen(pNameString)+1);
   if (pNewNode->NameString == NULL) {
     Error("CreateSymbolTableNode - %s",
-    		ErrorToString(ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_STRING));
+    		error_to_string(ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_STRING));
 
     return NULL;
   }
