@@ -57,27 +57,27 @@ static Literal_t Literal;
  *          DTSS (Dartmouth Timesharing System)
  */
 static TokenCommandList_t TokenDirectCommandList[] = {
-    { "HELLO"   , "<sign on>    " , TOKEN_HELLO     , DTSS_command_hello  },
-    { "NEW"     , "new program  " , TOKEN_NEW       , DTSSCommandNew    },
-    { "OLD"     , "last program " , TOKEN_OLD       , DTSSCommandOld    },
-    { "SAVE"    , "save current " , TOKEN_SAVE      , DTSSCommandSave   },
-    { "REPLACE" , "overwrite    " , TOKEN_REPLACE   , DTSSCommandReplace},
-    { "RENAME"  , "replace      " , TOKEN_RENAME    , DTSSCommandRename },
-    { "CAT"     , "list         " , TOKEN_CAT       , DTSSCommandCat    },
-    { "LIST"    , "list         " , TOKEN_LIST      , DTSSCommandList   },
-    { "RUN"     , "execute      " , TOKEN_RUN       , DTSSCommandRun    },
-    { "STOP"    , "stop         " , TOKEN_CMD_STOP  , DTSSCommandStop   },
-    { "UNSAVE"  , "undo         " , TOKEN_UNSAVE    , DTSSCommandUnsave },
-    { "SYSTEM"  , "system cmd   " , TOKEN_SYSTEM    , DTSSCommandSystem },
-    { "BYE"     , "logoff       " , TOKEN_BYE       , NULL              },
-    { "GOODBYE" , "really logoff" , TOKEN_GOODBYE   , NULL              },
-    { "SCRATCH" , "new          " , TOKEN_SCRATCH   , DTSSCommandScratch},
-    { "FRI"     , "friden mode  " , TOKEN_FRI       , NULL              },
-    { "NFR"     , "exit friden  " , TOKEN_NFR       , NULL              },
-    { "EXPLAIN" , "help         " , TOKEN_EXPLAIN   , DTSSCommandExplain},
-    { "SYMLIST" , "DBG symtable " , TOKEN_SYMTABLE_LIST, TT_SymbolTableShow},
-    { "HELP"    , "help         " , TOKEN_HELP      , TT_InteractiveHelp},
-    { NULL      , NULL            , TOKEN_WORD      , NULL              }    
+    { "HELLO"   , "<sign on>    " , TOKEN_HELLO     , DTSS_command_hello    },
+    { "NEW"     , "new program  " , TOKEN_NEW       , DTSSCommandNew        },
+    { "OLD"     , "last program " , TOKEN_OLD       , DTSSCommandOld        },
+    { "SAVE"    , "save current " , TOKEN_SAVE      , DTSSCommandSave       },
+    { "REPLACE" , "overwrite    " , TOKEN_REPLACE   , DTSSCommandReplace    },
+    { "RENAME"  , "replace      " , TOKEN_RENAME    , DTSSCommandRename     },
+    { "CAT"     , "list         " , TOKEN_CAT       , DTSSCommandCat        },
+    { "LIST"    , "list         " , TOKEN_LIST      , DTSSCommandList       },
+    { "RUN"     , "execute      " , TOKEN_RUN       , DTSSCommandRun        },
+    { "STOP"    , "stop         " , TOKEN_CMD_STOP  , DTSSCommandStop       },
+    { "UNSAVE"  , "undo         " , TOKEN_UNSAVE    , DTSSCommandUnsave     },
+    { "SYSTEM"  , "system cmd   " , TOKEN_SYSTEM    , DTSSCommandSystem     },
+    { "BYE"     , "logoff       " , TOKEN_BYE       , NULL                  },
+    { "GOODBYE" , "really logoff" , TOKEN_GOODBYE   , NULL                  },
+    { "SCRATCH" , "new          " , TOKEN_SCRATCH   , DTSSCommandScratch    },
+    { "FRI"     , "friden mode  " , TOKEN_FRI       , NULL                  },
+    { "NFR"     , "exit friden  " , TOKEN_NFR       , NULL                  },
+    { "EXPLAIN" , "help         " , TOKEN_EXPLAIN   , DTSSCommandExplain    },
+    { "SYMLIST" , "DBG symtable " , TOKEN_SYMTABLE_LIST, TT_SymbolTableShow },
+    { "HELP"    , "help         " , TOKEN_HELP      , TT_InteractiveHelp    },
+    { NULL      , NULL            , TOKEN_WORD      , NULL                  }
 };
 
 /**
@@ -165,9 +165,9 @@ int32_t TT_InteractiveHelp(void) {
   pRow = (TokenCommandList_t *)&TokenDirectCommandList[0]; 
   while (pRow->cmdstr != NULL) {
     printf("[%8s] %10s %s\n",
-	   pRow->cmdstr,
-	   pRow->HelpString,
-	   pRow->pDirectFunction == NULL ? "<empty>" : "<full>");
+	        pRow->cmdstr,
+	        pRow->HelpString,
+	        pRow->pDirectFunction == NULL ? "<empty>" : "<full>");
 
     pRow++;
   }
@@ -285,12 +285,12 @@ char *TOKEN_type_to_string(Token_t Token) {
  * @note      List is NULL terminated, stop when we reach here
  * @todo     
  */
-Token_t TokenDirectKeyword (char *Bufferp) {
+Token_t TOKEN_direct_keyword (char *buffer_p) {
   TokenCommandList_t *pRow;
   
   pRow = (TokenCommandList_t *)&TokenKeywordList[0];  
   while (pRow->cmdstr != NULL) {
-    if (string_match(Bufferp,pRow->cmdstr)) {
+    if (string_match(buffer_p,pRow->cmdstr)) {
        return pRow->TokenValue;
     }
 
@@ -303,18 +303,18 @@ Token_t TokenDirectKeyword (char *Bufferp) {
 /**
  * @brief     Look for any direct commands in supplied buffer
  * @fn        Token_t TokenDirectCommand (char *Bufferp) 
- * @param[in] *Bufferp - Buffer to tokenize
+ * @param[in] *buffer_pp - Buffer to tokenize
  * @return    Token_t 
  * @details   Is this is direct word?
  * @note
  * @todo      This should be combined with TokenDirectKeyword (or same array?)
  */
-Token_t TokenDirectCommand (char *Bufferp) {
+Token_t TOKEN_direct_command (char *buffer_p) {
   TokenCommandList_t *pRow;
   
   pRow = (TokenCommandList_t *)&TokenDirectCommandList[0];  
   while (pRow->cmdstr != NULL) {
-    if (string_match(Bufferp,pRow->cmdstr)) {
+    if (string_match(buffer_p,pRow->cmdstr)) {
        return pRow->TokenValue;
     }
     pRow++;
@@ -546,7 +546,7 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
   /*
    * Test if this s Keyword, TOKEN_ERROR means it isn't
    */
-  TokenReturn = TokenDirectKeyword(t);
+  TokenReturn = TOKEN_direct_keyword(t);
 
   return TokenReturn;
 }
@@ -803,7 +803,7 @@ int32_t Tokenize (char *FileName) {
 
        if (Token == TOKEN_WORD) {                           
 	 if (IsTokenDirectCommand(TokenBuffer)) {           /* Test for Direct Command                  */
-           Token = TokenDirectCommand(TokenBuffer);         /* Which direct command?                    */
+           Token = TOKEN_direct_command(TokenBuffer);         /* Which direct command?                    */
            TokenExecuteDirectCommand(Token, TokenBuffer);   /* Execute direct command                   */
 	 } else if (IsTokenDirectKeyword(TokenBuffer)) {    /* Test for a Keyword                       */
 	   printf("TODO Keyword...\n");

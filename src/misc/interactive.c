@@ -117,25 +117,25 @@ int32_t CommandLineMode (void) {
 
     while ((*Bufferp != '\0' && Token != TOKEN_BYE)) {
       if ((Token == TOKEN_MINUS  && isdigit(*Bufferp+1)) || /* Test for Numbers or -ve                  */
-	  (Token == TOKEN_PERIOD && isdigit(*Bufferp+1)) ||
-	  isdigit(*Bufferp) || Token == TOKEN_PERIOD) {
-	Token = TokenGetNumber(&Bufferp, TokenBuffer, Token);
+	      (Token == TOKEN_PERIOD && isdigit(*Bufferp+1)) ||
+	       isdigit(*Bufferp) || Token == TOKEN_PERIOD) {
+    	  Token = TokenGetNumber(&Bufferp, TokenBuffer, Token);
       } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
-	Token = TokenGetWord(&Bufferp, TokenBuffer);
+    	  Token = TokenGetWord(&Bufferp, TokenBuffer);
       } else if (isspace(*Bufferp)) {                      /* Test for SPACE, we just skip             */
-	Bufferp++;
-	Token = TOKEN_SPACE;
+    	  Bufferp++;
+    	  Token = TOKEN_SPACE;
       } else if (*Bufferp == '"') {                        /* Test for STRINGS                         */
-	Token = TokenGetString(&Bufferp, TokenBuffer);
+    	  Token = TokenGetString(&Bufferp, TokenBuffer);
       } else if (*Bufferp == '\n' || *Bufferp == '\r') {   /* TODO: convert to spaces for TokenBuffer? */
-	Bufferp++;
+    	  Bufferp++;
       } else {                                             /* Test for Special characters              */
          Token = TokenGetSpecial(&Bufferp, TokenBuffer);
       }
 
       if (Token == TOKEN_WORD) {                           
         if (IsTokenDirectCommand(TokenBuffer)) {           /* Test for Direct Command                  */
-           Token = TokenDirectCommand(TokenBuffer);        /* Which direct command?                    */
+           Token = TOKEN_direct_command(TokenBuffer);        /* Which direct command?                    */
            TokenExecuteDirectCommand(Token, TokenBuffer);  /* Execute direct command                   */
         } else if (IsTokenDirectKeyword(TokenBuffer)) {    /* Test for a Keyword                       */
           printf("TODO Keyword...\n");
