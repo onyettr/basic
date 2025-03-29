@@ -19,12 +19,18 @@ find_program(CMAKE_CXX_COMPILER     g++)
 # Adding MATH library support
 find_library(MATH_LIBRARY m PATHS /usr/lib64/)
 
+# Generate Docs
+OPTION(BUILD_WITH_DOCS "Generate Docs" ON)
+IF(TASKSCH_BUILD_WITH_DOCS)
+	ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/docs)
+ENDIF()
+
 set(PROJECT_NAME "basic")
 project(${PROJECT_NAME}
         VERSION 1.0
         LANGUAGES C CXX)
 if(MATH_LIBRARY)
-  message("Math library found")
+  message("[INFO] Math library found")
   LINK_LIBRARIES(${MATH_LIBRARY})
 else()
   message("MATH library not found")
@@ -45,6 +51,7 @@ add_subdirectory("src/dtss")
 add_subdirectory("src/lister")
 add_subdirectory("src/utilities")
 add_subdirectory("src/tokenizer")
+add_subdirectory("docs")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
                       lister
