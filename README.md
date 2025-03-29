@@ -1,4 +1,4 @@
-##### BASIC Interpreter
+# BASIC Interpreter
 Based on the original Dartmouth (1964) (Edition #1) syntax, this has following keywords
 
 LET       GOSUB    RETURN
@@ -10,16 +10,24 @@ GOTO      IF
 
 Additions have been added to the Edition #2, #3, #4, #5 and #6 extensions.
 
-##### Background
+# Background
 
 Found the book "Writing Compilers & Interpreters - An Applied Approach" - Ronald MAK. Using non-ANSI C it provides an excellent overview
 of compilers. I used this as a guide and template, this book is using Pascal as it's language. I decided to replace PASCAL with BASIC.
 
-##### Source Code
+# Building
+
+
+<code>
+$ cmake
+</code>
+
+# Source Code
 
 All written in ANSI C.
 
-##### Implementation
+
+# Implementation
 
 Main components:
 lister                  Used to print source code provided by a filename
