@@ -27,11 +27,11 @@ ADD_CUSTOM_COMMAND(OUTPUT ${DOXYGEN_INDEX_FILE}
 # Create CMake Target for generating doc.
 ADD_CUSTOM_TARGET(docs ALL DEPENDS ${DOXYGEN_INDEX_FILE})
 
-#doxygen_add_docs(docs_target
-#  ${PROJECT_SOURCE_DIR}
-#  ALL  # does not seem to work
-#  COMMENT "Generate HTML documentation"
-#)
+doxygen_add_docs(docs_target
+  ${PROJECT_SOURCE_DIR}
+  ALL  # does not seem to work
+  COMMENT "Generate HTML documentation"
+)
 
 
 
