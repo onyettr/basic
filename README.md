@@ -1,12 +1,13 @@
 # BASIC Interpreter
+
 Based on the original Dartmouth (1964) (Edition #1) syntax, this has following keywords
 
-LET       GOSUB    RETURN
-PRINT     NEXT     DEF
-END       TO       DIM
-READ      FOR      REM
-DATA      THEN     STOP
-GOTO      IF 
++ LET      GOSUB    RETURN
++ PRINT     NEXT     DEF
++ END       TO       DIM
++ READ      FOR      REM
++ DATA      THEN     STOP
++ GOTO      IF 
 
 Additions have been added to the Edition #2, #3, #4, #5 and #6 extensions.
 
@@ -17,20 +18,27 @@ of compilers. I used this as a guide and template, this book is using Pascal as 
 
 # Building
 
-
 <code>
-$ cmake
+
+$ mkdir build
+
+$ cd build
+
+$ cmake ..
+
+$ make
+
 </code>
 
 # Source Code
 
 All written in ANSI C.
 
-
 # Implementation
 
 Main components:
-lister                  Used to print source code provided by a filename
-tokenizer               Support for taking a file (or buffer) and turning into Tokens
-interactive             Support for Command line operation, can tokenize line elements, process the Teletype operations. 
-main                    Command line processing
++ lister                  Used to print source code provided by a filename
++ tokenizer               Support for taking a file (or buffer) and turning into Tokens
++ interactive             Support for Command line operation, can tokenize line elements, process the Teletype operations. 
++ main                    Command line processing
++ utilities               Support functions 
