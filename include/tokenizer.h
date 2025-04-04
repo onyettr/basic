@@ -65,10 +65,10 @@ typedef enum {
     TOKEN_BACK_SLASH,
     TOKEN_DIVIDE,
     TOKEN_LT,
-    TOKEN_LE,    
+    TOKEN_LE,
     TOKEN_GT,
     TOKEN_GE,
-    TOKEN_NE,        
+    TOKEN_NE,
     TOKEN_COMMA,
     TOKEN_SEMI_COLON,
     TOKEN_COLON,
@@ -179,14 +179,14 @@ typedef enum {
 
 /**
  *  @brief Token_t enumeration for Tokens
- *  @addtogroup Tokenizer
+ *  @addtogroup tokenizer
  */
 typedef int32_t Token_t;
 
 /**
  * @brief Literal Types string and integer
  * @enum LiteralType_t
- * @addtogroup Tokenizer
+ * @addtogroup tokenizer
  */
 typedef enum {
    LITERAL_STRING,
@@ -197,7 +197,7 @@ typedef enum {
 /**
  * @brief Literal string and integer storage
  * @struct Literal_t 
- * @addtogroup Tokenizer
+ * @addtogroup tokenizer
  */
 typedef struct {
   LiteralType_t Type;
@@ -215,7 +215,7 @@ typedef struct {
  *         if the string matches then the Token is returned and a callback can be invoked.
  *         Commands are DIRECT meaning system calls or they are language Keywords
  * @todo   Use the callback function for the direct commands
- * @addtogroup Tokenizer
+ * @addtogroup tokenizer
  */
 typedef struct {
   char *cmdstr;                      /*!> String containing Command                    */
@@ -249,17 +249,17 @@ Prototypes of all functions contained in this file (in order of occurrence)
 ********************************************************************************
 */
 int32_t Tokenize (char *FileName);
-Token_t TokenGetNumber     (char **Bufferp, char *Tokenp, Token_t PreToken);
-Token_t TokenGetWord       (char **Bufferp, char *Tokenp);
-Token_t TokenGetString     (char **Bufferp, char *Tokenp);
-Token_t TokenGetSpecial    (char **Bufferp, char *Tokenp);
-Token_t TokenGetDirect     (char **Bufferp, char *Tokenp);
-void    TokenPrint         (char *TokenString, Token_t Token);
+Token_t TOKEN_get_number     (char **Bufferp, char *Tokenp, Token_t PreToken);
+Token_t TOKEN_get_word       (char **Bufferp, char *Tokenp);
+Token_t TOKEN_get_string     (char **Bufferp, char *Tokenp);
+Token_t TOKEN_get_special    (char **Bufferp, char *Tokenp);
+Token_t TOKEN_get_direct     (char **Bufferp, char *Tokenp);
 Token_t TOKEN_direct_keyword (char *Bufferp);
 Token_t TOKEN_direct_command (char *Bufferp);
-bool    IsTokenDirectCommand (char *Bufferp);
-bool    IsTokenDirectKeyword (char *Bufferp);
-int32_t TokenExecuteDirectCommand (Token_t CommandToken, char *Tokenp);
+void    TOKEN_print          (char *TokenString, Token_t Token);
+bool    is_direct_command    (char *Bufferp);
+bool    is_direct_keyword    (char *Bufferp);
+int32_t TOKEN_execute_direct_command (Token_t CommandToken, char *Tokenp);
 char    *TokenGetStringType(Token_t Token);
 
 #endif  /* __TOKENIZER_H__ */

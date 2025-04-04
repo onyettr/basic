@@ -1,12 +1,12 @@
 /**   
  *******************************************************************************
  * @brief   basic interpreter
+ * @author  onyettr
+ * @file    basic.h
  * @defgroup basic basic
  * @defgroup tokenizer tokenizer
  * @defgroup Utilities Utilities
  * @defgroup Misc Misc
- * @author  onyettr
- * @file    basic.h
  *******************************************************************************
  */
 #ifndef __BASIC_H__

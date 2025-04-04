@@ -2,8 +2,8 @@
  *****************************************************************************
  * @brief   basic interpreter - tokenizer
  * @author  onyettr
+ * @ingroup tokenizer tokenizer
  * @file    tokenizer.c
- *
  ***************************************************************************** 
  */
 
@@ -332,7 +332,7 @@ Token_t TOKEN_direct_command (char *buffer_p) {
  * @note
  * @todo    
  */
-bool IsTokenDirectCommand (char *Bufferp) {
+bool is_direct_command (char *Bufferp) {
   TokenCommandList_t *pRow;
   
   pRow = (TokenCommandList_t *)&TokenDirectCommandList[0];  
@@ -355,7 +355,7 @@ bool IsTokenDirectCommand (char *Bufferp) {
  * @note      List is NULL terminated, stop when we reach here
  * @todo     
  */
-bool IsTokenDirectKeyword (char *Bufferp) {
+bool is_direct_keyword (char *Bufferp) {
   TokenCommandList_t *pRow;
   
   pRow = (TokenCommandList_t *)&TokenKeywordList[0];  
@@ -381,7 +381,7 @@ bool IsTokenDirectKeyword (char *Bufferp) {
  * @todo      This should be combined as we have to search again
  * @todo      should use int argc, char *argv[] for params to DirectFunction callback
  */
-int32_t TokenExecuteDirectCommand (Token_t CommandToken, char *Tokenp) {
+int32_t TOKEN_execute_direct_command (Token_t CommandToken, char *Tokenp) {
   int32_t ErrorCode = SUCCESS;
   TokenCommandList_t *pRow;
 
@@ -417,7 +417,7 @@ int32_t TokenExecuteDirectCommand (Token_t CommandToken, char *Tokenp) {
  * @endverbatim
  * @todo       Exponent        e.g. 2E10 or 2^10(?)
  */
-Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
+Token_t TOKEN_get_number(char **Bufferp, char *Tokenp, Token_t PreToken) {
   uint32_t DigitCount = 0;  
   float power = 1.0;
   float value = 0.0;
@@ -527,7 +527,7 @@ Token_t TokenGetNumber(char **Bufferp, char *Tokenp, Token_t PreToken) {
  * @details
  * @todo
  */
-Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
+Token_t TOKEN_get_word(char **Bufferp, char *Tokenp) {
   char *Bufp;
   char *t = Tokenp;
   Token_t TokenReturn = TOKEN_OK;
@@ -561,7 +561,7 @@ Token_t TokenGetWord  (char **Bufferp, char *Tokenp) {
  * @details    Creates a LITERAL (string) 
  * @todo
  */
-Token_t TokenGetString (char **Bufferp, char *Tokenp) {
+Token_t TOKEN_get_string(char **Bufferp, char *Tokenp) {
   char *Bufp;
 
   Bufp = *Bufferp;
@@ -600,7 +600,7 @@ Token_t TokenGetString (char **Bufferp, char *Tokenp) {
                <= LE
    @endverbatim
  */
-Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
+Token_t TOKEN_get_special(char **Bufferp, char *Tokenp) {
     char *Bufp;
     Token_t TokenReturn;
 
@@ -692,7 +692,7 @@ Token_t TokenGetSpecial(char **Bufferp, char *Tokenp) {
  * @return     Token_t 
  * @note       None
  */
-Token_t TokenGetDirect(char **Bufferp, char *Tokenp) {
+Token_t TOKEN_get_direct(char **Bufferp, char *Tokenp) {
     char *Bufp;
 
     if (Verbose) printf("TokenGetDirect %s\n", Tokenp);
@@ -714,7 +714,7 @@ Token_t TokenGetDirect(char **Bufferp, char *Tokenp) {
  * @details   Some tokens (SPACE) are ignored
  * @todo
  */
-void TokenPrint (char *TokenString, Token_t Token) {
+void TOKEN_print(char *TokenString, Token_t Token) {
 
     if (*TokenString != '\0') {
       char *Return;
@@ -787,25 +787,25 @@ int32_t Tokenize (char *FileName) {
        if ((Token == TOKEN_MINUS && isdigit(*Bufferp+1)) ||
  	   (Token == TOKEN_PERIOD && isdigit(*Bufferp+1)) ||
 	   isdigit(*Bufferp) || Token == TOKEN_PERIOD) {
-         Token = TokenGetNumber(&Bufferp, TokenBuffer, Token);
+         Token = TOKEN_get_number(&Bufferp, TokenBuffer, Token);
        } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
-         Token = TokenGetWord(&Bufferp, TokenBuffer);
+         Token = TOKEN_get_word(&Bufferp, TokenBuffer);
        } else if (isspace(*Bufferp)) {                      /* Test for SPACE, we just skip             */
          Bufferp++;
 	 Token = TOKEN_SPACE;
        } else if (*Bufferp == '"') {                        /* Test for STRINGS                         */
-         Token = TokenGetString(&Bufferp, TokenBuffer);
+         Token = TOKEN_get_string(&Bufferp, TokenBuffer);
        } else if (*Bufferp == '\n' || *Bufferp == '\r') {   /* TODO: convert to spaces for TokenBuffer? */
          Bufferp++;
        } else {                                             /* Test for Special characters              */
-         Token = TokenGetSpecial(&Bufferp, TokenBuffer);       
+         Token = TOKEN_get_special(&Bufferp, TokenBuffer);
        }
 
        if (Token == TOKEN_WORD) {                           
-	 if (IsTokenDirectCommand(TokenBuffer)) {           /* Test for Direct Command                  */
+	 if (is_direct_command(TokenBuffer)) {           /* Test for Direct Command                  */
            Token = TOKEN_direct_command(TokenBuffer);         /* Which direct command?                    */
-           TokenExecuteDirectCommand(Token, TokenBuffer);   /* Execute direct command                   */
-	 } else if (IsTokenDirectKeyword(TokenBuffer)) {    /* Test for a Keyword                       */
+           TOKEN_execute_direct_command(Token, TokenBuffer);   /* Execute direct command                   */
+	 } else if (is_direct_keyword(TokenBuffer)) {    /* Test for a Keyword                       */
 	   printf("TODO Keyword...\n");
 	 } else {                                           /* This is an identifier                    */
 	   pNewNode = symbol_table_search(TokenBuffer, symTable);
@@ -817,13 +817,13 @@ int32_t Tokenize (char *FileName) {
 	 }
        }
        
-       TokenPrint(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
+       TOKEN_print(TokenBuffer, Token);                      /* Show the Token buffer contentst           */
               
        memset(TokenBuffer, '\0', sizeof(TokenBuffer));      /* Clear Token buffer on each line parse     */
      }
   }
   Token = TOKEN_EOF;
-  TokenPrint(TokenBuffer, Token);  
+  TOKEN_print(TokenBuffer, Token);
 
   if (symTable != NULL) {
     symbol_table_clean(symTable);
