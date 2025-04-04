@@ -34,6 +34,18 @@
 
 # Debug files
 
+*.cmake
+*.~
+
 # DIrectory ignore
+.settings/
 build/
 html/
+CMakeFiles/
+dtss/CMakeFiles
+misc/CMakeFiles
+utilities/CMakeFiles
+tokenizer/CMakeFiles
+docs/html
+docs/latex
+docs/
