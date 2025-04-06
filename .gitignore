@@ -42,10 +42,14 @@
 build/
 html/
 CMakeFiles/
+diss/Makefile
 dtss/CMakeFiles
-misc/CMakeFiles
+misc/CMakeFile
+misc/Makefiles
 utilities/CMakeFiles
+utilities/Makefile
 tokenizer/CMakeFiles
+tokenizer/Makefile
 docs/html
 docs/latex
 docs/
