@@ -785,9 +785,9 @@ int32_t Tokenize (char *FileName) {
 
      while (*Bufferp != '\0' && Token != TOKEN_ERROR) {     /* Test for Numbers including -ve ones      */
        if ((Token == TOKEN_MINUS && isdigit(*Bufferp+1)) ||
- 	   (Token == TOKEN_PERIOD && isdigit(*Bufferp+1)) ||
-	   isdigit(*Bufferp) || Token == TOKEN_PERIOD) {
-         Token = TOKEN_get_number(&Bufferp, TokenBuffer, Token);
+ 	       (Token == TOKEN_PERIOD && isdigit(*Bufferp+1)) ||
+	        isdigit(*Bufferp) || Token == TOKEN_PERIOD) {
+               Token = TOKEN_get_number(&Bufferp, TokenBuffer, Token);
        } else if (isalnum(*Bufferp)) {                      /* Test for Numbers and Letters             */
          Token = TOKEN_get_word(&Bufferp, TokenBuffer);
        } else if (isspace(*Bufferp)) {                      /* Test for SPACE, we just skip             */
@@ -802,9 +802,9 @@ int32_t Tokenize (char *FileName) {
        }
 
        if (Token == TOKEN_WORD) {                           
-	 if (is_direct_command(TokenBuffer)) {           /* Test for Direct Command                  */
-           Token = TOKEN_direct_command(TokenBuffer);         /* Which direct command?                    */
-           TOKEN_execute_direct_command(Token, TokenBuffer);   /* Execute direct command                   */
+    	   if (is_direct_command(TokenBuffer)) {           /* Test for Direct Command                  */
+              Token = TOKEN_direct_command(TokenBuffer);         /* Which direct command?                    */
+              TOKEN_execute_direct_command(Token, TokenBuffer);   /* Execute direct command                   */
 	 } else if (is_direct_keyword(TokenBuffer)) {    /* Test for a Keyword                       */
 	   printf("TODO Keyword...\n");
 	 } else {                                           /* This is an identifier                    */
