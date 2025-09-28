@@ -14,6 +14,7 @@ Includes
 #include <ctype.h>
 #include <stdbool.h>
 #include "basic.h"
+#include "tokenizer.h"
 #include "debug.h"
 
 /*
