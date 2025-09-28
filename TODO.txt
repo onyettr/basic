@@ -1,5 +1,7 @@
 * Project and git state
 master branch V1.0.1 latest
+cmake-dev Updates for CMAKE 
+tokenizer-dev Cloned from cmake-dev with improved Toenizer functions and cleanup
 * Overall
 ** TODO Source file listing utilities
 ** TODO Scanner and Tokenizer 

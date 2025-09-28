@@ -29,6 +29,7 @@ Includes
 ******************************************************************************
 */
 #include "basic.h"
+#include "debug.h"
 
 /*
 ******************************************************************************
@@ -77,12 +78,15 @@ int main ( int argc, char *argv[]) {
   printf ("%s: Version %s\n", PROGRAM_NAME, VERSION);
 
   ParseCommandLine (argv, argc, FileName);
+  DEBUG_init(Verbose, DEBUG_LEVEL_DETAIL);
 
   if (ListMode) {
     ListerSource (FileName);          /* List the source code to the console */
     //  } else if (FileName[0] != '\0') {
   } else if (ScanMode) {
-    Tokenize(FileName);
+ //   Tokenize(FileName);
+	Tokenize_v2(FileName);
+
   } else {
     CommandLineMode();
   }

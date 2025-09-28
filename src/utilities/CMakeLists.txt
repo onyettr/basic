@@ -18,7 +18,9 @@ target_sources(${BASIC_LIB_TARGET}
     ${CMAKE_SOURCE_DIR}/src/utilities/symboltable.c
     ${CMAKE_SOURCE_DIR}/src/utilities/binarytree.c
     ${CMAKE_SOURCE_DIR}/src/utilities/utilities.c
+    ${CMAKE_SOURCE_DIR}/src/utilities/debug.c
     )
+    
 
 #message(STATUS "****************************************************")
 message(STATUS "Library                 : " ${BASIC_LIB_TARGET})

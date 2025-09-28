@@ -5,8 +5,8 @@
  * @file    error.h
  ***************************************************************************** 
  */
-#ifndef __ERROR__H__
-#define __ERROR__H__
+#ifndef ERROR__H
+#define ERROR__H
 
 /*
 ******************************************************************************
@@ -56,7 +56,13 @@ typedef enum {
   ERROR_NUMBER_TOO_LARGE,                         /* 9 digits only allowed */
   ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_NODE,
   ERROR_SYMBOL_TABLE_FAILED_TO_ALLOCATE_STRING,
-  ERROR_UNKNOWN
+  ERROR_UNKNOWN,
+  ERROR_FATAL,
+  ERROR_NULL_POINTER,
+  ERROR_INVALID_TOKEN,
+  ERROR_TOO_MANY_TOKENS,
+  ERROR_SYMBOL_TABLE_FULL
+
 } ErrorCode_t;
 
 typedef struct {
@@ -67,4 +73,4 @@ typedef struct {
 void Error (char *format, ...);
 char *error_to_string (ErrorCode_t ErrorCode);
 
-#endif  /* _ERROR_H__ */
+#endif  /* ERROR_H */

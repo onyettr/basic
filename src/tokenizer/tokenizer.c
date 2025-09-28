@@ -833,3 +833,291 @@ int32_t Tokenize (char *FileName) {
   
   return ErrorCode;
 }
+
+/**
+ * @brief     Tokenize a given file with improved error handling and structure
+ * @fn        int32_t Tokenize_v2 (char *FileName)
+ * @param[in] *FileName - file containing lines to Tokenize
+ * @return    int32_t ErrorCode
+ * @note      Enhanced version with better separation of concerns and error handling
+ */
+int32_t Tokenize_v2(char *FileName) {
+    FILE *fp = NULL;
+    int32_t ErrorCode = SUCCESS;
+    int32_t LineNumber = 0;
+
+    // Input validation
+    if (FileName == NULL || *FileName == '\0') {
+        Error("No filename provided");
+        return ERROR_FILE_NO_FILENAME;
+    }
+
+    // File operations
+    fp = fopen(FileName, "r");
+    if (fp == NULL) {
+        Error("Failed to open %s", FileName);
+        return ERROR_FILE_OPEN_FAILURE;
+    }
+
+    // Main processing loop
+    while (UtilsReadSourceLine(fp, SourceBuffer)) {
+        LineNumber++;
+        ErrorCode = ProcessLine(SourceBuffer, LineNumber);
+
+        if (ErrorCode != SUCCESS) {
+            Error("Error processing line %d: %s", LineNumber, error_to_string(ErrorCode));
+            // Continue processing or break based on error severity
+            if (ErrorCode == ERROR_FATAL) {
+                break;
+            }
+        }
+    }
+
+    // Cleanup
+    if (fp != NULL) {
+        fclose(fp);
+    }
+
+    // Final EOF token
+    TOKEN_print("", TOKEN_EOF);
+
+    // Symbol table cleanup
+    if (symTable != NULL) {
+        symbol_table_clean(symTable);
+    }
+
+    return ErrorCode;
+}
+
+/**
+ * @brief     Process a single line of source code
+ * @fn        int32_t ProcessLine(char *LineBuffer, int32_t LineNumber)
+ * @param[in] *LineBuffer - source line to process
+ * @param[in] LineNumber - current line number for error reporting
+ * @return    int32_t ErrorCode
+ */
+int32_t ProcessLine(char *LineBuffer, int32_t LineNumber) {
+    char *BufferPtr = NULL;
+    Token_t CurrentToken = TOKEN_NO_TOKEN;
+    int32_t ErrorCode = SUCCESS;
+    int32_t TokenCount = 0;
+
+    if (LineBuffer == NULL) {
+        return ERROR_NULL_POINTER;
+    }
+
+    // Skip leading whitespace
+    BufferPtr = UtilsSkipSpaces(LineBuffer);
+
+    // Skip empty lines and comments
+    if (*BufferPtr == '\0' || *BufferPtr == '\n') {
+        return SUCCESS;
+    }
+
+    if (Verbose) {
+        printf("Line %d: %s", LineNumber, BufferPtr);
+    }
+
+    // Process tokens in the line
+    while (*BufferPtr != '\0' && ErrorCode == SUCCESS) {
+        // Clear token buffer
+        memset(TokenBuffer, '\0', sizeof(TokenBuffer));
+
+        // Get next token
+        CurrentToken = GetNextToken(&BufferPtr, TokenBuffer);
+
+        if (CurrentToken == TOKEN_ERROR) {
+            ErrorCode = ERROR_INVALID_TOKEN;
+            Error("Invalid token at line %d, position %ld",
+                  LineNumber, BufferPtr - LineBuffer);
+            break;
+        }
+
+        // Skip whitespace tokens for cleaner output
+        if (CurrentToken == TOKEN_SPACE) {
+            continue;
+        }
+
+        // Process the token
+        ErrorCode = ProcessToken(CurrentToken, TokenBuffer, LineNumber);
+
+        if (Verbose || CurrentToken != TOKEN_SPACE) {
+            TOKEN_print(TokenBuffer, CurrentToken);
+        }
+
+        TokenCount++;
+
+        // Safety check for runaway tokenization
+        if (TokenCount > MAX_TOKENS_PER_LINE) {
+            Error("Too many tokens on line %d", LineNumber);
+            ErrorCode = ERROR_TOO_MANY_TOKENS;
+            break;
+        }
+    }
+
+    return ErrorCode;
+}
+
+/**
+ * @brief     Get the next token from the buffer
+ * @fn        Token_t GetNextToken(char **BufferPtr, char *TokenBuffer)
+ * @param[in/out] **BufferPtr - pointer to current position in buffer
+ * @param[out] *TokenBuffer - buffer to store the token string
+ * @return    Token_t - type of token found
+ */
+Token_t GetNextToken(char **BufferPtr, char *TokenBuffer) {
+    char *Bufp = *BufferPtr;
+    Token_t TokenType = TOKEN_NO_TOKEN;
+    Token_t PreviousToken = TOKEN_NO_TOKEN;  // For context-sensitive parsing
+
+    // Skip whitespace and update pointer
+    while (isspace(*Bufp) && *Bufp != '\0') {
+        if (*Bufp == ' ' || *Bufp == '\t') {
+            Bufp++;
+            *BufferPtr = Bufp;
+            return TOKEN_SPACE;
+        } else if (*Bufp == '\n' || *Bufp == '\r') {
+            Bufp++;
+            *BufferPtr = Bufp;
+            return TOKEN_NO_TOKEN; // End of line
+        }
+        Bufp++;
+    }
+
+    // End of buffer
+    if (*Bufp == '\0') {
+        *BufferPtr = Bufp;
+        return TOKEN_NO_TOKEN;
+    }
+
+    // Determine token type and parse accordingly
+    if (IsNumericStart(Bufp, PreviousToken)) {
+        TokenType = TOKEN_get_number(BufferPtr, TokenBuffer, PreviousToken);
+    } else if (isalpha(*Bufp) || *Bufp == '_') {
+        TokenType = TOKEN_get_word(BufferPtr, TokenBuffer);
+    } else if (*Bufp == '"' || *Bufp == '\'') {
+        TokenType = TOKEN_get_string(BufferPtr, TokenBuffer);
+    } else {
+        TokenType = TOKEN_get_special(BufferPtr, TokenBuffer);
+    }
+
+    return TokenType;
+}
+
+/**
+ * @brief     Process a parsed token
+ * @fn        int32_t ProcessToken(Token_t TokenType, char *TokenString, int32_t LineNumber)
+ * @param[in] TokenType - type of token
+ * @param[in] *TokenString - token string value
+ * @param[in] LineNumber - current line number
+ * @return    int32_t ErrorCode
+ */
+int32_t ProcessToken(Token_t TokenType, char *TokenString, int32_t LineNumber) {
+    int32_t ErrorCode = SUCCESS;
+    SymbolTableNode_t *pNewNode = NULL;
+
+    switch (TokenType) {
+        case TOKEN_WORD:
+            if (is_direct_command(TokenString)) {
+                TokenType = TOKEN_direct_command(TokenString);
+                ErrorCode = TOKEN_execute_direct_command(TokenType, TokenString);
+            } else if (is_direct_keyword(TokenString)) {
+                // Handle keyword - could expand this for syntax analysis
+                if (Verbose) {
+                    printf("Keyword found: %s\n", TokenString);
+                }
+            } else {
+                // Handle identifier
+                pNewNode = symbol_table_search(TokenString, symTable);
+                if (pNewNode == NULL) {
+                    pNewNode = symbol_table_add_node(TokenString, &symTable);
+                    if (pNewNode == NULL) {
+                        Error("Failed to add symbol '%s' to table at line %d",
+                              TokenString, LineNumber);
+                        ErrorCode = ERROR_SYMBOL_TABLE_FULL;
+                    }
+                }
+                TokenType = TOKEN_IDENTIFIER;
+            }
+            break;
+
+        case TOKEN_DIGIT:
+            // Could add range checking or literal processing here
+            break;
+
+        case TOKEN_STRING:
+            // Could add string processing/validation here
+            break;
+
+        case TOKEN_ERROR:
+            ErrorCode = ERROR_INVALID_TOKEN;
+            break;
+
+        default:
+            // Most tokens need no special processing
+            break;
+    }
+
+    return ErrorCode;
+}
+
+/**
+ * @brief     Check if current position starts a numeric token
+ * @fn        bool IsNumericStart(char *BufferPtr, Token_t PreviousToken)
+ * @param[in] *BufferPtr - current buffer position
+ * @param[in] PreviousToken - previously parsed token for context
+ * @return    bool - true if this starts a number
+ */
+bool IsNumericStart(char *BufferPtr, Token_t PreviousToken) {
+    if (isdigit(*BufferPtr)) {
+        return true;
+    }
+
+    // Handle negative numbers and decimal points
+    if ((*BufferPtr == '-' || *BufferPtr == '.') && isdigit(*(BufferPtr + 1))) {
+        return true;
+    }
+
+    // Handle cases like "5." or ".5"
+    if (*BufferPtr == '.' && (PreviousToken == TOKEN_DIGIT || isdigit(*(BufferPtr + 1)))) {
+        return true;
+    }
+
+    return false;
+}
+
+// Additional utility functions for better error handling and validation
+
+/**
+ * @brief     Validate token buffer bounds
+ * @fn        bool ValidateTokenBuffer(const char *TokenBuffer)
+ * @param[in] *TokenBuffer - token buffer to validate
+ * @return    bool - true if valid
+ */
+bool ValidateTokenBuffer(const char *TokenBuffer) {
+    if (TokenBuffer == NULL) {
+        return false;
+    }
+
+    size_t length = strlen(TokenBuffer);
+    if (length >= MAX_SOURCE_LINE_LENGTH) {
+        Error("Token too long: %zu characters", length);
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * @brief     Enhanced error reporting with context
+ * @fn        void ReportTokenError(const char *Message, int32_t LineNumber, const char *Context)
+ * @param[in] *Message - error message
+ * @param[in] LineNumber - line where error occurred
+ * @param[in] *Context - surrounding context
+ */
+void ReportTokenError(const char *Message, int32_t LineNumber, const char *Context) {
+    Error("Tokenization error at line %d: %s", LineNumber, Message);
+    if (Context != NULL && Verbose) {
+        Error("Context: %s", Context);
+    }
+}

@@ -6,8 +6,8 @@
  * @ingroup Tokenizer
  *******************************************************************************
  */
-#ifndef __TOKENIZER__H__
-#define __TOKENIZER__H__
+#ifndef TOKENIZER__H
+#define TOKENIZER__H
 
 /*
 ********************************************************************************
@@ -20,6 +20,7 @@ Includes
 Private Types
 ********************************************************************************
 */
+#define MAX_TOKENS_PER_LINE        256
 
 /**
  * @brief TOKEN values for the various elements
@@ -261,5 +262,12 @@ bool    is_direct_command    (char *Bufferp);
 bool    is_direct_keyword    (char *Bufferp);
 int32_t TOKEN_execute_direct_command (Token_t CommandToken, char *Tokenp);
 char    *TokenGetStringType(Token_t Token);
+int32_t ProcessLine(char *LineBuffer, int32_t LineNumber);
+Token_t GetNextToken(char **BufferPtr, char *TokenBuffer);
+int32_t ProcessToken(Token_t TokenType, char *TokenString, int32_t LineNumber);
+bool IsNumericStart(char *BufferPtr, Token_t PreviousToken);
+bool ValidateTokenBuffer(const char *TokenBuffer);
+void ReportTokenError(const char *Message, int32_t LineNumber, const char *Context);
+
 
 #endif  /* __TOKENIZER_H__ */
