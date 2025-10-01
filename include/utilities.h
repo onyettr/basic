@@ -51,7 +51,7 @@ Prototypes of all functions contained in this file (in order of occurrence)
 ******************************************************************************
 */
 void Error (char *format, ...);
-void ParseCommandLine (char *argv[], int argc, char *InputFileName);
+void parse_command_line (char *argv[], int argc, char *InputFileName);
   
 bool UtilsReadSourceLine (FILE *sourceFile, char *SourceBuffer);
 char *UtilsSkipSpaces (char *SourceBuffer);

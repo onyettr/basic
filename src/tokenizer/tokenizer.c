@@ -18,6 +18,7 @@ Includes
 #include <stdbool.h>
 #include <time.h>
 #include "basic.h"
+#include "debug.h"
 #include "dtss.h"
 
 /*
@@ -846,6 +847,9 @@ int32_t Tokenize_v2(char *FileName) {
     int32_t ErrorCode = SUCCESS;
     int32_t LineNumber = 0;
 
+    DBG_ENTER(FileName);
+    DBG_INFO(DEBUG_CAT_IO, "Starting tokenization of file: %s", FileName);
+
     // Input validation
     if (FileName == NULL || *FileName == '\0') {
         Error("No filename provided");
@@ -862,16 +866,24 @@ int32_t Tokenize_v2(char *FileName) {
     // Main processing loop
     while (UtilsReadSourceLine(fp, SourceBuffer)) {
         LineNumber++;
+        DBG_TRACE(DEBUG_CAT_GENERAL, "Processing line %d", LineNumber);
+        DBG_BUFFER("Source Line", SourceBuffer, strlen(SourceBuffer));
+
         ErrorCode = ProcessLine(SourceBuffer, LineNumber);
 
         if (ErrorCode != SUCCESS) {
+            DBG_ERROR(DEBUG_CAT_GENERAL, "Error processing line %d: %s",
+                      LineNumber, error_to_string(ErrorCode));
             Error("Error processing line %d: %s", LineNumber, error_to_string(ErrorCode));
             // Continue processing or break based on error severity
             if (ErrorCode == ERROR_FATAL) {
+                DBG_ERROR(DEBUG_CAT_GENERAL, "Fatal error encountered, stopping");
                 break;
             }
         }
     }
+
+    DBG_INFO(DEBUG_CAT_IO, "Processed %d lines total", LineNumber);
 
     // Cleanup
     if (fp != NULL) {
@@ -883,6 +895,7 @@ int32_t Tokenize_v2(char *FileName) {
 
     // Symbol table cleanup
     if (symTable != NULL) {
+        DBG_INFO(DEBUG_CAT_SYMBOLS, "Cleaning up symbol table");
         symbol_table_clean(symTable);
     }
 
@@ -902,6 +915,9 @@ int32_t ProcessLine(char *LineBuffer, int32_t LineNumber) {
     int32_t ErrorCode = SUCCESS;
     int32_t TokenCount = 0;
 
+    DBG_ENTER("LineBuffer, LineNumber");
+    DBG_TRACE(DEBUG_CAT_GENERAL, "Processing line %d", LineNumber);
+
     if (LineBuffer == NULL) {
         return ERROR_NULL_POINTER;
     }
@@ -914,6 +930,8 @@ int32_t ProcessLine(char *LineBuffer, int32_t LineNumber) {
         return SUCCESS;
     }
 
+    DBG_INFO(DEBUG_CAT_GENERAL, "Line %d: %s", LineNumber, BufferPtr);
+
     if (Verbose) {
         printf("Line %d: %s", LineNumber, BufferPtr);
     }
@@ -924,10 +942,14 @@ int32_t ProcessLine(char *LineBuffer, int32_t LineNumber) {
         memset(TokenBuffer, '\0', sizeof(TokenBuffer));
 
         // Get next token
+        DBG_TRACE(DEBUG_CAT_TOKENIZER, "Getting next token at position %ld",
+                  BufferPtr - LineBuffer);
         CurrentToken = GetNextToken(&BufferPtr, TokenBuffer);
 
         if (CurrentToken == TOKEN_ERROR) {
             ErrorCode = ERROR_INVALID_TOKEN;
+            DBG_ERROR(DEBUG_CAT_TOKENIZER, "Invalid token at line %d, position %ld",
+                        LineNumber, BufferPtr - LineBuffer);
             Error("Invalid token at line %d, position %ld",
                   LineNumber, BufferPtr - LineBuffer);
             break;
@@ -937,6 +959,8 @@ int32_t ProcessLine(char *LineBuffer, int32_t LineNumber) {
         if (CurrentToken == TOKEN_SPACE) {
             continue;
         }
+
+        DBG_TOKEN(CurrentToken, TokenBuffer);
 
         // Process the token
         ErrorCode = ProcessToken(CurrentToken, TokenBuffer, LineNumber);
@@ -955,6 +979,9 @@ int32_t ProcessLine(char *LineBuffer, int32_t LineNumber) {
         }
     }
 
+    DBG_INFO(DEBUG_CAT_TOKENIZER, "Line %d processed: %d tokens", LineNumber, TokenCount);
+    DBG_EXIT(ErrorCode);
+
     return ErrorCode;
 }
 
@@ -970,15 +997,24 @@ Token_t GetNextToken(char **BufferPtr, char *TokenBuffer) {
     Token_t TokenType = TOKEN_NO_TOKEN;
     Token_t PreviousToken = TOKEN_NO_TOKEN;  // For context-sensitive parsing
 
+    DBG_ENTER("BufferPtr, TokenBuffer");
+    DBG_DETAIL(DEBUG_CAT_TOKENIZER, "Current character: '%c' (0x%02X)",
+               *Bufp, (unsigned char)*Bufp);
+
     // Skip whitespace and update pointer
     while (isspace(*Bufp) && *Bufp != '\0') {
         if (*Bufp == ' ' || *Bufp == '\t') {
             Bufp++;
             *BufferPtr = Bufp;
+            DBG_TRACE(DEBUG_CAT_TOKENIZER, "Found whitespace, advancing");
+            DBG_EXIT(TOKEN_SPACE);
             return TOKEN_SPACE;
         } else if (*Bufp == '\n' || *Bufp == '\r') {
             Bufp++;
             *BufferPtr = Bufp;
+            DBG_TRACE(DEBUG_CAT_TOKENIZER, "Found end of line");
+            PreviousToken = TOKEN_NO_TOKEN;  // Reset context at line end
+            DBG_EXIT(TOKEN_NO_TOKEN);
             return TOKEN_NO_TOKEN; // End of line
         }
         Bufp++;
@@ -987,19 +1023,31 @@ Token_t GetNextToken(char **BufferPtr, char *TokenBuffer) {
     // End of buffer
     if (*Bufp == '\0') {
         *BufferPtr = Bufp;
+        DBG_TRACE(DEBUG_CAT_TOKENIZER, "Reached end of buffer");
+        PreviousToken = TOKEN_NO_TOKEN;
+        DBG_EXIT(TOKEN_NO_TOKEN);
         return TOKEN_NO_TOKEN;
     }
 
     // Determine token type and parse accordingly
     if (IsNumericStart(Bufp, PreviousToken)) {
+        DBG_TRACE(DEBUG_CAT_TOKENIZER, "Detected numeric token start");
         TokenType = TOKEN_get_number(BufferPtr, TokenBuffer, PreviousToken);
     } else if (isalpha(*Bufp) || *Bufp == '_') {
+        DBG_TRACE(DEBUG_CAT_TOKENIZER, "Detected word token start");
         TokenType = TOKEN_get_word(BufferPtr, TokenBuffer);
     } else if (*Bufp == '"' || *Bufp == '\'') {
+        DBG_TRACE(DEBUG_CAT_TOKENIZER, "Detected string token start");
         TokenType = TOKEN_get_string(BufferPtr, TokenBuffer);
     } else {
+        DBG_TRACE(DEBUG_CAT_TOKENIZER, "Detected special character token");
         TokenType = TOKEN_get_special(BufferPtr, TokenBuffer);
     }
+
+    PreviousToken = TokenType;
+
+    DBG_TOKEN(TokenType, TokenBuffer);
+    DBG_EXIT(TokenType);
 
     return TokenType;
 }
@@ -1016,18 +1064,25 @@ int32_t ProcessToken(Token_t TokenType, char *TokenString, int32_t LineNumber) {
     int32_t ErrorCode = SUCCESS;
     SymbolTableNode_t *pNewNode = NULL;
 
+    DBG_ENTER("TokenType, TokenString, LineNumber");
+    DBG_TRACE(DEBUG_CAT_TOKENIZER, "Processing token: %s = '%s' at line %d",
+             TOKEN_type_to_string(TokenType), TokenString, LineNumber);
+
     switch (TokenType) {
         case TOKEN_WORD:
             if (is_direct_command(TokenString)) {
+                DBG_INFO(DEBUG_CAT_TOKENIZER, "Found direct command: %s", TokenString);
                 TokenType = TOKEN_direct_command(TokenString);
                 ErrorCode = TOKEN_execute_direct_command(TokenType, TokenString);
             } else if (is_direct_keyword(TokenString)) {
                 // Handle keyword - could expand this for syntax analysis
+                DBG_INFO(DEBUG_CAT_TOKENIZER, "Found keyword: %s", TokenString);
                 if (Verbose) {
                     printf("Keyword found: %s\n", TokenString);
                 }
             } else {
                 // Handle identifier
+                DBG_INFO(DEBUG_CAT_SYMBOLS, "Adding new symbol: %s", TokenString);
                 pNewNode = symbol_table_search(TokenString, symTable);
                 if (pNewNode == NULL) {
                     pNewNode = symbol_table_add_node(TokenString, &symTable);
@@ -1036,6 +1091,8 @@ int32_t ProcessToken(Token_t TokenType, char *TokenString, int32_t LineNumber) {
                               TokenString, LineNumber);
                         ErrorCode = ERROR_SYMBOL_TABLE_FULL;
                     }
+                } else {
+                  DBG_TRACE(DEBUG_CAT_SYMBOLS, "Symbol already exists: %s", TokenString);
                 }
                 TokenType = TOKEN_IDENTIFIER;
             }
@@ -1043,20 +1100,26 @@ int32_t ProcessToken(Token_t TokenType, char *TokenString, int32_t LineNumber) {
 
         case TOKEN_DIGIT:
             // Could add range checking or literal processing here
+            DBG_TRACE(DEBUG_CAT_TOKENIZER, "Processing numeric literal");
             break;
 
         case TOKEN_STRING:
             // Could add string processing/validation here
+            DBG_TRACE(DEBUG_CAT_TOKENIZER, "Processing string literal");
             break;
 
         case TOKEN_ERROR:
+            DBG_ERROR(DEBUG_CAT_TOKENIZER, "Token error encountered");
             ErrorCode = ERROR_INVALID_TOKEN;
             break;
 
         default:
             // Most tokens need no special processing
+            DBG_DETAIL(DEBUG_CAT_TOKENIZER, "Processing standard token");
             break;
     }
+
+    DBG_EXIT(ErrorCode);
 
     return ErrorCode;
 }
@@ -1070,16 +1133,19 @@ int32_t ProcessToken(Token_t TokenType, char *TokenString, int32_t LineNumber) {
  */
 bool IsNumericStart(char *BufferPtr, Token_t PreviousToken) {
     if (isdigit(*BufferPtr)) {
+        DBG_DETAIL(DEBUG_CAT_TOKENIZER, "Numeric start: digit '%c'", *BufferPtr);
         return true;
     }
 
     // Handle negative numbers and decimal points
     if ((*BufferPtr == '-' || *BufferPtr == '.') && isdigit(*(BufferPtr + 1))) {
+        DBG_DETAIL(DEBUG_CAT_TOKENIZER, "Numeric start: '%c' followed by digit", *BufferPtr);
         return true;
     }
 
     // Handle cases like "5." or ".5"
     if (*BufferPtr == '.' && (PreviousToken == TOKEN_DIGIT || isdigit(*(BufferPtr + 1)))) {
+        DBG_DETAIL(DEBUG_CAT_TOKENIZER, "Numeric start: decimal point with context");
         return true;
     }
 

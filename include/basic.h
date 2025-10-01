@@ -59,6 +59,7 @@ Includes
  */
 #define MAX_DIGIT_COUNT         10          /*!> Accuracy of original machine */
 #define MAX_INT_VALUE           512         /*!> Ints are not very big        */
+#define MAX_FILENAME_LEN        32
 
 /*
 ********************************************************************************
@@ -81,6 +82,7 @@ extern bool Verbose;                 /*!> CLI option for more output   */
 extern bool Secret;                  /*!> CLI option for shhhh         */
 extern bool ListMode;                /*!> CLI option to enable listing */
 extern bool ScanMode;                /*!> CLI option to enable parsing */
+extern uint32_t verbose_level;       /*!< CLI verbosity level          */
 //extern uint32_t LineNumber;
 
 /*

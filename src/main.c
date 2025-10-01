@@ -77,8 +77,9 @@ int main ( int argc, char *argv[]) {
    */
   printf ("%s: Version %s\n", PROGRAM_NAME, VERSION);
 
-  ParseCommandLine (argv, argc, FileName);
-  DEBUG_init(Verbose, DEBUG_LEVEL_DETAIL);
+  parse_command_line (argv, argc, FileName);
+  DEBUG_init(true, verbose_level);
+  DEBUG_set_categories(DEBUG_CAT_TOKENIZER | DEBUG_CAT_SYMBOLS);
 
   if (ListMode) {
     ListerSource (FileName);          /* List the source code to the console */
