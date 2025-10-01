@@ -250,6 +250,7 @@ Prototypes of all functions contained in this file (in order of occurrence)
 ********************************************************************************
 */
 int32_t Tokenize (char *FileName);
+int32_t Tokenize_v2 (char *FileName);
 Token_t TOKEN_get_number     (char **Bufferp, char *Tokenp, Token_t PreToken);
 Token_t TOKEN_get_word       (char **Bufferp, char *Tokenp);
 Token_t TOKEN_get_string     (char **Bufferp, char *Tokenp);
