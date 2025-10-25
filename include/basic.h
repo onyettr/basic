@@ -33,8 +33,28 @@ Includes
 #include "symboltable.h"
 #include "interactive.h"
 
+#ifndef GIT_REPO
+#define GIT_REPO "unknown"
+#endif
+
+#ifndef GIT_COMMIT
+#define GIT_COMMIT "unknown"
+#endif
+
+#ifndef GIT_BRANCH
+#define GIT_BRANCH "unknown"
+#endif
+
+#ifndef BUILD_DATE
+#define BUILD_DATE "unknown"
+#endif
+
+#define VERSION_MAJOR  1
+#define VERSION_MINOR  0
+#define VERSION_PATCH  2
+
 #define PROGRAM_NAME   "basic"                        /*!> No name. no slogan */
-#define VERSION        "(v1.0.2) DEVELOPMENT Version" /*!> Version            */
+//#define VERSION        "(v1.0.2) DEVELOPMENT Version" /*!> Version            */
 #define AUTHOR_STRING  "()"                           /*!> Who did this?      */
 
 /*
