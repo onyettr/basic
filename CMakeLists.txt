@@ -27,7 +27,7 @@ ENDIF()
 
 set(PROJECT_NAME "basic")
 project(${PROJECT_NAME}
-        VERSION 1.0
+        VERSION 1.0.2
         LANGUAGES C CXX)
 if(MATH_LIBRARY)
   message("[INFO] Math library found")
@@ -45,6 +45,68 @@ add_executable(${PROJECT_NAME} src/main.c)
 target_sources(${PROJECT_NAME} PRIVATE "src/main.c")
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}")
+
+# Get git repo information for embed into C Code
+execute_process(
+    COMMAND git config --get remote.origin.url
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_REPO_URL
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
+
+# Extract just the repository name from URL
+if(GIT_REPO_URL)
+    # Remove everything up to the last slash
+    string(REGEX REPLACE ".*/([^/]+)$" "\\1" GIT_REPO "${GIT_REPO_URL}")
+    # Remove .git extension if present
+    string(REGEX REPLACE "\\.git$" "" GIT_REPO "${GIT_REPO}")
+else()
+    set(GIT_REPO "unknown")
+endif()
+
+# Get git commit hash
+execute_process(
+    COMMAND git rev-parse --short HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
+if(NOT GIT_COMMIT)
+    set(GIT_COMMIT "unknown")
+endif()
+
+# Get git branch
+execute_process(
+    COMMAND git rev-parse --abbrev-ref HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_BRANCH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
+if(NOT GIT_BRANCH)
+    set(GIT_BRANCH "unknown")
+endif()
+
+# Get build date
+string(TIMESTAMP BUILD_DATE "%Y-%m-%d %H:%M:%S")
+
+# Add definitions
+add_definitions(
+    -DVERSION="${PROJECT_VERSION}"
+    -DGIT_REPO="${GIT_REPO}"
+    -DGIT_COMMIT="${GIT_COMMIT}"
+    -DGIT_BRANCH="${GIT_BRANCH}"
+    -DBUILD_DATE="${BUILD_DATE}"
+)
+
+message(STATUS "Build Configuration:")
+message(STATUS "  Version:    ${PROJECT_VERSION}")
+message(STATUS "  Repository: ${GIT_REPO}")
+message(STATUS "  Commit:     ${GIT_COMMIT}")
+message(STATUS "  Branch:     ${GIT_BRANCH}")
+message(STATUS "  Build Date: ${BUILD_DATE}")
 
 add_subdirectory("src/misc")
 add_subdirectory("src/dtss")

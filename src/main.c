@@ -31,6 +31,22 @@ Includes
 #include "basic.h"
 #include "debug.h"
 
+#ifndef GIT_REPO
+#define GIT_REPO "unknown"
+#endif
+
+#ifndef GIT_COMMIT
+#define GIT_COMMIT "unknown"
+#endif
+
+#ifndef GIT_BRANCH
+#define GIT_BRANCH "unknown"
+#endif
+
+#ifndef BUILD_DATE
+#define BUILD_DATE "unknown"
+#endif
+
 /*
 ******************************************************************************
 Private Types
@@ -67,6 +83,15 @@ Prototypes of all functions contained in this file (in order of occurrence)
 ******************************************************************************
 */
 
+/**
+ *
+ */
+static void print_banner(void) {
+	printf ("%s: Version %s %s %s\n",
+			PROGRAM_NAME, VERSION,
+	        GIT_BRANCH, BUILD_DATE);
+}
+
 int main ( int argc, char *argv[]) {
   char FileName[80];
 
@@ -75,7 +100,7 @@ int main ( int argc, char *argv[]) {
   /*
    * Sign on banner..
    */
-  printf ("%s: Version %s\n", PROGRAM_NAME, VERSION);
+  print_banner();
 
   parse_command_line (argv, argc, FileName);
   DEBUG_init(true, verbose_level);
